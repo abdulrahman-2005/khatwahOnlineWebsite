@@ -1,0 +1,452 @@
+{
+  "ar": {
+    "nav": {
+      "products": "منتجاتنا",
+      "projects": "مشاريعنا",
+      "about": "من نحن",
+      "contact": "تواصل معنا",
+      "logo_online": "أونلاين",
+      "switch_to_dark": "الوضع الداكن",
+      "switch_to_light": "الوضع الفاتح",
+      "change_language": "تغيير اللغة",
+      "close_menu": "إغلاق القائمة",
+      "open_menu": "فتح القائمة",
+      "theme_dark": "داكن",
+      "theme_light": "فاتح",
+      "lang_ar": "عربي",
+      "lang_en": "English",
+      "home_label": "خُطوة اونلاين — الرئيسية"
+    },
+    "hero": {
+      "brand_name": "خطوة",
+      "brand_name_en": "Khatwah",
+      "brand_subtitle": "أونلاين",
+      "brand_subtitle_en": "ONLINE",
+      "headline_en": "The Digital Layer\nFor Local Business",
+      "headline_ar": "ساعد تجارتك تنتقل للأونلاين",
+      "body": "بنبني حلول تقنية للتجارة المحلية — متاجر أونلاين، حجوزات، إدارة مخزون.",
+      "cta_primary": "خد الخطوة",
+      "cta_secondary": "مشاريعنا"
+    },
+    "products_section": {
+      "eyebrow": "خدماتنا",
+      "headline_part1": "ثلاث خدمات.",
+      "headline_part2": "حل واحد.",
+      "body": "كل خدمة اتبنت عشان تحل مشكلة حقيقية في السوق المحلي."
+    },
+    "products": [
+      {
+        "num": "01",
+        "title": "نظام الحجوزات",
+        "subtitle": "للحلاقين، العيادات، والخدمات",
+        "description": "العميل يحجز أونلاين — يجيه تذكرة، إشعارات، ونقاط ولاء.",
+        "features": [
+          "تقويم حجوزات مباشر",
+          "تذاكر رقمية",
+          "إشعارات أوتوماتيكية",
+          "نظام ولاء"
+        ]
+      },
+      {
+        "num": "02",
+        "title": "المخزون والـ POS",
+        "subtitle": "٣ باقات حسب الاحتياج",
+        "description": "إدارة مخزون، نقطة بيع، محاسبة أوتوماتيكية، وربط بمتجر أونلاين.",
+        "features": [
+          "مخزون ذكي",
+          "نقطة بيع",
+          "محاسبة أوتوماتيكية",
+          "متجر أونلاين"
+        ]
+      },
+      {
+        "num": "03",
+        "title": "برمجة خاصة",
+        "subtitle": "أي حاجة محتاجها",
+        "description": "أي نظام أو موقع محتاجه — بنبنيه من الصفر حسب طلبك.",
+        "features": [
+          "تطبيقات ويب",
+          "لوحات تحكم",
+          "أنظمة إدارة",
+          "APIs مخصصة"
+        ]
+      }
+    ],
+    "mission_statement": {
+      "headline": "نحن نبني الجيل القادم من التجارة المحلية.",
+      "body": "من العريش، شمال سيناء، نرى فرصة لتحويل الأعمال التقليدية إلى كيانات رقمية مزدهرة. نحن نؤمن بأن التكنولوجيا يجب أن تكون في متناول الجميع، وأن الابتكار يبدأ من حيث أنت."
+    },
+    "market_section": {
+      "eyebrow": "السوق",
+      "headline_part1": "سوق ٢٠٠ ألف",
+      "headline_part2": "إنسان أونلاين",
+      "body": "العريش مدينة كبيرة بتتعامل بالهاتف والشارع. المنصات الكبيرة مش واصلة هنا. دي الفجوة اللي بنملّاها.",
+      "stats": [
+        {
+          "num": "٢٠٠+",
+          "label": "ألف نسمة"
+        },
+        {
+          "num": "٥٪",
+          "label": "متاجر أونلاين"
+        },
+        {
+          "num": "٠",
+          "label": "منصات واصلة"
+        },
+        {
+          "num": "١٠٠٪",
+          "label": "فرصة"
+        }
+      ],
+      "narrative_headline": "الناس عايزة تشتري أونلاين — مفيش حد بيبيع. التجار عايزين يبيعوا — مفيش حد بيبني لهم.",
+      "narrative_body": "ده مش نقص في الطلب أو العرض. ده نقص في البنية التحتية الرقمية.",
+      "narrative_accent_label": "لينا",
+      "narrative_accent_body": "من العريش. فاهمين السوق. بنشتغل من جوه."
+    },
+    "projects_teaser": {
+      "eyebrow": "أعمالنا",
+      "headline": "اللي بنيناه",
+      "all_projects_link": "كل المشاريع"
+    },
+    "common": {
+      "view_project": "عرض المشروع",
+      "live": "مباشر",
+      "wip": "قيد التنفيذ",
+      "concept": "فكرة",
+      "back_to_projects": "كل المشاريع",
+      "demo": "عرض تجريبي",
+      "screenshots": "لقطات",
+      "features": "المميزات",
+      "like_what_you_see": "عجبك اللي شفته؟",
+      "can_build_better": "نقدر نبني حاجة أحسن لمشروعك",
+      "contact_us": "تواصل معنا",
+      "visit_website": "زيارة الموقع",
+      "tech_stack": "التقنيات المستخدمة",
+      "section_label": "القسم",
+      "not_found": "مش موجود"
+    },
+    "footer": {
+      "description": "بنساعد التجارة المحلية تخطو خطوة أونلاين.",
+      "links_heading": "روابط",
+      "tagline": "صُنع في العريش، شمال سيناء 🇪🇬",
+      "rights": "© 2026 خطوة اونلاين"
+    },
+    "contact_page": {
+      "hero_eyebrow": "تواصل معنا",
+      "hero_headline_1": "عندك فكرة؟",
+      "hero_headline_2": "يلا نبدأ",
+      "hero_subtitle": "سواء مشروع، فكرة، أو مجرد سؤال — إحنا هنا.",
+      "contact_info_eyebrow": "تواصل",
+      "whatsapp": "واتساب",
+      "email": "البريد",
+      "messenger": "ماسينجر",
+      "messenger_value": "khatwah.online",
+      "follow_us": "تابعنا",
+      "message_eyebrow": "رسالة",
+      "promise_headline": "بنرد في أقل من ٢٤ ساعة",
+      "promise_sub": "سواء واتساب أو بريد — هتلاقينا ردّين بسرعة.",
+      "form_name": "الاسم",
+      "form_name_placeholder": "اسمك الكامل",
+      "form_contact": "البريد أو الواتساب",
+      "form_contact_placeholder": "example@email.com أو +20xxxxxxxxx",
+      "form_message": "رسالتك",
+      "form_message_placeholder": "اكتب رسالتك هنا...",
+      "form_send": "إرسال",
+      "form_sending": "جاري الإرسال...",
+      "form_success_title": "تم الإرسال!",
+      "form_success_sub": "هنتواصل معاك قريباً."
+    },
+    "about_page": {
+      "hero_eyebrow": "من نحن",
+      "hero_headline_1": "الناس اللي",
+      "hero_headline_2": "بتبني خُطوة",
+      "hero_subtitle": "تلاتة من العريش. درسنا كمبيوتر ساينس. قررنا نبدأ.",
+      "story_eyebrow": "قصتنا",
+      "story_p1": "إحنا تلاتة أصحاب من العريش. درسنا كمبيوتر ساينس ومن أول يوم كنا حاسين إن السوق المحلي محتاج حاجة مختلفة تماماً.",
+      "story_quote": "شفنا فجوة — مفيش منصات كبيرة واصلة للعريش. التجار عايزين يبيعوا أونلاين مفيش حد بيبني لهم.",
+      "story_p2": "رؤيتنا: نبدأ من العريش، نثبت النموذج، وبعدين نمد.",
+      "vision_eyebrow": "رؤيتنا",
+      "vision_1_title": "محلي بالافتخار",
+      "vision_1_desc": "بنبدأ من العريش لأن دي بيتنا والسوق اللي فاهمينه. مش بنخمن — بنعرف.",
+      "vision_2_title": "شغل حقيقي",
+      "vision_2_desc": "كل منتج اتبنى عشان مشكلة حقيقية. مش بنبيع كلام — بنبيع حلول.",
+      "vision_3_title": "من العريش للعالم",
+      "vision_3_desc": "نبدأ محلي، نثبت النموذج، وبعدين نمد لباقي مصر وبعدين أبعد.",
+      "tech_eyebrow": "التقنيات"
+    },
+    "about_team": {
+      "members": [
+        {
+          "name": "عبدالرحمن",
+          "role": "CTO & Frontend",
+          "bio": "٧+ سنين في البرمجة. بنيت أنظمة كاملة لعملاء حقيقيين. بقدر أبني وأطلق منتج كامل في أسبوعين.",
+          "structured_data_job": "CTO & Frontend Lead",
+          "structured_data_desc": "٧+ سنين في البرمجة. بنيت أنظمة كاملة لعملاء حقيقيين."
+        },
+        {
+          "name": "أحمد",
+          "role": "CEO & Backend",
+          "bio": "تصميم أنظمة و REST APIs. دلوقتي بيشتغل على Node.js و Next.js. بقدر أجيب عملاء من الإنترنت.",
+          "structured_data_job": "CEO & Backend Lead",
+          "structured_data_desc": "تصميم أنظمة و REST APIs. بيشتغل على Node.js و Next.js."
+        },
+        {
+          "name": "محمود",
+          "role": "COO & Marketing",
+          "bio": "خبرة عمره في السوق المحلي. بيدير العلاقات العامة وجلب العملاء بالعلاقات الدافية.",
+          "structured_data_job": "COO & Marketing Lead",
+          "structured_data_desc": "خبرة عمره في السوق المحلي. بيدير العلاقات العامة وجلب العملاء."
+        }
+      ]
+    },
+    "projects_page": {
+      "hero_eyebrow": "مشاريعنا",
+      "hero_headline": "اللي بنيناه",
+      "hero_subtitle": "كل المشاريع اللي اشتغلنا عليها — من الفكرة للتنفيذ",
+      "cta_eyebrow": "عندك مشروع؟",
+      "cta_headline_1": "نقدر نبنى",
+      "cta_headline_2": "حاجة أحسن",
+      "cta_sub": "من أول فكرة لمنتج حقيقي. تواصل معانا ونبدأ."
+    },
+    "hero_animation": {
+      "local": "مـحـلـي",
+      "initiate": "جارِ البدء...",
+      "status": "الحالة: مسيطرة",
+      "subtitle_1": "عملك المحلي.. مقيد بالحدود والمساحة؟",
+      "subtitle_2": "فريقنا يتدخل",
+      "subtitle_3": "انقل مبيعاتك للطرف الثاني",
+      "subtitle_4": "واستنى الارباح في الاخر"
+    },
+    "interactive_portal": {
+      "local": "محلي",
+      "from_local_to_online": "من المحلي للأونلاين",
+      "online": "أونلاين"
+    }
+  },
+  "en": {
+    "nav": {
+      "products": "Products",
+      "projects": "Projects",
+      "about": "About",
+      "contact": "Contact",
+      "logo_online": "ONLINE",
+      "switch_to_dark": "Switch to dark mode",
+      "switch_to_light": "Switch to light mode",
+      "change_language": "Change language",
+      "close_menu": "Close menu",
+      "open_menu": "Open menu",
+      "theme_dark": "Dark",
+      "theme_light": "Light",
+      "lang_ar": "عربي",
+      "lang_en": "English",
+      "home_label": "Khatwah Online — Home"
+    },
+    "hero": {
+      "brand_name": "Khatwah",
+      "brand_name_en": "Khatwah",
+      "brand_subtitle": "ONLINE",
+      "brand_subtitle_en": "ONLINE",
+      "headline_en": "The Digital Layer\nFor Local Business",
+      "headline_ar": "Help your business move online",
+      "body": "We build tech solutions for local commerce — online stores, bookings, inventory management.",
+      "cta_primary": "Take the Step",
+      "cta_secondary": "Our Projects"
+    },
+    "products_section": {
+      "eyebrow": "Our Services",
+      "headline_part1": "Three Services.",
+      "headline_part2": "One Solution.",
+      "body": "Each service was built to solve a real problem in the local market."
+    },
+    "products": [
+      {
+        "num": "01",
+        "title": "Booking System",
+        "subtitle": "For barbers, clinics, and services",
+        "description": "Customers book online — get tickets, notifications, and loyalty points.",
+        "features": [
+          "Live booking calendar",
+          "Digital tickets",
+          "Automatic notifications",
+          "Loyalty system"
+        ]
+      },
+      {
+        "num": "02",
+        "title": "Inventory & POS",
+        "subtitle": "3 packages based on need",
+        "description": "Inventory management, point of sale, automatic accounting, and online store integration.",
+        "features": [
+          "Smart inventory",
+          "Point of Sale",
+          "Automatic accounting",
+          "Online store"
+        ]
+      },
+      {
+        "num": "03",
+        "title": "Custom Software",
+        "subtitle": "Whatever you need",
+        "description": "Any system or website you need — we build it from scratch according to your request.",
+        "features": [
+          "Web applications",
+          "Dashboards",
+          "Management systems",
+          "Custom APIs"
+        ]
+      }
+    ],
+    "mission_statement": {
+      "headline": "We are building the next generation of local commerce.",
+      "body": "From Arish, North Sinai, we see an opportunity to transform traditional businesses into thriving digital entities. We believe that technology should be accessible to everyone, and innovation starts where you are."
+    },
+    "market_section": {
+      "eyebrow": "The Market",
+      "headline_part1": "A market of 200K+",
+      "headline_part2": "online people",
+      "body": "Arish is a large city that operates by phone and street. Large platforms are not reaching here. This is the gap we fill.",
+      "stats": [
+        {
+          "num": "200K+",
+          "label": "Population"
+        },
+        {
+          "num": "5%",
+          "label": "Online Stores"
+        },
+        {
+          "num": "0",
+          "label": "Platforms Reaching"
+        },
+        {
+          "num": "100%",
+          "label": "Opportunity"
+        }
+      ],
+      "narrative_headline": "People want to buy online — no one is selling. Merchants want to sell — no one is building for them.",
+      "narrative_body": "This is not a lack of demand or supply. This is a lack of digital infrastructure.",
+      "narrative_accent_label": "About Us",
+      "narrative_accent_body": "From Arish. We understand the market. We work from within."
+    },
+    "projects_teaser": {
+      "eyebrow": "Our Work",
+      "headline": "What We've Built",
+      "all_projects_link": "All Projects"
+    },
+    "common": {
+      "view_project": "View Project",
+      "live": "Live",
+      "wip": "WIP",
+      "concept": "Concept",
+      "back_to_projects": "All Projects",
+      "demo": "Demo",
+      "screenshots": "Screenshots",
+      "features": "Features",
+      "like_what_you_see": "Like what you see?",
+      "can_build_better": "We can build something better for your project",
+      "contact_us": "Contact Us",
+      "visit_website": "Visit Website",
+      "tech_stack": "Tech Stack",
+      "section_label": "Section",
+      "not_found": "Not Found"
+    },
+    "footer": {
+      "description": "We help local businesses take a step online.",
+      "links_heading": "Links",
+      "tagline": "Built in Arish, North Sinai 🇪🇬",
+      "rights": "© 2026 Khatwah Online"
+    },
+    "contact_page": {
+      "hero_eyebrow": "Contact Us",
+      "hero_headline_1": "Got an Idea?",
+      "hero_headline_2": "Let's Start",
+      "hero_subtitle": "Whether it's a project, an idea, or just a question — we are here.",
+      "contact_info_eyebrow": "Reach Out",
+      "whatsapp": "WhatsApp",
+      "email": "Email",
+      "messenger": "Messenger",
+      "messenger_value": "khatwah.online",
+      "follow_us": "Follow Us",
+      "message_eyebrow": "Message",
+      "promise_headline": "We reply in under 24 hours",
+      "promise_sub": "Whether on WhatsApp or email — we reply quickly.",
+      "form_name": "Name",
+      "form_name_placeholder": "Your Full Name",
+      "form_contact": "Email or WhatsApp",
+      "form_contact_placeholder": "example@email.com or +20xxxxxxxxx",
+      "form_message": "Your Message",
+      "form_message_placeholder": "Type your message here...",
+      "form_send": "Send",
+      "form_sending": "Sending...",
+      "form_success_title": "Sent!",
+      "form_success_sub": "We will contact you soon."
+    },
+    "about_page": {
+      "hero_eyebrow": "About Us",
+      "hero_headline_1": "The People",
+      "hero_headline_2": "Building Khatwah",
+      "hero_subtitle": "Three from Arish. Studied computer science. Decided to start.",
+      "story_eyebrow": "Our Story",
+      "story_p1": "We are three friends from Arish. We studied computer science and from day one, we felt the local market needed something completely different.",
+      "story_quote": "We saw a gap — no large platforms reached Arish. Merchants want to sell online, and no one is building for them.",
+      "story_p2": "Our vision: Start from Arish, prove the model, then expand.",
+      "vision_eyebrow": "Our Vision",
+      "vision_1_title": "Proudly Local",
+      "vision_1_desc": "We start from Arish because it's our home and the market we understand. We don't guess — we know.",
+      "vision_2_title": "Real Work",
+      "vision_2_desc": "Every product was built for a real problem. We don't sell talk — we sell solutions.",
+      "vision_3_title": "From Arish to the World",
+      "vision_3_desc": "Start local, prove the model, then expand to the rest of Egypt, and beyond.",
+      "tech_eyebrow": "Technologies"
+    },
+    "about_team": {
+      "members": [
+        {
+          "name": "Abdelrahman",
+          "role": "CTO & Frontend",
+          "bio": "7+ years in programming. Built complete systems for real clients. Can build and launch a full product in two weeks.",
+          "structured_data_job": "CTO & Frontend Lead",
+          "structured_data_desc": "7+ years in programming. Built complete systems for real clients."
+        },
+        {
+          "name": "Ahmed",
+          "role": "CEO & Backend",
+          "bio": "System design and REST APIs. Currently working on Node.js and Next.js. Can acquire clients from the internet.",
+          "structured_data_job": "CEO & Backend Lead",
+          "structured_data_desc": "System design and REST APIs. Working on Node.js and Next.js."
+        },
+        {
+          "name": "Mahmoud",
+          "role": "COO & Marketing",
+          "bio": "Lifetime experience in the local market. Manages public relations and client acquisition through warm relationships.",
+          "structured_data_job": "COO & Marketing Lead",
+          "structured_data_desc": "Lifetime experience in the local market. Manages public relations and client acquisition."
+        }
+      ]
+    },
+    "projects_page": {
+      "hero_eyebrow": "Our Projects",
+      "hero_headline": "What We Built",
+      "hero_subtitle": "All the projects we worked on — from idea to execution",
+      "cta_eyebrow": "Have a Project?",
+      "cta_headline_1": "We Can Build",
+      "cta_headline_2": "Something Better",
+      "cta_sub": "From the first idea to a real product. Contact us and let's start."
+    },
+    "hero_animation": {
+      "local": "LOCAL",
+      "initiate": "INITIATING UPLINK...",
+      "status": "STATUS: DOMINATING",
+      "subtitle_1": "Is your local business restricted by borders and space?",
+      "subtitle_2": "Our team intervenes",
+      "subtitle_3": "Move your sales to the other side",
+      "subtitle_4": "And expect profits in the end"
+    },
+    "interactive_portal": {
+      "local": "Local",
+      "from_local_to_online": "From Local to Online",
+      "online": "Online"
+    }
+  }
+}

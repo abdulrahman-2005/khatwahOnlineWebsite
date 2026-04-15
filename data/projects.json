@@ -1,0 +1,212 @@
+[
+  {
+    "sections": [
+      {
+        "titleAr": "الصفحة الرئيسية والتعريفية",
+        "screenshots": [
+          {
+            "labelEn": "Hero Section",
+            "labelAr": "البداية",
+            "src": "landing-hero.png"
+          },
+          {
+            "labelEn": "About Section",
+            "labelAr": "عن المنصة",
+            "src": "landing-about.png"
+          },
+          {
+            "labelEn": "Pricing Plans",
+            "labelAr": "خطط الأسعار",
+            "src": "landing-plans.png"
+          },
+          {
+            "labelEn": "Social Links",
+            "labelAr": "التواصل الاجتماعي",
+            "src": "landing-social.png"
+          }
+        ],
+        "titleEn": "Landing \u0026 About",
+        "descriptionAr": "تصميم عصري يركز على تحويل الزوار إلى مشتركين مع عرض مميزات المنصة والخطط المتاحة.",
+        "descriptionEn": "Modern design focused on converting visitors to subscribers, showcasing platform features and available plans."
+      },
+      {
+        "titleAr": "لوحة تحكم الإدارة",
+        "screenshots": [
+          {
+            "labelEn": "Main Dashboard",
+            "labelAr": "الرئيسية",
+            "src": "admin-main.png"
+          },
+          {
+            "labelEn": "User Management",
+            "labelAr": "إدارة المستخدمين",
+            "src": "admin-manage-users.png"
+          },
+          {
+            "labelEn": "Content Management",
+            "labelAr": "إدارة المحتوى",
+            "src": "admin-manage-videos.png"
+          },
+          {
+            "labelEn": "Sales Management",
+            "labelAr": "إدارة المبيعات",
+            "src": "admin-manage-purchases.png"
+          },
+          {
+            "labelEn": "Security Settings",
+            "labelAr": "إدارة الحماية",
+            "src": "admin-watermark-management.png"
+          }
+        ],
+        "titleEn": "Admin Dashboard",
+        "descriptionAr": "نظام إدارة كامل للطلاب، الفيديوهات، الاشتراكات، والشكاوى مع تقارير مفصلة.",
+        "descriptionEn": "Full management system for students, videos, subscriptions, and complaints with detailed reports."
+      },
+      {
+        "titleAr": "تجربة الطالب",
+        "screenshots": [
+          {
+            "labelEn": "Course List",
+            "labelAr": "قائمة الكورسات",
+            "src": "user-coursespage.png"
+          },
+          {
+            "labelEn": "Lesson Player",
+            "labelAr": "مشاهدة الدرس",
+            "src": "user-videowatch.png"
+          },
+          {
+            "labelEn": "User Profile",
+            "labelAr": "الملف الشخصي",
+            "src": "profile-info.png"
+          }
+        ],
+        "titleEn": "Student Experience",
+        "descriptionAr": "واجهة مستخدم بسيطة وسهلة للوصول للكورسات ومتابعة التقدم الدراسي.",
+        "descriptionEn": "Simple and intuitive user interface for accessing courses and tracking learning progress."
+      }
+    ],
+    "detailedDescriptionAr": "تم بناء هذه المنصة لتوفر تجربة تعليمية سلسة وآمنة. تشمل المنصة لوحة تحكم متقدمة للإدارة، نظام حماية فيديوهات بوضع علامة مائية ديناميكية، ونظام إدارة اشتراكات ومدفوعات متكامل.",
+    "thumbnail": "/projects/courses-website/landing-hero.png",
+    "order": 1,
+    "detailedDescriptionEn": "This platform was built to provide a seamless and secure learning experience. It includes an advanced admin dashboard, a video protection system with dynamic watermarking, and an integrated subscription and payment management system.",
+    "descriptionEn": "A comprehensive system for managing and selling online courses with advanced content protection and a full dashboard.",
+    "url": "https://courses.khatwah.online",
+    "featured": true,
+    "titleEn": "Educational Courses Platform",
+    "descriptionAr": "نظام متكامل لإدارة وبيع الكورسات عبر الإنترنت مع حماية متقدمة للمحتوى ولوحة تحكم شاملة.",
+    "status": "live",
+    "basePath": "/projects/courses-website",
+    "slug": "courses-platform",
+    "headerImages": [
+      "landing-hero.png",
+      "admin-main.png",
+      "user-coursespage.png",
+      "user-videowatch.png"
+    ],
+    "titleAr": "منصة الكورسات التعليمية",
+    "techStack": ["Next.js", "React", "Node.js", "MongoDB", "Tailwind CSS"]
+  },
+  {
+    "sections": [
+      {
+        "titleAr": "واجهة المتجر",
+        "screenshots": [
+          {
+            "labelEn": "Home Page",
+            "labelAr": "الرئيسية",
+            "src": "storefront.png"
+          },
+          {
+            "labelEn": "Product Detail",
+            "labelAr": "صفحة المنتج",
+            "src": "product-page.png"
+          }
+        ],
+        "titleEn": "Storefront",
+        "descriptionAr": "تجربة تسوق مميزة وسريعة للمستخدمين مع عرض جذاب للمنتجات.",
+        "descriptionEn": "Premium and fast shopping experience for users with attractive product displays."
+      },
+      {
+        "titleAr": "إدارة العمليات (Back-office)",
+        "screenshots": [
+          {
+            "labelEn": "Inventory",
+            "labelAr": "المخزون",
+            "src": "admin-manage-inventory.png"
+          },
+          {
+            "labelEn": "Orders",
+            "labelAr": "الطلبات",
+            "src": "admin-manage-orders.png"
+          },
+          {
+            "labelEn": "Invoices",
+            "labelAr": "الفواتير",
+            "src": "admin-manage-invoices.png"
+          },
+          {
+            "labelEn": "Accounting",
+            "labelAr": "المحاسبة",
+            "src": "admin-manage-accounting.png"
+          }
+        ],
+        "titleEn": "Operations Management",
+        "descriptionAr": "لوحة تحكم لإدارة المخزون، الطلبات، الفواتير، والتقارير المحاسبية.",
+        "descriptionEn": "Dashboard for managing inventory, orders, invoices, and accounting reports."
+      }
+    ],
+    "detailedDescriptionAr": "نظام تجارة إلكترونية شامل يربط بين واجهة المتجر الجذابة ولوحة تحكم خلفية قوية تدير كل جوانب العمل من المخزون إلى الفواتير والمحاسبة.",
+    "thumbnail": "/projects/eccomerce-website/storefront.png",
+    "order": 2,
+    "detailedDescriptionEn": "A comprehensive e-commerce system that links an attractive storefront with a powerful backend dashboard managing all business aspects from inventory to invoices and accounting.",
+    "descriptionEn": "Sophisticated e-commerce store with inventory management, accounting, and order tracking.",
+    "url": "https://shop.khatwah.online",
+    "featured": true,
+    "titleEn": "Integrated E-commerce System",
+    "descriptionAr": "متجر إلكتروني متطور مع نظام إدارة مخزون ومحاسبة وإدارة طلبيات.",
+    "status": "live",
+    "basePath": "/projects/eccomerce-website",
+    "slug": "ecommerce-system",
+    "headerImages": [
+      "storefront.png",
+      "admin-manage-inventory.png",
+      "product-page.png",
+      "admin-manage-orders.png"
+    ],
+    "titleAr": "نظام التجارة الإلكترونية المتكامل",
+    "techStack": ["Next.js", "React", "PostgreSQL", "Tailwind CSS"]
+  },
+  {
+    "sections": [
+      {
+        "titleAr": "واجهة الدليل",
+        "screenshots": [
+          {
+            "labelEn": "Cover",
+            "labelAr": "الغلاف",
+            "src": "thumbnail.webp"
+          }
+        ],
+        "titleEn": "Catalogue Interface",
+        "descriptionAr": "عرض المتاجر والخدمات حسب التصنيف والمنطقة.",
+        "descriptionEn": "Display stores and services by category and area."
+      }
+    ],
+    "detailedDescriptionAr": "مشروع يهدف لرقمنة التجارة المحلية في مدينة العريش، مما يسهل على السكان الوصول للمتاجر والخدمات.",
+    "thumbnail": "/projects/arish-catalogue/thumbnail.webp",
+    "order": 3,
+    "detailedDescriptionEn": "A project aimed at digitizing local commerce in Arish city, making it easier for residents to access stores and services.",
+    "descriptionEn": "Online directory of all stores in Arish — discovery and management for local commerce.",
+    "url": "",
+    "featured": true,
+    "titleEn": "Arish City Catalogue",
+    "descriptionAr": "دليل أونلاين لكل المتاجر في العريش — اكتشاف وإدارة للتجارة المحلية.",
+    "status": "wip",
+    "basePath": "/projects/arish-catalogue",
+    "slug": "arish-catalogue",
+    "headerImages": ["thumbnail.webp"],
+    "titleAr": "كتالوج مدينة العريش",
+    "techStack": ["Next.js", "Supabase", "Tailwind CSS"]
+  }
+]

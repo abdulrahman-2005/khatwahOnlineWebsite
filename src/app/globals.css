@@ -1,26 +1,324 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* === CORE BRAND === */
+  --color-primary: #0247FE; /* Royal Blue (Glows/Lighting) */
+  --color-primary-soft: rgba(2, 71, 254, 0.12);
+  --color-primary-glow: rgba(2, 71, 254, 0.45);
+  --color-primary-light: #4A7AFA;
+
+  --color-gold: #ee930c; /* Royal Gold (Primary Icon/Growth) */
+  --color-gold-soft: rgba(212, 136, 55, 0.1);
+  --color-gold-glow: rgba(212, 141, 55, 0.35);
+  --color-gold-dark: #c07928;
+  --color-gold-light: #c36e0e; /* Light Gold (Highlights) */
+
+  --color-accent: #FF3D6B;
+  --color-accent-soft: rgba(255, 61, 107, 0.1);
+  --color-accent-glow: rgba(255, 61, 107, 0.4);
+
+  /* === SURFACES === */
+  --color-surface: #00225A; /* Surface based on Deep Navy */
+  --color-surface-elevated: #002D7A;
+  --color-background: #001B48; /* Deep Navy Blue (Base bg) */
+  --color-ink: #00112D; /* Very dark navy for deepest areas */
+  --color-ink-overlay: rgba(0, 17, 45, 0.95);
+
+  /* === TEXT === */
+  --color-text: #FFFFFF; /* Crisp White */
+  --color-text-secondary: #BDD0E7; /* Soft blueish white */
+  --color-text-muted: #7A9BCA;
+  --color-text-on-dark: #FFFFFF;
+  --color-text-on-dark-muted: rgba(255, 255, 255, 0.7);
+
+  /* === BORDERS === */
+  --color-border: rgba(2, 71, 254, 0.2);
+  --color-border-strong: rgba(2, 71, 254, 0.4);
+  --color-border-dark: rgba(212, 175, 55, 0.15);
+  --color-border-dark-strong: rgba(212, 175, 55, 0.3);
+
+  /* === NAVBAR GLASS === */
+  --navbar-bg-top: rgba(0, 27, 72, 0.45);
+  --navbar-bg-scrolled: rgba(0, 17, 45, 0.82);
+  --navbar-border: rgba(255, 255, 255, 0.08);
+  --navbar-highlight: rgba(255, 255, 255, 0.06);
+  --navbar-divider: rgba(255, 255, 255, 0.08);
+  --navbar-link-active-bg: rgba(255, 255, 255, 0.06);
+  --navbar-dropdown-bg: rgba(0, 17, 45, 0.92);
+  --navbar-drawer-bg: rgba(0, 17, 45, 0.95);
 }
 
+/* â”€â”€â”€ Light theme overrides â”€â”€â”€ */
+[data-theme="light"] {
+  --color-primary: #0247FE;
+  --color-primary-soft: rgba(2, 71, 254, 0.08);
+  --color-primary-glow: rgba(2, 71, 254, 0.25);
+  --color-primary-light: #4A7AFA;
+  --color-gold: #ee930c;
+  --color-gold-soft: rgba(238, 147, 12, 0.08);
+  --color-gold-glow: rgba(238, 147, 12, 0.15);
+  --color-gold-dark: #c07928;
+  --color-accent: #FF3D6B;
+  --color-accent-soft: rgba(255, 61, 107, 0.08);
+  --color-accent-glow: rgba(255, 61, 107, 0.15);
+  
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #F8F9FC;
+  --color-background: #F0F4F8;
+  --color-ink: #E2E8F4;
+  --color-ink-overlay: rgba(240, 244, 248, 0.95);
+  
+  --color-text: #0B1930;
+  --color-text-secondary: #3A4B6B;
+  --color-text-muted: #6B7C9E;
+  --color-text-on-dark: #07101E; /* matches ink deep color readability */
+  --color-text-on-dark-muted: rgba(7, 16, 30, 0.7);
+  
+  --color-border: rgba(2, 71, 254, 0.15);
+  --color-border-strong: rgba(2, 71, 254, 0.3);
+  --color-border-dark: rgba(2, 71, 254, 0.1);
+  --color-border-dark-strong: rgba(2, 71, 254, 0.2);
+
+  /* === NAVBAR GLASS (LIGHT) === */
+  --navbar-bg-top: rgba(255, 255, 255, 0.55);
+  --navbar-bg-scrolled: rgba(248, 249, 252, 0.85);
+  --navbar-border: rgba(0, 0, 0, 0.06);
+  --navbar-highlight: rgba(255, 255, 255, 0.7);
+  --navbar-divider: rgba(0, 0, 0, 0.06);
+  --navbar-link-active-bg: rgba(0, 0, 0, 0.04);
+  --navbar-dropdown-bg: rgba(255, 255, 255, 0.95);
+  --navbar-drawer-bg: rgba(248, 249, 252, 0.97);
+}
+
+/* â”€â”€â”€ Tailwind v4 theme mapping â”€â”€â”€ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-text);
+  --color-primary: var(--color-primary);
+  --color-primary-soft: var(--color-primary-soft);
+  --color-primary-glow: var(--color-primary-glow);
+  --color-gold: var(--color-gold);
+  --color-gold-soft: var(--color-gold-soft);
+  --color-gold-glow: var(--color-gold-glow);
+  --color-accent: var(--color-accent);
+  --color-accent-soft: var(--color-accent-soft);
+  --color-accent-glow: var(--color-accent-glow);
+  --color-surface: var(--color-surface);
+  --color-surface-elevated: var(--color-surface-elevated);
+  --color-ink: var(--color-ink);
+  --color-text: var(--color-text);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-muted: var(--color-text-muted);
+  --color-border: var(--color-border);
+  --color-border-strong: var(--color-border-strong);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@keyframes ping-out {
+  0%   { transform: scale(0.6); opacity: 0.7; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+@keyframes pulse-core {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.4); }
+}
+
+/* â”€â”€â”€ Base styles â”€â”€â”€ */
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-body), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Consistent typography */
+h1, h2, h3, h4, h5, h6 {
+  text-rendering: optimizeLegibility;
+}
+
+/* Tabular numbers for stats */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Scroll reveal base â€” for JS-powered reveals */
+.reveal-hidden {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal-hidden {
+    opacity: 1;
+  }
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+/* â”€â”€â”€ Navbar styles â”€â”€â”€ */
+.navbar-link:hover {
+  color: var(--color-text) !important;
+  background-color: var(--navbar-link-active-bg) !important;
+}
+
+.navbar-action-btn:hover {
+  color: var(--color-text) !important;
+  background-color: var(--navbar-link-active-bg) !important;
+}
+
+.navbar-logo:hover span:first-child {
+  color: var(--color-gold) !important;
+}
+
+@keyframes navbar-icon-spin {
+  from { transform: rotate(0deg) scale(0.6); opacity: 0; }
+  to   { transform: rotate(360deg) scale(1); opacity: 1; }
+}
+
+.navbar-icon-rotate {
+  animation: navbar-icon-spin 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Enhanced Infinite Marquee */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 60s linear infinite;
+  will-change: transform;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* True Infinite Marquee */
+.marquee-container {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  gap: 32px;
+}
+
+.marquee-content {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-around;
+  gap: 32px;
+  min-width: 100%;
+  animation: scroll-marquee 40s linear infinite;
+}
+
+.marquee-container:hover .marquee-content {
+  animation-play-state: paused;
+}
+
+@keyframes scroll-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - 32px));
+  }
+}
+
+/* --- KHATWAH INFINITE MARQUEE --- */
+.k-marquee {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  background: var(--color-ink);
+}
+
+.k-marquee-group {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  min-width: 100%;
+  animation: k-scroll 60s linear infinite;
+}
+
+@keyframes k-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+/* Pause on hover */
+.k-marquee:hover .k-marquee-group {
+  animation-play-state: paused;
+}
+
+/* --- KHATWAH INFINITE MARQUEE V3 --- */
+.marquee-wrapper {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  width: 100%;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.marquee-inner {
+  display: flex;
+  flex-shrink: 0;
+  gap: 32px;
+  min-width: 100%;
+  animation: marquee-scroll 60s linear infinite;
+}
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-100% - 32px)); }
+}
+
+.marquee-wrapper:hover .marquee-inner {
+  animation-play-state: paused;
+}
+
+/* Standard Loop Marquee */
+@keyframes marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-row {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 50s linear infinite;
+}
+.marquee-row:hover {
+  animation-play-state: paused;
 }

@@ -1,0 +1,89 @@
+{"header" : {
+  "cloc_url"           : "github.com/AlDanial/cloc",
+  "cloc_version"       : "2.08",
+  "elapsed_seconds"    : 1.6349470615387,
+  "n_files"            : 15,
+  "n_lines"            : 3122,
+  "files_per_second"   : 9.17460898451541,
+  "lines_per_second"   : 1909.54194997714,
+  "report_file"        : "stats.json"},
+".\\package-lock.json" :{
+  "blank": 0,
+  "comment": 0,
+  "code": 2455,
+  "language": "JSON"},
+".\\src\\app\\globals.css" :{
+  "blank": 41,
+  "comment": 21,
+  "code": 262,
+  "language": "CSS"},
+".\\src\\app\\layout.js" :{
+  "blank": 6,
+  "comment": 1,
+  "code": 147,
+  "language": "JavaScript"},
+".\\src\\app\\page.js" :{
+  "blank": 3,
+  "comment": 1,
+  "code": 85,
+  "language": "JavaScript"},
+".\\package.json" :{
+  "blank": 0,
+  "comment": 0,
+  "code": 24,
+  "language": "JSON"},
+".\\README.md" :{
+  "blank": 13,
+  "comment": 0,
+  "code": 23,
+  "language": "Markdown"},
+".\\postcss.config.mjs" :{
+  "blank": 1,
+  "comment": 0,
+  "code": 15,
+  "language": "JavaScript"},
+".\\jsconfig.json" :{
+  "blank": 0,
+  "comment": 0,
+  "code": 8,
+  "language": "JSON"},
+".\\next.config.mjs" :{
+  "blank": 1,
+  "comment": 1,
+  "code": 4,
+  "language": "JavaScript"},
+".\\AGENTS.md" :{
+  "blank": 1,
+  "comment": 2,
+  "code": 2,
+  "language": "Markdown"},
+".\\public\\file.svg" :{
+  "blank": 0,
+  "comment": 0,
+  "code": 1,
+  "language": "SVG"},
+".\\public\\globe.svg" :{
+  "blank": 0,
+  "comment": 0,
+  "code": 1,
+  "language": "SVG"},
+".\\public\\next.svg" :{
+  "blank": 0,
+  "comment": 0,
+  "code": 1,
+  "language": "SVG"},
+".\\public\\vercel.svg" :{
+  "blank": 0,
+  "comment": 0,
+  "code": 1,
+  "language": "SVG"},
+".\\public\\window.svg" :{
+  "blank": 0,
+  "comment": 0,
+  "code": 1,
+  "language": "SVG"},
+"SUM": {
+  "blank": 66,
+  "comment": 26,
+  "code": 3030,
+  "nFiles": 15} }
