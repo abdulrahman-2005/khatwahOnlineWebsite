@@ -170,7 +170,7 @@ export default function PhoneCard({ phone, index, updatePhone, removePhone, canR
                   <div className="mt-2">
                     <img 
                       src={phone.image} 
-                      alt="Phone preview" 
+                      alt={`${phone.brand} ${phone.model} - معاينة الهاتف`} 
                       className="h-20 w-20 rounded-lg object-cover border"
                       style={{ borderColor: "var(--color-border)" }}
                     />

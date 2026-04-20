@@ -339,7 +339,7 @@ export default function LivePreview({ phones, brandName }) {
                   {hasImg && (
                     <div className={`flex justify-center items-center ${layoutMode === 'compact' ? 'w-1/3 shrink-0 h-full' : 'w-full flex-1 min-h-0 mb-2'}`}>
                       <img
-                        src={phoneImageSrc} alt={phone.model}
+                        src={phoneImageSrc} alt={`${phone.brand} ${phone.model}`}
                         className={`object-contain w-full h-full drop-shadow-2xl transition-transform hover:scale-105`}
                         style={{ filter: phone.image ? 'none' : 'brightness(0) invert(1) opacity(0.8)' }}
                       />

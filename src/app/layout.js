@@ -110,7 +110,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html className={`${outfit.variable} ${ibmPlexSansArabic.variable}`} data-scroll-behavior="smooth" suppressHydrationWarning>
+      <html lang="ar" dir="rtl" className={`${outfit.variable} ${ibmPlexSansArabic.variable}`} data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <script

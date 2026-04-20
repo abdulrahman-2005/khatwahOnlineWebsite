@@ -92,7 +92,7 @@ export default function StoryPreview({ phones, brandName, brandLogo, theme }) {
         >
           <div className="flex items-center gap-2">
             {brandLogo && (
-              <img src={brandLogo} alt="Brand" className="h-8 w-8 rounded-full object-cover" />
+              <img src={brandLogo} alt={brandName || "شعار المتجر"} className="h-8 w-8 rounded-full object-cover" />
             )}
             <span 
               className="text-lg font-bold"

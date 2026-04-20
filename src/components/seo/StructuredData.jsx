@@ -4,14 +4,16 @@
  * and enable rich snippets in search results
  */
 
+import { seoConfig } from "@/lib/seo";
+
 export function OrganizationSchema() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "خطوة اونلاين | Khatwah Online",
     alternateName: "Khatwah Online",
-    url: "https://www.khatwah.online",
-    logo: "https://www.khatwah.online/og-image.png",
+    url: seoConfig.baseUrl,
+    logo: `${seoConfig.baseUrl}/og-image.png`,
     description: "شركة برمجة مصرية متخصصة في تصميم وتطوير المواقع الإلكترونية وبرمجة تطبيقات الجوال. نقدم حلول برمجية مخصصة للتجارة المحلية في مصر مع دعم فني مستمر.",
     address: {
       "@type": "PostalAddress",
@@ -55,14 +57,9 @@ export function WebsiteSchema() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "خطوة اونلاين | Khatwah Online",
-    url: "https://www.khatwah.online",
+    url: seoConfig.baseUrl,
     description: "حلول تقنية للتجارة المحلية — شركة تقنية من العريش، شمال سيناء",
-    inLanguage: ["ar", "en"],
-    potentialAction: {
-      "@type": "SearchAction",
-      target: "https://www.khatwah.online/projects?q={search_term_string}",
-      "query-input": "required name=search_term_string",
-    },
+    inLanguage: "ar_EG",
   };
 
   return (
@@ -95,8 +92,8 @@ export function BreadcrumbSchema({ items }) {
 
 export function ProjectSchema({ project }) {
   const firstImage = project.headerImages?.[0] 
-    ? `https://www.khatwah.online${project.basePath}/${project.headerImages[0]}`
-    : "https://www.khatwah.online/og-image.png";
+    ? `${seoConfig.baseUrl}${project.basePath}/${project.headerImages[0]}`
+    : `${seoConfig.baseUrl}/og-image.png`;
 
   const schema = {
     "@context": "https://schema.org",
@@ -104,12 +101,12 @@ export function ProjectSchema({ project }) {
     name: project.titleAr,
     alternateName: project.titleEn,
     description: project.descriptionAr,
-    url: `https://www.khatwah.online/projects/${project.slug}`,
+    url: `${seoConfig.baseUrl}/projects/${project.slug}`,
     image: firstImage,
     creator: {
       "@type": "Organization",
       name: "خطوة اونلاين | Khatwah Online",
-      url: "https://www.khatwah.online",
+      url: seoConfig.baseUrl,
     },
     keywords: [
       project.titleAr,
@@ -118,7 +115,7 @@ export function ProjectSchema({ project }) {
       "شركة برمجة مصرية",
       "تصميم وتطوير المواقع",
     ].join(", "),
-    inLanguage: ["ar", "en"],
+    inLanguage: "ar_EG",
     datePublished: "2024-01-01",
     aggregateRating: {
       "@type": "AggregateRating",
@@ -145,9 +142,9 @@ export function LocalBusinessSchema() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "@id": "https://www.khatwah.online",
+    "@id": seoConfig.baseUrl,
     name: "خطوة اونلاين | Khatwah Online",
-    image: "https://www.khatwah.online/og-image.png",
+    image: `${seoConfig.baseUrl}/og-image.png`,
     description: "شركة برمجة مصرية متخصصة في تصميم وتطوير المواقع الإلكترونية وبرمجة تطبيقات الجوال. نقدم حلول برمجية مخصصة للتجارة المحلية في مصر مع دعم فني مستمر.",
     address: {
       "@type": "PostalAddress",
@@ -160,7 +157,7 @@ export function LocalBusinessSchema() {
       latitude: 31.13,
       longitude: 33.80,
     },
-    url: "https://www.khatwah.online",
+    url: seoConfig.baseUrl,
     telephone: "+201000000000",
     priceRange: "$$",
     openingHoursSpecification: {
