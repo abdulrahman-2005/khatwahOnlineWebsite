@@ -1,16 +1,8 @@
 ﻿import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
-import { OrbitControls, Html, Line } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { useTheme } from '@/contexts/ThemeContext';
-
-const getCSSVar = (varName, fallback) => {
-  if (typeof window !== 'undefined') {
-    const value = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
-    return value || fallback;
-  }
-  return fallback;
-};
 
 const EarthShaderMaterial = {
   uniforms: {
@@ -84,26 +76,19 @@ const getGeoCoordinates = (lat, lon, radius) => {
 
 const ActualEarthAndArish = ({ mobile }) => {
   const earthRef = useRef();
-  const arishGroupRef = useRef();
-  const markerRef = useRef();
-  const beaconRef = useRef();
-  const [hovered, setHovered] = useState(false);
   const GLOBE_RADIUS = mobile ? 2.0 : 2.3;
   const { theme } = useTheme();
 
   const texture = useLoader(
     THREE.TextureLoader,
-    '/textures/earth_specular_2048.jpg'
+    '/textures/earth_specular_2048.webp'
   );
-
-  const latReal = 31.13;
-  const lonReal = 33.80;
 
   const uniforms = useMemo(() => {
     const isLight = theme === 'light';
-    const landColorHex = isLight ? '#D1D5DB' : '#ee930c'; 
-    const seaColorHex = isLight ? '#CBD5E1' : '#0247FE';  
-    const gridColorHex = isLight ? '#4B5563' : '#001B48'; 
+    const landColorHex = isLight ? '#84CC16' : '#4D7C0F';  
+    const seaColorHex  = isLight ? '#38BDF8' : '#0369A1';  
+    const gridColorHex = isLight ? '#1F2937' : '#94A3B8';  
 
     return {
       earthMap: { value: texture },
@@ -114,95 +99,74 @@ const ActualEarthAndArish = ({ mobile }) => {
     };
   }, [theme, texture]);
 
-  const { arishPoints, arishColors, targetPosition, beaconPoints } = useMemo(() => {
-    const points = [];
-    const colors = [];
-    const colorGold = new THREE.Color(getCSSVar('--color-gold', '#ee930c'));
-    const colorAccent = new THREE.Color(getCSSVar('--color-accent', '#FF3D6B'));
-    const height = .8;
-    const baseWidth = 5.0;
-
-    for (let dy = 0; dy <= height; dy += 0.05) {
-      const currentWidth = baseWidth * (1 - (dy / height));
-      for (let dx = -currentWidth/2; dx <= currentWidth/2; dx += 0.05) {
-        const pLat = latReal - dy;
-        const pLon = lonReal + dx;
-        const pos = getGeoCoordinates(pLat, pLon, GLOBE_RADIUS + 0.01);
-        points.push(pos.x, pos.y, pos.z);
-        if (Math.random() > 0.85) {
-          colors.push(colorAccent.r, colorAccent.g, colorAccent.b);
-        } else {
-          colors.push(colorGold.r, colorGold.g, colorGold.b);
-        }
-      }
-    }
-    const centerPos = getGeoCoordinates(latReal - (height/2), lonReal, GLOBE_RADIUS + 0.02);
-    const beaconTop = getGeoCoordinates(latReal - (height/2), lonReal, GLOBE_RADIUS + 0.6);
-    return {
-      arishPoints: new Float32Array(points),
-      arishColors: new Float32Array(colors),
-      targetPosition: [centerPos.x, centerPos.y, centerPos.z],
-      beaconPoints: [centerPos, beaconTop]
-    };
-  }, [theme, GLOBE_RADIUS]);
-
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
     if (earthRef.current) earthRef.current.rotation.y = time * 0.015;
-    if (arishGroupRef.current) arishGroupRef.current.rotation.y = time * 0.015;
-    if (markerRef.current) {
-        const scale = 1 + Math.sin(time * 3) * 0.3;
-        markerRef.current.scale.set(scale, scale, scale);
-        markerRef.current.material.opacity = 0.3 + Math.sin(time * 3) * 0.5;
-    }
-    if (beaconRef.current) {
-        beaconRef.current.material.opacity = 0.5 + Math.sin(time * 5) * 0.5;
-    }
   });
 
   return (
     <group>
-      <mesh ref={earthRef}>
+      <mesh ref={earthRef} renderOrder={1}>
         <sphereGeometry args={[GLOBE_RADIUS, mobile ? 64 : 128, mobile ? 64 : 128]} />
         <shaderMaterial
           attach="material"
           vertexShader={EarthShaderMaterial.vertexShader}
           fragmentShader={EarthShaderMaterial.fragmentShader}
           uniforms={uniforms}
+          transparent={false}
+          opacity={1.0}
+          depthWrite={true}
+          depthTest={true}
+          side={THREE.FrontSide}
+          alphaTest={0}
         />
       </mesh>
-      <group ref={arishGroupRef}>
-        <points>
-          <bufferGeometry>
-            <bufferAttribute attach="attributes-position" count={arishPoints.length / 3} array={arishPoints} itemSize={3} />
-            <bufferAttribute attach="attributes-color" count={arishColors.length / 3} array={arishColors} itemSize={3} />
-          </bufferGeometry>
-          <pointsMaterial size={mobile ? 0.025 : 0.018} vertexColors={true} transparent opacity={0.9} blending={theme === 'light' ? THREE.NormalBlending : THREE.AdditiveBlending} depthWrite={false} />
-        </points>
-        <Line ref={beaconRef} points={beaconPoints} color={getCSSVar('--color-accent', '#FF3D6B')} lineWidth={mobile ? 8 : 15} transparent blending={theme === 'light' ? THREE.NormalBlending : THREE.AdditiveBlending} />
-        <mesh position={targetPosition} ref={markerRef}>
-           <ringGeometry args={[0.04, 0.05, 35]} />
-           <meshBasicMaterial color={getCSSVar('--color-gold', '#ee930c')} transparent opacity={0.8} side={THREE.DoubleSide} blending={theme === 'light' ? THREE.NormalBlending : THREE.AdditiveBlending} />
-        </mesh>
-      </group>
     </group>
   );
 };
 
 export const ArishGlobe = ({ mobile }) => {
   const initialCamPos = getGeoCoordinates(31.13, 33.80, mobile ? 10 : 8);
+  const containerRef = useRef(null);
+  const [isInView, setIsInView] = useState(false);
+
+  // Aggressive memory management: Only mount WebGL when visible
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { rootMargin: '200px' } // Pre-load 200px before it scrolls into view
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+  
   return (
-    <div style={{ width: '100%', height: '100vh' }}>
-      <Canvas 
-        camera={{ position: [initialCamPos.x, initialCamPos.y, initialCamPos.z], fov: mobile ? 45 : 55 }}
-        gl={{ antialias: !mobile, powerPreference: "high-performance" }}
-      >
-        <ambientLight intensity={1} />
-        <React.Suspense fallback={null}>
-          <ActualEarthAndArish mobile={mobile} />
-        </React.Suspense>
-        <OrbitControls enableZoom={false} autoRotate={true} autoRotateSpeed={mobile ? 0.8 : 0.4} enablePan={false} />
-      </Canvas>
+    <div ref={containerRef} style={{ width: '100%', height: '100%' }}>
+      {isInView && (
+        <Canvas 
+          camera={{ position: [initialCamPos.x, initialCamPos.y, initialCamPos.z], fov: mobile ? 45 : 55 }}
+          gl={{ 
+            antialias: !mobile, 
+            powerPreference: "high-performance",
+            alpha: true,
+            depth: true,
+            premultipliedAlpha: false
+          }}
+          style={{ background: 'transparent' }}
+        >
+          <ambientLight intensity={1} />
+          <React.Suspense fallback={null}>
+            <ActualEarthAndArish mobile={mobile} />
+          </React.Suspense>
+          <OrbitControls enableZoom={false} autoRotate={true} autoRotateSpeed={mobile ? 0.8 : 0.4} enablePan={false} />
+        </Canvas>
+      )}
     </div>
   );
 };

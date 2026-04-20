@@ -20,7 +20,7 @@ export const InteractivePortalCTA = ({ locale, i18n }) => {
         setIsBoing(true);
         setTimeout(() => setIsBoing(false), 800);
       }, 1000);
-    } else {
+    } else { 
       clearTimeout(timeoutRef.current);
       setIsBoing(false);
       setParticles({ right: [], left: [] });
@@ -90,7 +90,7 @@ export const InteractivePortalCTA = ({ locale, i18n }) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         className={`group relative flex items-center justify-center rounded-full overflow-hidden transition-all duration-[800ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] w-[260px] sm:w-[280px] hover:w-[280px] sm:hover:w-[480px] h-[64px] sm:h-[72px] ${isLight ? 'bg-white' : 'bg-[var(--color-ink)]'} border-[2px] border-[var(--color-gold)]/30 hover:border-[var(--color-gold)] hover:shadow-[0_0_30px_rgba(255,215,0,0.15)] z-20 ${isBoing ? 'animate-boing' : ''}`}
-        style={{ fontFamily: locale === 'ar' ? "var(--font-body)" : "var(--font-display)" }}
+        style={{ fontFamily: "var(--font-display)" }}
       >
         <div className="absolute inset-0 flex items-center justify-center transition-all duration-500 group-hover:opacity-0 group-hover:-translate-y-4">
           <span className={`text-base sm:text-xl font-black text-[var(--color-gold)] uppercase tracking-widest transition-transform duration-500 group-hover:scale-90`}>

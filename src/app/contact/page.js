@@ -1,21 +1,22 @@
 
-export const metadata = {
-  title: "تواصل معنا — خُطوة اونلاين",
-  description:
-    "تواصل مع خُطوة اونلاين — واتساب، بريد إلكتروني، أو من خلال نموذج الاتصال. بنرد في أقل من ٢٤ ساعة.",
-  alternates: {
-    canonical: "https://khatwah.vercel.app/contact",
-  },
-  openGraph: {
-    title: "تواصل معنا — خُطوة اونلاين",
-    description: "سواء مشروع، فكرة، أو مجرد سؤال — إحنا هنا.",
-    url: "https://khatwah.vercel.app/contact",
-    type: "website",
-  },
-};
+import { generateContactMetadata } from "@/lib/seo";
+
+export const metadata = generateContactMetadata("ar");
 
 import ContactContent from "./ContactContent";
+import { BreadcrumbSchema, LocalBusinessSchema } from "@/components/seo/StructuredData";
 
 export default function Page() {
-  return <ContactContent />;
+  const breadcrumbs = [
+    { name: "الرئيسية", url: "https://www.khatwah.online" },
+    { name: "تواصل معنا", url: "https://www.khatwah.online/contact" },
+  ];
+
+  return (
+    <>
+      <BreadcrumbSchema items={breadcrumbs} />
+      <LocalBusinessSchema />
+      <ContactContent />
+    </>
+  );
 }

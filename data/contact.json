@@ -1,0 +1,82 @@
+{
+  "company": {
+    "name": {
+      "ar": "خُطوة اونلاين",
+      "en": "Khatwah Online"
+    },
+    "tagline": {
+      "ar": "بنساعد التجارة المحلية تخطو خطوة أونلاين",
+      "en": "We help local businesses take a step online"
+    },
+    "location": {
+      "ar": "العريش، شمال سيناء 🇪🇬",
+      "en": "Arish, North Sinai 🇪🇬"
+    }
+  },
+  "phones": [
+    {
+      "number": "+20 107 014 0780",
+      "label": {
+        "ar": "عبدالرحمن",
+        "en": "Abdelrahman"
+      },
+      "primary": true
+    },
+    {
+      "number": "+20 100 123 4567",
+      "label": {
+        "ar": "أحمد",
+        "en": "Ahmed"
+      },
+      "primary": false
+    },
+    {
+      "number": "+20 111 987 6543",
+      "label": {
+        "ar": "محمود",
+        "en": "Mahmoud"
+      },
+      "primary": false
+    }
+  ],
+  "email": "hello@khatwah.online",
+  "social": {
+    "instagram": {
+      "handle": "@khatwah.online",
+      "url": "https://instagram.com/khatwah.online"
+    },
+    "tiktok": {
+      "handle": "@khatwah.online",
+      "url": "https://tiktok.com/@khatwah.online"
+    },
+    "facebook": {
+      "handle": "khatwah.online",
+      "url": "https://facebook.com/khatwah.online",
+      "messenger": "https://m.me/khatwah.online"
+    },
+    "github": {
+      "handle": "@khatwah",
+      "url": "https://github.com/khatwah"
+    },
+    "linkedin": {
+      "handle": "khatwah-online",
+      "url": "https://linkedin.com/company/khatwah-online"
+    },
+    "twitter": {
+      "handle": "@khatwah_online",
+      "url": "https://twitter.com/khatwah_online"
+    },
+    "youtube": {
+      "handle": "@khatwah.online",
+      "url": "https://youtube.com/@khatwah.online"
+    }
+  },
+  "address": {
+    "ar": "العريش، شمال سيناء، مصر",
+    "en": "Arish, North Sinai, Egypt"
+  },
+  "workingHours": {
+    "ar": "السبت - الخميس: 9 صباحاً - 6 مساءً",
+    "en": "Saturday - Thursday: 9 AM - 6 PM"
+  }
+}

@@ -15,7 +15,10 @@
       "theme_light": "فاتح",
       "lang_ar": "عربي",
       "lang_en": "English",
-      "home_label": "خُطوة اونلاين — الرئيسية"
+      "home_label": "خُطوة اونلاين — الرئيسية",
+      "blog": "المدونة",
+      "home":"الصفحة الرئيسية",
+      "services": "أدوات"
     },
     "hero": {
       "brand_name": "خطوة",
@@ -23,90 +26,209 @@
       "brand_subtitle": "أونلاين",
       "brand_subtitle_en": "ONLINE",
       "headline_en": "The Digital Layer\nFor Local Business",
-      "headline_ar": "ساعد تجارتك تنتقل للأونلاين",
-      "body": "بنبني حلول تقنية للتجارة المحلية — متاجر أونلاين، حجوزات، إدارة مخزون.",
+      "headline_ar": "حول خدماتك للأونلاين في أسرع وقت ممكن",
+      "body": " نظام حجوزات، ادارة مخزون، متجر الكتروني او اي نظام مصمم خصيصا عشانك انت",
       "cta_primary": "خد الخطوة",
       "cta_secondary": "مشاريعنا"
     },
     "products_section": {
-      "eyebrow": "خدماتنا",
-      "headline_part1": "ثلاث خدمات.",
-      "headline_part2": "حل واحد.",
-      "body": "كل خدمة اتبنت عشان تحل مشكلة حقيقية في السوق المحلي."
+      "eyebrow": "حلولنا الثلاثة",
+      "headline_part1": "اللي هتغير تجارتك",
+      "headline_part2": "",
+      "body": "كل حل مصمم خصيصًا لسوق العريش وشمال سيناء عشان يحل مشاكلك اليومية ويزود أرباحك."
     },
     "products": [
       {
         "num": "01",
+        "slug": "booking-system",
         "title": "نظام الحجوزات",
-        "subtitle": "للحلاقين، العيادات، والخدمات",
-        "description": "العميل يحجز أونلاين — يجيه تذكرة، إشعارات، ونقاط ولاء.",
+        "subtitle": "خلّي عملائك يحجزوا معاك وأنت نايم",
+        "description": "نظام حجوزات أونلاين سهل وبسيط للحلاقين، العيادات، الصالونات والخدمات.",
         "features": [
-          "تقويم حجوزات مباشر",
-          "تذاكر رقمية",
-          "إشعارات أوتوماتيكية",
-          "نظام ولاء"
-        ]
+          "حجز فوري من الموبايل",
+          "تذكيرات أوتوماتيكية على الواتساب",
+          "تقويم ذكي يمنع الازدحام",
+          "نقاط ولاء عشان العملاء يرجعوا",
+          "تقارير يومية"
+        ],
+        "benefits": [
+          "وفر وقتك: العملاء يحجزوا 24/7 بدون ما تتدخل",
+          "قلل الازدحاد: التقويم الذكي ينظم المواعيد تلقائياً",
+          "زود رجوع العملاء: نظام الولاء يخلي العميل يرجعلك",
+          "نام مرتاح: التذكيرات الأوتوماتيكية تمنع النسيان"
+        ],
+        "cta": "عايز نظام حجوزات لمحلي"
       },
       {
         "num": "02",
-        "title": "المخزون والـ POS",
-        "subtitle": "٣ باقات حسب الاحتياج",
-        "description": "إدارة مخزون، نقطة بيع، محاسبة أوتوماتيكية، وربط بمتجر أونلاين.",
+        "slug": "inventory-pos",
+        "title": "إدارة المخزون والـ POS",
+        "subtitle": "تخلص من ضياع المخزون والأخطاء في الحساب",
+        "description": "إدارة مخزون ذكية + نقطة بيع + ربط بالمتجر الأونلاين.",
         "features": [
-          "مخزون ذكي",
-          "نقطة بيع",
-          "محاسبة أوتوماتيكية",
-          "متجر أونلاين"
-        ]
+          "تابع مخزونك لحظيًا",
+          "محاسبة أوتوماتيكية بدون أخطاء",
+          "بيع من المحل والأونلاين في نظام واحد",
+          "تقارير مبيعات واضحة",
+          "٣ باقات تناسب حجم تجارتك"
+        ],
+        "benefits": [
+          "لا مزيد من الضياع: تابع كل منتج لحظيًا",
+          "لا مزيد من الأخطاء: المحاسبة الأوتوماتيكية دقيقة 100%",
+          "بيع من أي مكان: المحل والأونلاين في نظام واحد",
+          "اتخذ قرارات أفضل: تقارير واضحة تساعدك تفهم تجارتك"
+        ],
+        "cta": "عايز أتحكم في مخزوني"
       },
       {
         "num": "03",
+        "slug": "custom-development",
         "title": "برمجة خاصة",
-        "subtitle": "أي حاجة محتاجها",
-        "description": "أي نظام أو موقع محتاجه — بنبنيه من الصفر حسب طلبك.",
+        "subtitle": "أي فكرة أو نظام تحتاجه… بننفذه لك",
+        "description": "حلول مخصصة 100% حسب احتياجك (مواقع، تطبيقات، أنظمة إدارة…).",
         "features": [
-          "تطبيقات ويب",
-          "لوحات تحكم",
-          "أنظمة إدارة",
-          "APIs مخصصة"
-        ]
+          "برمجة حسب طلبك بالظبط",
+          "مواقع وتطبيقات احترافية",
+          "أنظمة إدارة متكاملة",
+          "ربط مع الواتساب والأنظمة الأخرى",
+          "دعم فني محلي مستمر"
+        ],
+        "benefits": [
+          "حل فريد: نظام مصمم خصيصًا لاحتياجاتك",
+          "مرونة كاملة: عدّل وطور حسب ما تجارتك تكبر",
+          "دعم محلي: فريق من العريش يفهم السوق المحلي",
+          "تكامل سهل: اربط مع أي نظام تستخدمه حاليًا"
+        ],
+        "cta": "عندي فكرة خاصة"
       }
     ],
-    "mission_statement": {
-      "headline": "نحن نبني الجيل القادم من التجارة المحلية.",
-      "body": "من العريش، شمال سيناء، نرى فرصة لتحويل الأعمال التقليدية إلى كيانات رقمية مزدهرة. نحن نؤمن بأن التكنولوجيا يجب أن تكون في متناول الجميع، وأن الابتكار يبدأ من حيث أنت."
+    "products_page": {
+      "hero_eyebrow": "منتجاتنا",
+      "hero_headline": "حلول مصممة لنجاحك",
+      "hero_subtitle": "كل منتج اتبنى عشان يحل مشكلة حقيقية في السوق المحلي ويزود أرباحك",
+      "view_details": "عرض التفاصيل",
+      "learn_more": "اعرف أكتر"
     },
-    "market_section": {
-      "eyebrow": "السوق",
-      "headline_part1": "سوق ٢٠٠ ألف",
-      "headline_part2": "إنسان أونلاين",
-      "body": "العريش مدينة كبيرة بتتعامل بالهاتف والشارع. المنصات الكبيرة مش واصلة هنا. دي الفجوة اللي بنملّاها.",
-      "stats": [
+    "product_detail": {
+      "back_to_products": "كل المنتجات",
+      "key_benefits": "إزاي هيساعدك؟",
+      "features": "المميزات",
+      "get_started": "ابدأ الآن",
+      "contact_for": "تواصل عشان"
+    },
+    "mission_statement": {
+      "headline": "غيابك عن الإنترنت بيكلفك أكتر مما تتخيل",
+      "body": "كل يوم مش أونلاين = عملاء رايحين لغيرك. إحنا بنساعدك تبني وجود رقمي يحوّل الزوار لعملاء ويزود أرباحك"
+    },
+    "why_us_section": {
+      "eyebrow": "لماذا نحن الخيار الأمثل",
+      "headline_part1": "شركاء في النجاح",
+      "headline_part2": "وليس مجرد مطورين",
+      "body": "نتجاوز مفهوم التطوير التقليدي لنصبح شركاء حقيقيين في رحلة تحولك الرقمي. بخبرة محلية عميقة وتقنيات عالمية متطورة.",
+      "advantages": [
         {
-          "num": "٢٠٠+",
-          "label": "ألف نسمة"
+          "title": "خبرة محلية متخصصة",
+          "description": "فريق محلي يفهم السوق المصري والاحتياجات الفريدة للأعمال في شمال سيناء.",
+          "points": [
+            "فهم عميق لسلوك المستهلك المحلي",
+            "معرفة بالتحديات اللوجستية المحلية",
+            "دعم فني مباشر باللغة العربية"
+          ],
+          "iconBg": "var(--color-primary-soft)",
+          "iconColor": "var(--color-primary)",
+          "pointColor": "var(--color-primary)",
+          "accentColor": "var(--color-primary)"
         },
         {
-          "num": "٥٪",
-          "label": "متاجر أونلاين"
+          "title": "تقنيات متطورة",
+          "description": "نستخدم أحدث التقنيات لضمان تطبيقات سريعة وآمنة ومتوافقة مع معايير الويب العالمية.",
+          "points": [
+            "تطوير بتقنيات React وNext.js الحديثة",
+            "أنظمة أمان متقدمة وحماية البيانات",
+            "تحسين محركات البحث وسرعة التحميل"
+          ],
+          "iconBg": "var(--color-gold-soft)",
+          "iconColor": "var(--color-gold)",
+          "pointColor": "var(--color-gold)",
+          "accentColor": "var(--color-gold)"
         },
         {
-          "num": "٠",
-          "label": "منصات واصلة"
+          "title": "منهجية مثبتة",
+          "description": "نتبع منهجية تطوير احترافية مع اختبارات مستمرة وضمان الجودة.",
+          "points": [
+            "نماذج أولية قابلة للاختبار كل أسبوعين",
+            "اختبارات شاملة ومراجعة كود دقيقة",
+            "توثيق تقني مفصل وتدريب شامل"
+          ],
+          "iconBg": "var(--color-primary-soft)",
+          "iconColor": "var(--color-primary)",
+          "pointColor": "var(--color-primary)",
+          "accentColor": "var(--color-primary)"
         },
         {
-          "num": "١٠٠٪",
-          "label": "فرصة"
+          "title": "شفافية في التسعير",
+          "description": "هيكل تسعير واضح بدون رسوم خفية، مع خيارات دفع مرنة تناسب ميزانيتك.",
+          "points": [
+            "عروض أسعار مفصلة وشاملة",
+            "خيارات دفع مرنة وإمكانية التقسيط",
+            "ضمان صيانة مجانية مدى الحياة"
+          ],
+          "iconBg": "var(--color-gold-soft)",
+          "iconColor": "var(--color-gold)",
+          "pointColor": "var(--color-gold)",
+          "accentColor": "var(--color-gold)"
+        },
+        {
+          "title": "تركيز على النتائج",
+          "description": "هدفنا تحقيق نمو حقيقي لأعمالك من خلال زيادة المبيعات وتحسين تجربة العملاء.",
+          "points": [
+            "تحليل مفصل لأداء الموقع ومعدلات التحويل",
+            "استراتيجيات تسويق رقمي مدمجة",
+            "تقارير دورية شاملة عن الأداء"
+          ],
+          "iconBg": "var(--color-primary-soft)",
+          "iconColor": "var(--color-primary)",
+          "pointColor": "var(--color-primary)",
+          "accentColor": "var(--color-primary)"
+        },
+        {
+          "title": "شراكة طويلة المدى",
+          "description": "نؤمن بالعلاقات طويلة المدى ونقدم دعماً مستمراً وتطويراً دورياً.",
+          "points": [
+            "دعم فني متخصص على مدار الساعة",
+            "تحديثات دورية وميزات جديدة",
+            "استشارات تقنية واستراتيجية مجانية"
+          ],
+          "iconBg": "var(--color-gold-soft)",
+          "iconColor": "var(--color-gold)",
+          "pointColor": "var(--color-gold)",
+          "accentColor": "var(--color-gold)"
         }
       ],
-      "narrative_headline": "الناس عايزة تشتري أونلاين — مفيش حد بيبيع. التجار عايزين يبيعوا — مفيش حد بيبني لهم.",
-      "narrative_body": "ده مش نقص في الطلب أو العرض. ده نقص في البنية التحتية الرقمية.",
-      "narrative_accent_label": "لينا",
-      "narrative_accent_body": "من العريش. فاهمين السوق. بنشتغل من جوه."
+      "cta_headline": "ابدأ رحلة التحول الرقمي اليوم",
+      "cta_body": "لا تدع منافسيك يتقدمون عليك في العالم الرقمي. احجز استشارة مجانية واكتشف كيف يمكن لحلولنا أن تحول أعمالك.",
+      "cta_stats": [
+        {
+          "number": "7+",
+          "label": "سنوات خبرة"
+        },
+        {
+          "number": "50+",
+          "label": "مشروع ناجح"
+        },
+        {
+          "number": "100%",
+          "label": "رضا العملاء"
+        },
+        {
+          "number": "24/7",
+          "label": "دعم فني"
+        }
+      ]
     },
     "projects_teaser": {
       "eyebrow": "أعمالنا",
-      "headline": "اللي بنيناه",
+      "headline": "أخر اعمالنا",
       "all_projects_link": "كل المشاريع"
     },
     "common": {
@@ -136,26 +258,26 @@
       "hero_eyebrow": "تواصل معنا",
       "hero_headline_1": "عندك فكرة؟",
       "hero_headline_2": "يلا نبدأ",
-      "hero_subtitle": "سواء مشروع، فكرة، أو مجرد سؤال — إحنا هنا.",
-      "contact_info_eyebrow": "تواصل",
-      "whatsapp": "واتساب",
-      "email": "البريد",
-      "messenger": "ماسينجر",
+      "contact_info_eyebrow": "اتصل بينا",
+      "phone_1": "+20 107 014 0780",
+      "phone_2": "+20 100 123 4567",
+      "phone_3": "+20 111 987 6543",
+      "email_value": "hello@khatwah.online",
       "messenger_value": "khatwah.online",
-      "follow_us": "تابعنا",
-      "message_eyebrow": "رسالة",
-      "promise_headline": "بنرد في أقل من ٢٤ ساعة",
-      "promise_sub": "سواء واتساب أو بريد — هتلاقينا ردّين بسرعة.",
-      "form_name": "الاسم",
-      "form_name_placeholder": "اسمك الكامل",
-      "form_contact": "البريد أو الواتساب",
-      "form_contact_placeholder": "example@email.com أو +20xxxxxxxxx",
-      "form_message": "رسالتك",
-      "form_message_placeholder": "اكتب رسالتك هنا...",
-      "form_send": "إرسال",
-      "form_sending": "جاري الإرسال...",
-      "form_success_title": "تم الإرسال!",
-      "form_success_sub": "هنتواصل معاك قريباً."
+      "instagram_handle": "@khatwah.online",
+      "tiktok_handle": "@khatwah.online",
+      "social_eyebrow": "تابعنا",
+      "promise_headline": "متاحين على كل القنوات",
+      "promise_sub": "اختار اللي يناسبك — واتساب، مكالمة، بريد، أو سوشيال ميديا.",
+      "direct_contact": "تواصل مباشر",
+      "call_us": "اتصل بنا",
+      "available_hours": "متاح من السبت إلى الخميس، 9 صباحاً - 6 مساءً",
+      "whatsapp": "واتساب",
+      "call": "اتصال",
+      "email": "البريد الإلكتروني",
+      "email_description": "للاستفسارات الرسمية والمشاريع",
+      "send_email": "إرسال بريد",
+      "messenger": "ماسينجر"
     },
     "about_page": {
       "hero_eyebrow": "من نحن",
@@ -165,34 +287,35 @@
       "story_eyebrow": "قصتنا",
       "story_p1": "إحنا تلاتة أصحاب من العريش. درسنا كمبيوتر ساينس ومن أول يوم كنا حاسين إن السوق المحلي محتاج حاجة مختلفة تماماً.",
       "story_quote": "شفنا فجوة — مفيش منصات كبيرة واصلة للعريش. التجار عايزين يبيعوا أونلاين مفيش حد بيبني لهم.",
-      "story_p2": "رؤيتنا: نبدأ من العريش، نثبت النموذج، وبعدين نمد.",
       "vision_eyebrow": "رؤيتنا",
       "vision_1_title": "محلي بالافتخار",
       "vision_1_desc": "بنبدأ من العريش لأن دي بيتنا والسوق اللي فاهمينه. مش بنخمن — بنعرف.",
       "vision_2_title": "شغل حقيقي",
       "vision_2_desc": "كل منتج اتبنى عشان مشكلة حقيقية. مش بنبيع كلام — بنبيع حلول.",
       "vision_3_title": "من العريش للعالم",
-      "vision_3_desc": "نبدأ محلي، نثبت النموذج، وبعدين نمد لباقي مصر وبعدين أبعد.",
-      "tech_eyebrow": "التقنيات"
+      "vision_3_desc": "نبدأ محلي، نثبت النموذج، وبعدين نتوسع لباقي مصر وبعدين أبعد.",
+      "tech_eyebrow": "التقنيات",
+      "org_name": "خُطوة اونلاين",
+      "org_description": "شركة تقنية من العريش، شمال سيناء"
     },
     "about_team": {
       "members": [
         {
-          "name": "عبدالرحمن",
-          "role": "CTO & Frontend",
+          "name": "عبدالرحمن عزمي",
+          "role": "CEO & Frontend",
           "bio": "٧+ سنين في البرمجة. بنيت أنظمة كاملة لعملاء حقيقيين. بقدر أبني وأطلق منتج كامل في أسبوعين.",
           "structured_data_job": "CTO & Frontend Lead",
           "structured_data_desc": "٧+ سنين في البرمجة. بنيت أنظمة كاملة لعملاء حقيقيين."
         },
         {
-          "name": "أحمد",
-          "role": "CEO & Backend",
+          "name": "أحمد محمود",
+          "role": "CTO & Backend",
           "bio": "تصميم أنظمة و REST APIs. دلوقتي بيشتغل على Node.js و Next.js. بقدر أجيب عملاء من الإنترنت.",
           "structured_data_job": "CEO & Backend Lead",
           "structured_data_desc": "تصميم أنظمة و REST APIs. بيشتغل على Node.js و Next.js."
         },
         {
-          "name": "محمود",
+          "name": "محمود ايمن",
           "role": "COO & Marketing",
           "bio": "خبرة عمره في السوق المحلي. بيدير العلاقات العامة وجلب العملاء بالعلاقات الدافية.",
           "structured_data_job": "COO & Marketing Lead",
@@ -202,7 +325,7 @@
     },
     "projects_page": {
       "hero_eyebrow": "مشاريعنا",
-      "hero_headline": "اللي بنيناه",
+      "hero_headline": "اخر اعمالنا",
       "hero_subtitle": "كل المشاريع اللي اشتغلنا عليها — من الفكرة للتنفيذ",
       "cta_eyebrow": "عندك مشروع؟",
       "cta_headline_1": "نقدر نبنى",
@@ -222,6 +345,73 @@
       "local": "محلي",
       "from_local_to_online": "من المحلي للأونلاين",
       "online": "أونلاين"
+    },
+    "seo_content": {
+      "title": "شركة برمجة مصرية رائدة في تصميم وتطوير المواقع الإلكترونية",
+      "sections": [
+        {
+          "heading": "أفضل شركات برمجة مواقع في مصر",
+          "content": "خُطوة اونلاين هي شركة برمجة مصرية متخصصة في تصميم وتطوير المواقع الإلكترونية وبرمجة تطبيقات الجوال. نقدم حلول برمجية مخصصة لمختلف القطاعات في مصر، من المتاجر الإلكترونية إلى أنظمة إدارة المخزون والحجوزات. نحن من أكبر شركات البرمجيات في العريش، شمال سيناء، ونعمل على خدمة التجارة المحلية في مصر بجودة عالية ودعم فني مستمر."
+        },
+        {
+          "heading": "تصميم وتطوير المواقع الإلكترونية بجودة عالية",
+          "content": "نستخدم أحدث لغات البرمجة والتقنيات الحديثة مثل Next.js و React و Node.js لتصميم تطبيقات ومواقع إلكترونية سريعة وآمنة. فريقنا من المطورين المحترفين يضمن تقديم حلول برمجية تلبي احتياجات عملائنا في مختلف القطاعات، سواء كنت تبحث عن متجر إلكتروني، نظام حجوزات، أو تطبيق جوال مخصص."
+        },
+        {
+          "heading": "برمجة تطبيقات الجوال والحلول البرمجية المخصصة",
+          "content": "كأفضل شركة تصميم مواقع في مصر، نقدم خدمات برمجة تطبيقات الجوال وتطوير حلول برمجية مخصصة تناسب احتياجات عملك. من تصميم تطبيقات iOS و Android إلى بناء أنظمة إدارة معقدة، نحن نوفر دعم فني مستمر ونضمن جودة عالية في كل مشروع نعمل عليه."
+        },
+        {
+          "heading": "خدماتنا للتجارة المحلية في مصر",
+          "content": "نساعد الشركات والمتاجر المحلية في مصر على الانتقال إلى العالم الرقمي من خلال بناء متاجر أونلاين، أنظمة إدارة المخزون، وأنظمة الحجوزات الإلكترونية. نحن نفهم السوق المصري ونقدم حلول تقنية تناسب احتياجات التجارة المحلية مع أسعار تنافسية ودعم فني باللغة العربية."
+        }
+      ],
+      "footer_text": "خُطوة اونلاين - شركة برمجة مصرية من العريش، شمال سيناء. نقدم خدمات تصميم المواقع الإلكترونية، برمجة التطبيقات، وحلول برمجية مخصصة لمختلف القطاعات في مصر.",
+      "hero_description": "شركة برمجة مصرية متخصصة في تصميم وتطوير المواقع الإلكترونية وتطبيقات الجوال. نقدم حلول برمجية مخصصة للتجارة المحلية في مصر مع دعم فني مستمر وجودة عالية.",
+      "market_additional": "كأفضل شركة برمجة مواقع في مصر، نعمل على تصميم تطبيقات الجوال وبرمجة تطبيقات مخصصة لمختلف القطاعات. نحن من أكبر شركات البرمجيات في العريش، نقدم خدمات تصميم وتطوير المواقع الإلكترونية بجودة عالية.",
+      "browse_more": "تصفح المزيد من مشاريعنا",
+      "all_projects": "جميع المشاريع",
+      "home": "الصفحة الرئيسية"
+    },
+    "faq": {
+      "title": "الأسئلة الشائعة",
+      "questions": [
+        {
+          "question": "ما هي خدمات خُطوة اونلاين؟",
+          "answer": "نقدم ثلاث خدمات رئيسية: نظام الحجوزات الأونلاين للحلاقين والعيادات، نظام إدارة المخزون والـ POS مع ربط المتجر الإلكتروني، والبرمجة الخاصة لأي نظام أو موقع تحتاجه."
+        },
+        {
+          "question": "كم تكلفة تصميم موقع إلكتروني؟",
+          "answer": "تختلف التكلفة حسب نوع المشروع والمتطلبات. نقدم باقات تبدأ من 10,000 جنيه للمواقع البسيطة وحتى 50,000+ جنيه للأنظمة المعقدة. تواصل معنا للحصول على عرض سعر مخصص."
+        },
+        {
+          "question": "كم يستغرق تطوير الموقع أو التطبيق؟",
+          "answer": "المشاريع البسيطة تستغرق 2-4 أسابيع، والمشاريع المتوسطة 4-8 أسابيع، والأنظمة المعقدة قد تستغرق 2-4 أشهر. نحدد الجدول الزمني بدقة بعد دراسة متطلبات مشروعك."
+        },
+        {
+          "question": "هل تقدمون دعم فني بعد التسليم؟",
+          "answer": "نعم، نقدم دعم فني مستمر لجميع مشاريعنا. يشمل الدعم إصلاح الأخطاء، التحديثات الأمنية، والصيانة الدورية. كما نوفر تدريب فريقك على استخدام النظام."
+        },
+        {
+          "question": "هل تعملون مع شركات خارج العريش؟",
+          "answer": "نعم، رغم أن مقرنا في العريش، نعمل مع عملاء في جميع أنحاء مصر والوطن العربي. نستخدم أدوات التواصل الحديثة لضمان التعاون الفعال عن بُعد."
+        },
+        {
+          "question": "ما هي التقنيات التي تستخدمونها؟",
+          "answer": "نستخدم أحدث التقنيات مثل Next.js، React، Node.js، وقواعد بيانات PostgreSQL. نختار التقنية المناسبة لكل مشروع لضمان الأداء الأمثل والأمان."
+        }
+      ]
+    },
+    "blog": {
+      "eyebrow": "رؤى وتحليلات",
+      "headline": "مدونة خُطوة",
+      "subtitle": "رؤى تقنية، تحليلات استراتيجية، ومنظورات صناعية من فريقنا.",
+      "read_article": "اقرأ المقال",
+      "no_posts": "لا توجد مقالات منشورة حتى الآن. تحقق مرة أخرى قريباً.",
+      "back_to_blog": "العودة للمدونة",
+      "related_articles": "مقالات ذات صلة",
+      "no_content": "لا يوجد محتوى متاح لهذا المقال.",
+      "seo_section_title": "شركة برمجة مصرية رائدة في تصميم وتطوير المواقع الإلكترونية"
     }
   },
   "en": {
@@ -240,7 +430,10 @@
       "theme_light": "Light",
       "lang_ar": "عربي",
       "lang_en": "English",
-      "home_label": "Khatwah Online — Home"
+      "home_label": "Khatwah Online — Home",
+      "blog": "Blog",
+      "home": "Home",
+      "services": "tools"
     },
     "hero": {
       "brand_name": "Khatwah",
@@ -254,80 +447,199 @@
       "cta_secondary": "Our Projects"
     },
     "products_section": {
-      "eyebrow": "Our Services",
-      "headline_part1": "Three Services.",
-      "headline_part2": "One Solution.",
-      "body": "Each service was built to solve a real problem in the local market."
+      "eyebrow": "Our Three Solutions",
+      "headline_part1": "That Will Transform Your Business",
+      "headline_part2": "",
+      "body": "Each solution is custom-designed for the Arish and North Sinai market to solve your daily problems and increase your profits."
     },
     "products": [
       {
         "num": "01",
+        "slug": "booking-system",
         "title": "Booking System",
-        "subtitle": "For barbers, clinics, and services",
-        "description": "Customers book online — get tickets, notifications, and loyalty points.",
+        "subtitle": "Let customers book while you sleep",
+        "description": "Simple online booking for barbers, clinics, salons, and service businesses.",
         "features": [
-          "Live booking calendar",
-          "Digital tickets",
-          "Automatic notifications",
-          "Loyalty system"
-        ]
+          "Instant mobile booking",
+          "Automatic WhatsApp reminders",
+          "Smart calendar prevents double-booking",
+          "Loyalty points keep customers coming back",
+          "Daily performance reports"
+        ],
+        "benefits": [
+          "Save time: Customers book 24/7 without your involvement",
+          "Reduce no-shows: Smart calendar organizes appointments automatically",
+          "Boost retention: Loyalty system brings customers back",
+          "Sleep easy: Automatic reminders prevent missed appointments"
+        ],
+        "cta": "Get a booking system"
       },
       {
         "num": "02",
+        "slug": "inventory-pos",
         "title": "Inventory & POS",
-        "subtitle": "3 packages based on need",
-        "description": "Inventory management, point of sale, automatic accounting, and online store integration.",
+        "subtitle": "Stop losing inventory and making accounting mistakes",
+        "description": "Smart inventory management + point of sale + online store integration.",
         "features": [
-          "Smart inventory",
-          "Point of Sale",
-          "Automatic accounting",
-          "Online store"
-        ]
+          "Real-time inventory tracking",
+          "Error-free automatic accounting",
+          "Sell in-store and online from one system",
+          "Clear sales reports",
+          "3 packages to fit your business size"
+        ],
+        "benefits": [
+          "No more losses: Track every product in real-time",
+          "No more errors: Automatic accounting is 100% accurate",
+          "Sell anywhere: In-store and online in one unified system",
+          "Make smarter decisions: Clear reports help you understand your business"
+        ],
+        "cta": "Take control of inventory"
       },
       {
         "num": "03",
-        "title": "Custom Software",
-        "subtitle": "Whatever you need",
-        "description": "Any system or website you need — we build it from scratch according to your request.",
+        "slug": "custom-development",
+        "title": "Custom Development",
+        "subtitle": "Any idea or system you need… we build it",
+        "description": "100% custom solutions tailored to your needs (websites, apps, management systems…).",
         "features": [
-          "Web applications",
-          "Dashboards",
-          "Management systems",
-          "Custom APIs"
-        ]
+          "Built exactly to your specifications",
+          "Professional websites and mobile apps",
+          "Integrated management systems",
+          "WhatsApp and third-party integrations",
+          "Ongoing local technical support"
+        ],
+        "benefits": [
+          "Unique solution: System designed specifically for your needs",
+          "Complete flexibility: Modify and scale as your business grows",
+          "Local support: Team from Arish who understands the local market",
+          "Easy integration: Connect with any system you currently use"
+        ],
+        "cta": "I have a custom idea"
       }
     ],
+    "products_page": {
+      "hero_eyebrow": "Our Products",
+      "hero_headline": "Solutions Designed for Your Success",
+      "hero_subtitle": "Each product was built to solve a real problem in the local market and increase your profits",
+      "view_details": "View Details",
+      "learn_more": "Learn More"
+    },
+    "product_detail": {
+      "back_to_products": "All Products",
+      "key_benefits": "How Will It Help You?",
+      "features": "Features",
+      "get_started": "Get Started",
+      "contact_for": "Contact for"
+    },
     "mission_statement": {
       "headline": "We are building the next generation of local commerce.",
       "body": "From Arish, North Sinai, we see an opportunity to transform traditional businesses into thriving digital entities. We believe that technology should be accessible to everyone, and innovation starts where you are."
     },
-    "market_section": {
-      "eyebrow": "The Market",
-      "headline_part1": "A market of 200K+",
-      "headline_part2": "online people",
-      "body": "Arish is a large city that operates by phone and street. Large platforms are not reaching here. This is the gap we fill.",
-      "stats": [
+    "why_us_section": {
+      "eyebrow": "Why Choose Us",
+      "headline_part1": "Success Partners",
+      "headline_part2": "Not Just Developers",
+      "body": "We transcend traditional development to become true partners in your digital transformation journey. With deep local expertise and cutting-edge global technologies.",
+      "advantages": [
         {
-          "num": "200K+",
-          "label": "Population"
+          "title": "Local Expertise",
+          "description": "A local team that understands the Egyptian market and unique business needs in North Sinai.",
+          "points": [
+            "Deep understanding of local consumer behavior",
+            "Knowledge of local logistical challenges",
+            "Direct technical support in Arabic"
+          ],
+          "iconBg": "var(--color-primary-soft)",
+          "iconColor": "var(--color-primary)",
+          "pointColor": "var(--color-primary)",
+          "accentColor": "var(--color-primary)"
         },
         {
-          "num": "5%",
-          "label": "Online Stores"
+          "title": "Advanced Technology",
+          "description": "We use the latest technologies to ensure fast, secure applications that comply with global web standards.",
+          "points": [
+            "Development with modern React and Next.js",
+            "Advanced security systems and data protection",
+            "SEO optimization and optimal loading speeds"
+          ],
+          "iconBg": "var(--color-gold-soft)",
+          "iconColor": "var(--color-gold)",
+          "pointColor": "var(--color-gold)",
+          "accentColor": "var(--color-gold)"
         },
         {
-          "num": "0",
-          "label": "Platforms Reaching"
+          "title": "Proven Methodology",
+          "description": "We follow a professional development methodology with continuous testing and quality assurance.",
+          "points": [
+            "Testable prototypes every two weeks",
+            "Comprehensive testing and code review",
+            "Detailed technical documentation"
+          ],
+          "iconBg": "var(--color-primary-soft)",
+          "iconColor": "var(--color-primary)",
+          "pointColor": "var(--color-primary)",
+          "accentColor": "var(--color-primary)"
         },
         {
-          "num": "100%",
-          "label": "Opportunity"
+          "title": "Transparent Pricing",
+          "description": "Clear pricing structure without hidden fees, with flexible payment options that suit your budget.",
+          "points": [
+            "Detailed and comprehensive quotes",
+            "Flexible payment and installment options",
+            "Lifetime free maintenance guarantee"
+          ],
+          "iconBg": "var(--color-gold-soft)",
+          "iconColor": "var(--color-gold)",
+          "pointColor": "var(--color-gold)",
+          "accentColor": "var(--color-gold)"
+        },
+        {
+          "title": "Results-Focused",
+          "description": "Our goal is achieving real growth for your business through increased sales and improved customer experience.",
+          "points": [
+            "Detailed website performance analysis",
+            "Integrated digital marketing strategies",
+            "Comprehensive periodic performance reports"
+          ],
+          "iconBg": "var(--color-primary-soft)",
+          "iconColor": "var(--color-primary)",
+          "pointColor": "var(--color-primary)",
+          "accentColor": "var(--color-primary)"
+        },
+        {
+          "title": "Long-term Partnership",
+          "description": "We believe in long-term relationships and provide continuous support and periodic development.",
+          "points": [
+            "Specialized technical support around the clock",
+            "Regular updates and new features",
+            "Free technical and strategic consultations"
+          ],
+          "iconBg": "var(--color-gold-soft)",
+          "iconColor": "var(--color-gold)",
+          "pointColor": "var(--color-gold)",
+          "accentColor": "var(--color-gold)"
         }
       ],
-      "narrative_headline": "People want to buy online — no one is selling. Merchants want to sell — no one is building for them.",
-      "narrative_body": "This is not a lack of demand or supply. This is a lack of digital infrastructure.",
-      "narrative_accent_label": "About Us",
-      "narrative_accent_body": "From Arish. We understand the market. We work from within."
+      "cta_headline": "Start Your Digital Transformation Today",
+      "cta_body": "Don't let your competitors get ahead of you in the digital world. Book a free consultation and discover how our solutions can transform your business.",
+      "cta_stats": [
+        {
+          "number": "7+",
+          "label": "Years Experience"
+        },
+        {
+          "number": "50+",
+          "label": "Successful Projects"
+        },
+        {
+          "number": "100%",
+          "label": "Client Satisfaction"
+        },
+        {
+          "number": "24/7",
+          "label": "Technical Support"
+        }
+      ]
     },
     "projects_teaser": {
       "eyebrow": "Our Work",
@@ -361,26 +673,26 @@
       "hero_eyebrow": "Contact Us",
       "hero_headline_1": "Got an Idea?",
       "hero_headline_2": "Let's Start",
-      "hero_subtitle": "Whether it's a project, an idea, or just a question — we are here.",
-      "contact_info_eyebrow": "Reach Out",
-      "whatsapp": "WhatsApp",
-      "email": "Email",
-      "messenger": "Messenger",
+      "contact_info_eyebrow": "Call Us",
+      "phone_1": "+20 107 014 0780",
+      "phone_2": "+20 100 123 4567",
+      "phone_3": "+20 111 987 6543",
+      "email_value": "hello@khatwah.online",
       "messenger_value": "khatwah.online",
-      "follow_us": "Follow Us",
-      "message_eyebrow": "Message",
-      "promise_headline": "We reply in under 24 hours",
-      "promise_sub": "Whether on WhatsApp or email — we reply quickly.",
-      "form_name": "Name",
-      "form_name_placeholder": "Your Full Name",
-      "form_contact": "Email or WhatsApp",
-      "form_contact_placeholder": "example@email.com or +20xxxxxxxxx",
-      "form_message": "Your Message",
-      "form_message_placeholder": "Type your message here...",
-      "form_send": "Send",
-      "form_sending": "Sending...",
-      "form_success_title": "Sent!",
-      "form_success_sub": "We will contact you soon."
+      "instagram_handle": "@khatwah.online",
+      "tiktok_handle": "@khatwah.online",
+      "social_eyebrow": "Follow Us",
+      "promise_headline": "Available on all channels",
+      "promise_sub": "Choose what suits you — WhatsApp, call, email, or social media.",
+      "direct_contact": "Direct Contact",
+      "call_us": "Call Us",
+      "available_hours": "Available Saturday to Thursday, 9 AM - 6 PM",
+      "whatsapp": "WhatsApp",
+      "call": "Call",
+      "email": "Email",
+      "email_description": "For formal inquiries and projects",
+      "send_email": "Send Email",
+      "messenger": "Messenger"
     },
     "about_page": {
       "hero_eyebrow": "About Us",
@@ -390,7 +702,6 @@
       "story_eyebrow": "Our Story",
       "story_p1": "We are three friends from Arish. We studied computer science and from day one, we felt the local market needed something completely different.",
       "story_quote": "We saw a gap — no large platforms reached Arish. Merchants want to sell online, and no one is building for them.",
-      "story_p2": "Our vision: Start from Arish, prove the model, then expand.",
       "vision_eyebrow": "Our Vision",
       "vision_1_title": "Proudly Local",
       "vision_1_desc": "We start from Arish because it's our home and the market we understand. We don't guess — we know.",
@@ -398,26 +709,28 @@
       "vision_2_desc": "Every product was built for a real problem. We don't sell talk — we sell solutions.",
       "vision_3_title": "From Arish to the World",
       "vision_3_desc": "Start local, prove the model, then expand to the rest of Egypt, and beyond.",
-      "tech_eyebrow": "Technologies"
+      "tech_eyebrow": "Technologies",
+      "org_name": "Khatwah Online",
+      "org_description": "A tech company from Arish, North Sinai"
     },
     "about_team": {
       "members": [
         {
-          "name": "Abdelrahman",
-          "role": "CTO & Frontend",
+          "name": "Abdelrahman Azmy",
+          "role": "CEO & Frontend",
           "bio": "7+ years in programming. Built complete systems for real clients. Can build and launch a full product in two weeks.",
           "structured_data_job": "CTO & Frontend Lead",
           "structured_data_desc": "7+ years in programming. Built complete systems for real clients."
         },
         {
-          "name": "Ahmed",
-          "role": "CEO & Backend",
+          "name": "Ahmed Mahmoud",
+          "role": "CTO & Backend",
           "bio": "System design and REST APIs. Currently working on Node.js and Next.js. Can acquire clients from the internet.",
           "structured_data_job": "CEO & Backend Lead",
           "structured_data_desc": "System design and REST APIs. Working on Node.js and Next.js."
         },
         {
-          "name": "Mahmoud",
+          "name": "Mahmoud Ayman",
           "role": "COO & Marketing",
           "bio": "Lifetime experience in the local market. Manages public relations and client acquisition through warm relationships.",
           "structured_data_job": "COO & Marketing Lead",
@@ -447,6 +760,73 @@
       "local": "Local",
       "from_local_to_online": "From Local to Online",
       "online": "Online"
+    },
+    "seo_content": {
+      "title": "Leading Egyptian Software Development Company",
+      "sections": [
+        {
+          "heading": "Best Web Development Companies in Egypt",
+          "content": "Khatwah Online is an Egyptian software development company specializing in web design, mobile app development, and custom software solutions. We provide tailored programming solutions for various sectors in Egypt, from e-commerce stores to inventory management and booking systems. We are among the largest software companies in Arish, North Sinai, serving local businesses in Egypt with high quality and continuous technical support."
+        },
+        {
+          "heading": "High-Quality Web Design and Development",
+          "content": "We use the latest programming languages and modern technologies such as Next.js, React, and Node.js to design fast and secure applications and websites. Our team of professional developers ensures delivering software solutions that meet our clients' needs across various sectors, whether you're looking for an online store, booking system, or custom mobile application."
+        },
+        {
+          "heading": "Mobile App Development and Custom Software Solutions",
+          "content": "As one of the best web design companies in Egypt, we offer mobile app development services and custom software solutions tailored to your business needs. From designing iOS and Android applications to building complex management systems, we provide continuous technical support and guarantee high quality in every project we work on."
+        },
+        {
+          "heading": "Our Services for Local Businesses in Egypt",
+          "content": "We help local companies and stores in Egypt transition to the digital world by building online stores, inventory management systems, and electronic booking systems. We understand the Egyptian market and provide technical solutions that suit local business needs with competitive prices and technical support in Arabic."
+        }
+      ],
+      "footer_text": "Khatwah Online - Egyptian software company from Arish, North Sinai. We provide web design services, application development, and custom software solutions for various sectors in Egypt.",
+      "hero_description": "Egyptian software development company specializing in web design, mobile app development, and custom software solutions for local businesses in Egypt with continuous technical support and high quality.",
+      "market_additional": "As one of the best web development companies in Egypt, we design mobile applications and develop custom software for various sectors. We are among the largest software companies in Arish, providing high-quality web design and development services.",
+      "browse_more": "Browse more of our projects",
+      "all_projects": "All Projects",
+      "home": "Home"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "questions": [
+        {
+          "question": "What services does Khatwah Online provide?",
+          "answer": "We provide three main services: online booking system for barbers and clinics, inventory management and POS system with e-commerce integration, and custom software development for any system or website you need."
+        },
+        {
+          "question": "How much does website development cost?",
+          "answer": "Cost varies based on project type and requirements. Our packages start from 10,000 EGP for simple websites up to 50,000+ EGP for complex systems. Contact us for a custom quote."
+        },
+        {
+          "question": "How long does website or app development take?",
+          "answer": "Simple projects take 2-4 weeks, medium projects 4-8 weeks, and complex systems may take 2-4 months. We determine the exact timeline after studying your project requirements."
+        },
+        {
+          "question": "Do you provide technical support after delivery?",
+          "answer": "Yes, we provide continuous technical support for all our projects. Support includes bug fixes, security updates, and regular maintenance. We also provide training for your team on using the system."
+        },
+        {
+          "question": "Do you work with companies outside Arish?",
+          "answer": "Yes, although our headquarters is in Arish, we work with clients throughout Egypt and the Arab world. We use modern communication tools to ensure effective remote collaboration."
+        },
+        {
+          "question": "What technologies do you use?",
+          "answer": "We use the latest technologies such as Next.js, React, Node.js, and PostgreSQL databases. We choose the appropriate technology for each project to ensure optimal performance and security."
+        }
+      ]
+    },
+    "blog": {
+      "eyebrow": "Insights & Analysis",
+      "headline": "Khatwah Blog",
+      "subtitle": "Technical insights, strategic perspectives, and industry analysis from our team.",
+      "read_article": "Read Article",
+      "no_posts": "No posts published yet. Check back soon.",
+      "back_to_blog": "Back to Blog",
+      "related_articles": "Related Articles",
+      "no_content": "No content available for this article.",
+      "seo_section_title": "Leading Egyptian Software Development Company"
     }
   }
 }

@@ -7,22 +7,22 @@
           {
             "labelEn": "Hero Section",
             "labelAr": "البداية",
-            "src": "landing-hero.png"
+            "src": "landing-hero.webp"
           },
           {
             "labelEn": "About Section",
             "labelAr": "عن المنصة",
-            "src": "landing-about.png"
+            "src": "landing-about.webp"
           },
           {
             "labelEn": "Pricing Plans",
             "labelAr": "خطط الأسعار",
-            "src": "landing-plans.png"
+            "src": "landing-plans.webp"
           },
           {
             "labelEn": "Social Links",
             "labelAr": "التواصل الاجتماعي",
-            "src": "landing-social.png"
+            "src": "landing-social.webp"
           }
         ],
         "titleEn": "Landing \u0026 About",
@@ -35,27 +35,27 @@
           {
             "labelEn": "Main Dashboard",
             "labelAr": "الرئيسية",
-            "src": "admin-main.png"
+            "src": "admin-main.webp"
           },
           {
             "labelEn": "User Management",
             "labelAr": "إدارة المستخدمين",
-            "src": "admin-manage-users.png"
+            "src": "admin-manage-users.webp"
           },
           {
             "labelEn": "Content Management",
             "labelAr": "إدارة المحتوى",
-            "src": "admin-manage-videos.png"
+            "src": "admin-manage-videos.webp"
           },
           {
             "labelEn": "Sales Management",
             "labelAr": "إدارة المبيعات",
-            "src": "admin-manage-purchases.png"
+            "src": "admin-manage-purchases.webp"
           },
           {
             "labelEn": "Security Settings",
             "labelAr": "إدارة الحماية",
-            "src": "admin-watermark-management.png"
+            "src": "admin-watermark-management.webp"
           }
         ],
         "titleEn": "Admin Dashboard",
@@ -68,17 +68,17 @@
           {
             "labelEn": "Course List",
             "labelAr": "قائمة الكورسات",
-            "src": "user-coursespage.png"
+            "src": "user-coursespage.webp"
           },
           {
             "labelEn": "Lesson Player",
             "labelAr": "مشاهدة الدرس",
-            "src": "user-videowatch.png"
+            "src": "user-videowatch.webp"
           },
           {
             "labelEn": "User Profile",
             "labelAr": "الملف الشخصي",
-            "src": "profile-info.png"
+            "src": "profile-info.webp"
           }
         ],
         "titleEn": "Student Experience",
@@ -87,11 +87,10 @@
       }
     ],
     "detailedDescriptionAr": "تم بناء هذه المنصة لتوفر تجربة تعليمية سلسة وآمنة. تشمل المنصة لوحة تحكم متقدمة للإدارة، نظام حماية فيديوهات بوضع علامة مائية ديناميكية، ونظام إدارة اشتراكات ومدفوعات متكامل.",
-    "thumbnail": "/projects/courses-website/landing-hero.png",
     "order": 1,
     "detailedDescriptionEn": "This platform was built to provide a seamless and secure learning experience. It includes an advanced admin dashboard, a video protection system with dynamic watermarking, and an integrated subscription and payment management system.",
     "descriptionEn": "A comprehensive system for managing and selling online courses with advanced content protection and a full dashboard.",
-    "url": "https://courses.khatwah.online",
+    "url": "https://coursately.vercel.app",
     "featured": true,
     "titleEn": "Educational Courses Platform",
     "descriptionAr": "نظام متكامل لإدارة وبيع الكورسات عبر الإنترنت مع حماية متقدمة للمحتوى ولوحة تحكم شاملة.",
@@ -99,13 +98,13 @@
     "basePath": "/projects/courses-website",
     "slug": "courses-platform",
     "headerImages": [
-      "landing-hero.png",
-      "admin-main.png",
-      "user-coursespage.png",
-      "user-videowatch.png"
+      "landing-hero.webp",
+      "admin-main.webp",
+      "user-coursespage.webp",
+      "user-videowatch.webp"
     ],
     "titleAr": "منصة الكورسات التعليمية",
-    "techStack": ["Next.js", "React", "Node.js", "MongoDB", "Tailwind CSS"]
+    "techStack": ["Next.js", "Svelte","Sveltekit", "Node.js", "MongoDB", "Tailwind CSS"]
   },
   {
     "sections": [
@@ -115,12 +114,12 @@
           {
             "labelEn": "Home Page",
             "labelAr": "الرئيسية",
-            "src": "storefront.png"
+            "src": "storefront.webp"
           },
           {
             "labelEn": "Product Detail",
             "labelAr": "صفحة المنتج",
-            "src": "product-page.png"
+            "src": "product-page.webp"
           }
         ],
         "titleEn": "Storefront",
@@ -133,22 +132,22 @@
           {
             "labelEn": "Inventory",
             "labelAr": "المخزون",
-            "src": "admin-manage-inventory.png"
+            "src": "admin-manage-inventory.webp"
           },
           {
             "labelEn": "Orders",
             "labelAr": "الطلبات",
-            "src": "admin-manage-orders.png"
+            "src": "admin-manage-orders.webp"
           },
           {
             "labelEn": "Invoices",
             "labelAr": "الفواتير",
-            "src": "admin-manage-invoices.png"
+            "src": "admin-manage-invoices.webp"
           },
           {
             "labelEn": "Accounting",
             "labelAr": "المحاسبة",
-            "src": "admin-manage-accounting.png"
+            "src": "admin-manage-accounting.webp"
           }
         ],
         "titleEn": "Operations Management",
@@ -157,7 +156,6 @@
       }
     ],
     "detailedDescriptionAr": "نظام تجارة إلكترونية شامل يربط بين واجهة المتجر الجذابة ولوحة تحكم خلفية قوية تدير كل جوانب العمل من المخزون إلى الفواتير والمحاسبة.",
-    "thumbnail": "/projects/eccomerce-website/storefront.png",
     "order": 2,
     "detailedDescriptionEn": "A comprehensive e-commerce system that links an attractive storefront with a powerful backend dashboard managing all business aspects from inventory to invoices and accounting.",
     "descriptionEn": "Sophisticated e-commerce store with inventory management, accounting, and order tracking.",
@@ -169,10 +167,10 @@
     "basePath": "/projects/eccomerce-website",
     "slug": "ecommerce-system",
     "headerImages": [
-      "storefront.png",
-      "admin-manage-inventory.png",
-      "product-page.png",
-      "admin-manage-orders.png"
+      "storefront.webp",
+      "admin-manage-inventory.webp",
+      "product-page.webp",
+      "admin-manage-orders.webp"
     ],
     "titleAr": "نظام التجارة الإلكترونية المتكامل",
     "techStack": ["Next.js", "React", "PostgreSQL", "Tailwind CSS"]
@@ -194,12 +192,11 @@
       }
     ],
     "detailedDescriptionAr": "مشروع يهدف لرقمنة التجارة المحلية في مدينة العريش، مما يسهل على السكان الوصول للمتاجر والخدمات.",
-    "thumbnail": "/projects/arish-catalogue/thumbnail.webp",
     "order": 3,
     "detailedDescriptionEn": "A project aimed at digitizing local commerce in Arish city, making it easier for residents to access stores and services.",
     "descriptionEn": "Online directory of all stores in Arish — discovery and management for local commerce.",
     "url": "",
-    "featured": true,
+    "featured": false,
     "titleEn": "Arish City Catalogue",
     "descriptionAr": "دليل أونلاين لكل المتاجر في العريش — اكتشاف وإدارة للتجارة المحلية.",
     "status": "wip",
@@ -208,5 +205,493 @@
     "headerImages": ["thumbnail.webp"],
     "titleAr": "كتالوج مدينة العريش",
     "techStack": ["Next.js", "Supabase", "Tailwind CSS"]
+  },
+  {
+    "sections": [
+      {
+        "titleEn": "Landing & About",
+        "titleAr": "الصفحة الرئيسية والتعريفية",
+        "descriptionEn": "Modern design focused on converting visitors to subscribers, showcasing platform features and available plans.",
+        "descriptionAr": "تصميم عصري يهدف إلى تحويل الزوار إلى مشتركين مع عرض مميزات المنصة وأبرز ما تقدمه من بيانات وتحليلات للعملات الرقمية.",
+        "screenshots": [
+          {
+            "labelEn": "Hero Section",
+            "labelAr": "البداية",
+            "src": "main-intro.webp"
+          },
+          {
+            "labelEn": "Latest updates on Exchanges",
+            "labelAr": "آخر تحديثات البورصات",
+            "src": "main-crypto-section.webp"
+          },
+          {
+            "labelEn": "Trending Cryptocurrencies",
+            "labelAr": "العملات الرقمية الرائجة",
+            "src": "main-trending-crypto.webp"
+          },
+          {
+            "labelEn": "Statistics about all coins",
+            "labelAr": "إحصائيات العملات",
+            "src": "main-compare-crypto.webp"
+          },
+          {
+            "labelEn": "Dashboard for call to action subscribe",
+            "labelAr": "لوحة الاشتراك",
+            "src": "main-dashboard.webp"
+          }
+        ]
+      },
+      {
+        "titleEn": "Admin Dashboard",
+        "titleAr": "لوحة تحكم الإدارة",
+        "descriptionEn": "Full management system for coins, exchanges, and platform data with detailed reports and easy content control.",
+        "descriptionAr": "نظام إدارة متكامل للعملات الرقمية والبورصات مع تقارير مفصلة وتحكم سهل في محتوى المنصة.",
+        "screenshots": [
+          {
+            "labelEn": "Main Dashboard",
+            "labelAr": "الرئيسية",
+            "src": "admin-dashboard.webp"
+          },
+          {
+            "labelEn": "Coins Management",
+            "labelAr": "إدارة العملات",
+            "src": "admin-manage-coins.webp"
+          },
+          {
+            "labelEn": "Exchange Management",
+            "labelAr": "إدارة البورصات",
+            "src": "admin-edit-exchange.webp"
+          },
+          {
+            "labelEn": "Add Exchange",
+            "labelAr": "إضافة بورصة",
+            "src": "admin-add-exchanges.webp"
+          },
+          {
+            "labelEn": "Add Crypto",
+            "labelAr": "إضافة عملة رقمية",
+            "src": "admin-add-coins.webp"
+          }
+        ]
+      },
+      {
+        "titleEn": "User Experience",
+        "titleAr": "تجربة المستخدم",
+        "descriptionEn": "Intuitive user interface for exploring market data, reading the latest crypto news, and comparing top exchanges worldwide.",
+        "descriptionAr": "واجهة مستخدم سلسة لاستعراض بيانات السوق، قراءة أحدث أخبار الكريبتو، ومقارنة أبرز البورصات العالمية.",
+        "screenshots": [
+          {
+            "labelEn": "The global cryptocurrency market cap today",
+            "labelAr": "القيمة السوقية العالمية للعملات الرقمية",
+            "src": "market-search.webp"
+          },
+          {
+            "labelEn": "Latest news about crypto",
+            "labelAr": "آخر أخبار الكريبتو",
+            "src": "latestnews.webp"
+          },
+          {
+            "labelEn": "Compare the top cryptocurrency exchanges worldwide with detailed reviews and analysis",
+            "labelAr": "مقارنة أبرز بورصات العملات الرقمية مع مراجعات وتحليلات مفصلة",
+            "src": "compare exchange-page.webp"
+          },
+          {
+            "labelEn": "Browse through our comprehensive list of cryptocurrencies for review and analysis",
+            "labelAr": "تصفح قائمة شاملة للعملات الرقمية مع مراجعات وتحليلات",
+            "src": "crpto-page.webp"
+          }
+        ]
+      }
+    ],
+    "titleEn": "Cryptocurrency Analytics Platform",
+    "titleAr": "منصة تحليلات العملات الرقمية",
+    "descriptionEn": "A comprehensive platform for tracking, comparing, and analyzing cryptocurrencies and exchanges with real-time data.",
+    "descriptionAr": "منصة متكاملة لتتبع ومقارنة وتحليل العملات الرقمية والبورصات مع بيانات حية ومحدثة.",
+    "detailedDescriptionEn": "This platform was built to provide traders and enthusiasts with a seamless experience for exploring crypto market data. It features an advanced admin dashboard for managing coins and exchanges, real-time market statistics, latest news aggregation, and detailed exchange comparison tools.",
+    "detailedDescriptionAr": "تم بناء هذه المنصة لتوفر تجربة سلسة للمتداولين والمهتمين باستعراض بيانات سوق الكريبتو. تشمل لوحة تحكم متقدمة لإدارة العملات والبورصات، إحصائيات السوق الحية، تجميع آخر الأخبار، وأدوات مقارنة مفصلة للبورصات.",
+    "order": 4,
+    "url": "https://courses.khatwah.online",
+    "featured": false,
+    "status": "live",
+    "basePath": "/projects/crypto-platform",
+    "slug": "crypto-platform",
+    "headerImages": [
+      "main-intro.webp",
+      "admin-dashboard.webp",
+      "market-search.webp",
+      "compare exchange-page.webp"
+    ],
+    "techStack": ["Next.js", "React", "Node.js", "MongoDB", "Tailwind CSS"]
+  },
+  {
+    "sections": [
+      {
+        "titleEn": "Landing Page",
+        "titleAr": "الصفحة الرئيسية",
+        "descriptionEn": "Bold and modern landing page showcasing our mission, market presence, products, and featured projects with dynamic animations.",
+        "descriptionAr": "صفحة رئيسية جريئة وعصرية تعرض رسالتنا، حضورنا في السوق، منتجاتنا، ومشاريعنا المميزة مع رسوم متحركة ديناميكية.",
+        "screenshots": [
+          {
+            "labelEn": "Hero Section",
+            "labelAr": "قسم البداية",
+            "src": "landingpage-herosection.webp"
+          },
+          {
+            "labelEn": "Mission Statement",
+            "labelAr": "رسالتنا",
+            "src": "landgingpage-mission.webp"
+          },
+          {
+            "labelEn": "Market Presence",
+            "labelAr": "حضورنا في السوق",
+            "src": "landingpage-market.webp"
+          },
+          {
+            "labelEn": "Products Showcase",
+            "labelAr": "عرض المنتجات",
+            "src": "landingpage-products.webp"
+          },
+          {
+            "labelEn": "Projects Teaser",
+            "labelAr": "عرض المشاريع",
+            "src": "landingpage-projectteaser.webp"
+          }
+        ]
+      },
+      {
+        "titleEn": "About Page",
+        "titleAr": "صفحة من نحن",
+        "descriptionEn": "Comprehensive introduction to our company, vision, values, and the talented team behind Khatwah Online.",
+        "descriptionAr": "تعريف شامل بشركتنا، رؤيتنا، قيمنا، والفريق الموهوب وراء خُطوة اونلاين.",
+        "screenshots": [
+          {
+            "labelEn": "About Hero",
+            "labelAr": "بداية صفحة من نحن",
+            "src": "aboutpage-hero.webp"
+          },
+          {
+            "labelEn": "Vision & Values",
+            "labelAr": "الرؤية والقيم",
+            "src": "aboutpage-vision.webp"
+          },
+          {
+            "labelEn": "Our Team",
+            "labelAr": "فريقنا",
+            "src": "aboutpage-people.webp"
+          }
+        ]
+      },
+      {
+        "titleEn": "Projects Page",
+        "titleAr": "صفحة المشاريع",
+        "descriptionEn": "Interactive showcase of all our completed and ongoing projects with detailed information and engaging visuals.",
+        "descriptionAr": "عرض تفاعلي لجميع مشاريعنا المكتملة والجارية مع معلومات تفصيلية ومرئيات جذابة.",
+        "screenshots": [
+          {
+            "labelEn": "Projects Hero",
+            "labelAr": "بداية صفحة المشاريع",
+            "src": "projectspage-hero.webp"
+          },
+          {
+            "labelEn": "Projects Grid",
+            "labelAr": "شبكة المشاريع",
+            "src": "projectspage-projects.webp"
+          },
+          {
+            "labelEn": "Call to Action",
+            "labelAr": "دعوة للتواصل",
+            "src": "projectspage-cta.webp"
+          }
+        ]
+      },
+      {
+        "titleEn": "Contact Page",
+        "titleAr": "صفحة التواصل",
+        "descriptionEn": "Easy-to-use contact interface with multiple communication channels and availability information.",
+        "descriptionAr": "واجهة تواصل سهلة الاستخدام مع قنوات اتصال متعددة ومعلومات التوفر.",
+        "screenshots": [
+          {
+            "labelEn": "Contact Hero",
+            "labelAr": "بداية صفحة التواصل",
+            "src": "contactpage-hero.webp"
+          },
+          {
+            "labelEn": "Contact Methods",
+            "labelAr": "طرق التواصل",
+            "src": "contactpage-contactmethods.webp"
+          },
+          {
+            "labelEn": "Availability",
+            "labelAr": "أوقات التوفر",
+            "src": "contactpage-weareavaialble.webp"
+          }
+        ]
+      }
+    ],
+    "titleEn": "Khatwah Online Portfolio",
+    "titleAr": "موقع خُطوة اونلاين",
+    "descriptionEn": "Our company portfolio website — a bold, modern showcase of who we are, what we do, and the projects we've built.",
+    "descriptionAr": "موقع محفظة أعمال شركتنا — عرض جريء وعصري لمن نحن، ماذا نفعل، والمشاريع التي بنيناها.",
+    "detailedDescriptionEn": "This is our own portfolio website, built to showcase Khatwah Online's identity, mission, and work. It features a bold design system with dynamic animations, smooth transitions, and an engaging user experience. The site includes comprehensive sections for our landing page, about us, projects showcase, and contact information — all built with modern web technologies and optimized for performance.",
+    "detailedDescriptionAr": "هذا هو موقع محفظة أعمالنا الخاص، تم بناؤه لعرض هوية خُطوة اونلاين، رسالتنا، وأعمالنا. يتميز بنظام تصميم جريء مع رسوم متحركة ديناميكية، انتقالات سلسة، وتجربة مستخدم جذابة. يتضمن الموقع أقسامًا شاملة للصفحة الرئيسية، من نحن، عرض المشاريع، ومعلومات التواصل — كلها مبنية بتقنيات ويب حديثة ومحسّنة للأداء.",
+    "order": 5,
+    "url": "https://www.khatwah.online",
+    "featured": false,
+    "status": "live",
+    "basePath": "/projects/khatwahonline-website",
+    "slug": "khatwah-portfolio",
+    "headerImages": [
+      "landingpage-herosection.webp",
+      "aboutpage-hero.webp",
+      "projectspage-projects.webp",
+      "contactpage-hero.webp"
+    ],
+    "techStack": ["Next.js", "React", "Tailwind CSS", "Framer Motion"]
+  }, {
+    "sections": [
+      {
+        "titleEn": "Landing & Hero",
+        "titleAr": "الصفحة الرئيسية والبداية",
+        "descriptionEn": "Modern dark hero section with strong call-to-action and premium streetwear vibe.",
+        "descriptionAr": "قسم البداية العصري بتصميم داكن أنيق ودعوة للعمل قوية.",
+        "screenshots": [
+          {
+            "labelEn": "Hero Section",
+            "labelAr": "قسم البداية",
+            "src": "main-page-hero.webp"
+          }
+        ]
+      },
+      {
+        "titleEn": "Why Choose 2Nice",
+        "titleAr": "لماذا تختار 2Nice",
+        "descriptionEn": "Key benefits including Free Shipping, Easy Returns, Best Prices, and 24/7 Support.",
+        "descriptionAr": "المميزات الرئيسية: شحن مجاني، إرجاع سهل، أفضل الأسعار، ودعم 24/7.",
+        "screenshots": [
+          {
+            "labelEn": "Why Choose 2Nice",
+            "labelAr": "لماذا 2Nice",
+            "src": "why 2nice.webp"
+          }
+        ]
+      },
+      {
+        "titleEn": "Latest Blog Posts",
+        "titleAr": "أحدث مقالات المدونة",
+        "descriptionEn": "Preview of the latest 3 blog posts shown on the homepage.",
+        "descriptionAr": "معاينة لأحدث 3 مقالات في المدونة تظهر في الصفحة الرئيسية.",
+        "screenshots": [
+          {
+            "labelEn": "Latest Blog Posts Preview",
+            "labelAr": "معاينة أحدث المقالات",
+            "src": "main-page-latest3plogs.webp"
+          }
+        ]
+      },
+      {
+        "titleEn": "Customer Testimonials",
+        "titleAr": "آراء العملاء",
+        "descriptionEn": "Real customer reviews and ratings section on the homepage.",
+        "descriptionAr": "قسم آراء وتقييمات العملاء الحقيقية في الصفحة الرئيسية.",
+        "screenshots": [
+          {
+            "labelEn": "Testimonials",
+            "labelAr": "آراء العملاء",
+            "src": "customrer-says.webp"
+          }
+        ]
+      },
+      {
+        "titleEn": "Newsletter",
+        "titleAr": "النشرة البريدية",
+        "descriptionEn": "Stay updated with our latest products and promotions in the footer.",
+        "descriptionAr": "ابقَ على اطلاع بأحدث المنتجات والعروض في الفوتر.",
+        "screenshots": [
+          {
+            "labelEn": "Newsletter Subscription",
+            "labelAr": "الاشتراك في النشرة",
+            "src": "stay updated with email.webp"
+          }
+        ]
+      },
+      {
+        "titleEn": "Shop Page",
+        "titleAr": "صفحة المتجر",
+        "descriptionEn": "Main shop page with product grid, filters, categories, and search.",
+        "descriptionAr": "صفحة المتجر الرئيسية مع عرض المنتجات والفلاتر والتصنيفات والبحث.",
+        "screenshots": [
+          {
+            "labelEn": "Shop Page",
+            "labelAr": "صفحة المتجر",
+            "src": "shop page with offers tap.webp"
+          }
+        ]
+      },
+      {
+        "titleEn": "Special Offers",
+        "titleAr": "العروض الخاصة",
+        "descriptionEn": "Dedicated section for current special offers and discounted products.",
+        "descriptionAr": "قسم مخصص للعروض الخاصة والمنتجات المخفضة.",
+        "screenshots": [
+          {
+            "labelEn": "Special Offers",
+            "labelAr": "العروض الخاصة",
+            "src": "special offers.webp"
+          }
+        ]
+      },
+      {
+        "titleEn": "Product Details",
+        "titleAr": "تفاصيل المنتج",
+        "descriptionEn": "Single product page with multiple images, size & color selection, quantity, and add to cart functionality.",
+        "descriptionAr": "صفحة المنتج الواحد مع صور متعددة واختيار المقاس واللون والكمية وإضافة للسلة.",
+        "screenshots": [
+          {
+            "labelEn": "Product Details Page",
+            "labelAr": "صفحة تفاصيل المنتج",
+            "src": "select spesfications and add to cart.webp"
+          },
+          {
+            "labelEn": "Product Images Gallery",
+            "labelAr": "معرض صور المنتج",
+            "src": "product image and additional images.webp"
+          },
+          {
+            "labelEn": "Special Offer Product View",
+            "labelAr": "عرض منتج ضمن العروض",
+            "src": "special offer details.webp"
+          }
+        ]
+      },
+      {
+        "titleEn": "Full Blog Page",
+        "titleAr": "صفحة المدونة الكاملة",
+        "descriptionEn": "Complete blog page with all articles and filtering options.",
+        "descriptionAr": "صفحة المدونة الكاملة مع كل المقالات وخيارات التصفية.",
+        "screenshots": [
+          {
+            "labelEn": "Blog Page",
+            "labelAr": "صفحة المدونة",
+            "src": "plog page.webp"
+          }
+        ]
+      },
+      {
+        "titleEn": "About Us",
+        "titleAr": "من نحن",
+        "descriptionEn": "Brand story, mission, vision, values, and team.",
+        "descriptionAr": "قصة العلامة والمهمة والرؤية والقيم وفريق العمل.",
+        "screenshots": [
+          {
+            "labelEn": "About Us Page",
+            "labelAr": "صفحة من نحن",
+            "src": "about us.webp"
+          }
+        ]
+      },
+      {
+        "titleEn": "Contact Us",
+        "titleAr": "تواصل معنا",
+        "descriptionEn": "Contact form and store information.",
+        "descriptionAr": "نموذج التواصل ومعلومات المتجر.",
+        "screenshots": [
+          {
+            "labelEn": "Contact Page",
+            "labelAr": "صفحة التواصل",
+            "src": "contact.webp"
+          }
+        ]
+      },
+      {
+        "titleEn": "Lucky Winners",
+        "titleAr": "الفائزون",
+        "descriptionEn": "Showcase of lucky winners from daily store events.",
+        "descriptionAr": "عرض الفائزين المحظوظين من فعاليات المتجر اليومية.",
+        "screenshots": [
+          {
+            "labelEn": "Winners Page",
+            "labelAr": "صفحة الفائزين",
+            "src": "winner page.webp"
+          }
+        ]
+      },
+      {
+        "titleEn": "Admin Dashboard",
+        "titleAr": "لوحة تحكم الإدارة",
+        "descriptionEn": "Full admin panel with management for products, orders, blog, categories, marketers, messages, and winners with multi-language support.",
+        "descriptionAr": "لوحة تحكم شاملة لإدارة المنتجات والطلبات والمدونة والفئات والمسوقين والرسائل والفائزين مع دعم متعدد اللغات.",
+        "screenshots": [
+          {
+            "labelEn": "Main Admin Dashboard",
+            "labelAr": "لوحة التحكم الرئيسية",
+            "src": "admin dashboard options.webp"
+          },
+          {
+            "labelEn": "Add New Product",
+            "labelAr": "إضافة منتج جديد",
+            "src": "basic info 1 support lang trans.webp"
+          },
+          {
+            "labelEn": "Sizes, Colors & Pricing (Admin)",
+            "labelAr": "المقاسات والألوان والتسعير (في الإدارة)",
+            "src": "size and colors and pricing .webp"
+          },
+          {
+            "labelEn": "Categories Management",
+            "labelAr": "إدارة الفئات",
+            "src": "manage cateoryes.webp"
+          },
+          {
+            "labelEn": "Orders Management",
+            "labelAr": "إدارة الطلبات",
+            "src": "orders management.webp"
+          },
+          {
+            "labelEn": "Marketers Management",
+            "labelAr": "إدارة المسوقين",
+            "src": "add marketers.webp"
+          },
+          {
+            "labelEn": "Add New Blog Post",
+            "labelAr": "إضافة مقالة جديدة",
+            "src": "add plog page 1.webp"
+          },
+          {
+            "labelEn": "Blog Translation System",
+            "labelAr": "نظام ترجمة المقالات",
+            "src": "add plog page 2 - translation system.webp"
+          },
+          {
+            "labelEn": "Contact Messages",
+            "labelAr": "رسائل العملاء",
+            "src": "message page.webp"
+          },
+          {
+            "labelEn": "Add New Winner",
+            "labelAr": "إضافة فائز جديد",
+            "src": "add winner page.webp"
+          }
+        ]
+      }
+    ],
+    "titleEn": "2Nice - Streetwear E-commerce Store",
+    "titleAr": "تو نايس - متجر ملابس ستريت وير",
+    "descriptionEn": "Modern dark-themed e-commerce platform specialized in comfortable streetwear with extended sizes, daily offers, and a powerful admin dashboard.",
+    "descriptionAr": "منصة تجارة إلكترونية عصرية بتصميم داكن متخصصة في الملابس المريحة بمقاسات ممتدة مع عروض يومية ولوحة تحكم شاملة.",
+    "detailedDescriptionEn": "A complete e-commerce solution featuring a sleek customer frontend with hero, benefits, blog preview, testimonials, and newsletter sections, plus full shop, offers, product details, and a robust admin panel with multi-language support.",
+    "detailedDescriptionAr": "حل تجاري إلكتروني متكامل يحتوي على واجهة أمامية أنيقة (هيرو، مميزات، معاينة مدونة، آراء عملاء، نشرة) بالإضافة إلى المتجر والعروض وتفاصيل المنتج ولوحة تحكم قوية تدعم الترجمة المتعددة.",
+    "order": 6,
+    "url": "https://2nice.co/",
+    "featured": true,
+    "status": "live",
+    "basePath": "/projects/2nice-store",
+    "slug": "2nice-store",
+    "headerImages": [
+      "main-page-hero.webp",
+      "shop page with offers tap.webp",
+      "why 2nice.webp",
+      "admin dashboard options.webp"
+    ],
+    "techStack": ["Next.js", "React", "Node.js", "MongoDB", "Tailwind CSS", "TypeScript"]
   }
 ]

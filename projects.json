@@ -1,0 +1,229 @@
+[
+  {
+    "sections": [
+      {
+        "titleEn": "Landing & Hero",
+        "titleAr": "الصفحة الرئيسية والبداية",
+        "descriptionEn": "Eye-catching hero section with strong call-to-action and modern dark design.",
+        "descriptionAr": "قسم البداية الجذاب مع تصميم داكن عصري ودعوة للعمل واضحة.",
+        "screenshots": [
+          {
+            "labelEn": "Hero Section",
+            "labelAr": "قسم البداية",
+            "src": "main-page-hero.png"
+          }
+        ]
+      },
+      {
+        "titleEn": "Why Choose 2Nice",
+        "titleAr": "لماذا تختار متجر 2Nice",
+        "descriptionEn": "Highlights the key benefits: Free Shipping, Easy Returns, Best Prices, and 24/7 Support.",
+        "descriptionAr": "عرض المميزات الرئيسية: شحن مجاني، إرجاع سهل، أفضل الأسعار، ودعم 24/7.",
+        "screenshots": [
+          {
+            "labelEn": "Why Choose 2Nice",
+            "labelAr": "لماذا 2Nice",
+            "src": "why 2nice.png"
+          }
+        ]
+      },
+      {
+        "titleEn": "Special Offers",
+        "titleAr": "العروض الخاصة",
+        "descriptionEn": "Dedicated section for discounted products with filters and attractive offer cards.",
+        "descriptionAr": "قسم مخصص للمنتجات المخفضة مع فلاتر وعروض جذابة.",
+        "screenshots": [
+          {
+            "labelEn": "Special Offers",
+            "labelAr": "العروض الخاصة",
+            "src": "special offers.png"
+          },
+          {
+            "labelEn": "Special Offer Details",
+            "labelAr": "تفاصيل العرض",
+            "src": "special offer details.png"
+          }
+        ]
+      },
+      {
+        "titleEn": "Shop & Product Details",
+        "titleAr": "المتجر وتفاصيل المنتج",
+        "descriptionEn": "Product listing page with filters, and detailed product view with size, color, and add to cart functionality.",
+        "descriptionAr": "صفحة المنتجات مع الفلاتر، وصفحة تفاصيل المنتج مع اختيار المقاس واللون وإضافة للسلة.",
+        "screenshots": [
+          {
+            "labelEn": "Shop Page",
+            "labelAr": "صفحة المتجر",
+            "src": "shop page with offers tap.png"
+          },
+          {
+            "labelEn": "Product Details",
+            "labelAr": "تفاصيل المنتج",
+            "src": "select spesfications and add to cart.png"
+          },
+          {
+            "labelEn": "Product Images Management",
+            "labelAr": "إدارة صور المنتج",
+            "src": "product image and additional images.png"
+          },
+          {
+            "labelEn": "Sizes, Colors & Pricing",
+            "labelAr": "المقاسات والألوان والتسعير",
+            "src": "size and colors and pricing .png"
+          }
+        ]
+      },
+      {
+        "titleEn": "Customer Testimonials",
+        "titleAr": "آراء العملاء",
+        "descriptionEn": "Real customer reviews and ratings section.",
+        "descriptionAr": "قسم آراء وتقييمات العملاء الحقيقية.",
+        "screenshots": [
+          {
+            "labelEn": "Testimonials",
+            "labelAr": "آراء العملاء",
+            "src": "customrer-says.png"
+          }
+        ]
+      },
+      {
+        "titleEn": "Our Blog",
+        "titleAr": "مدونتنا",
+        "descriptionEn": "Blog section with articles about fashion and size inclusivity, supporting multiple languages.",
+        "descriptionAr": "قسم المدونة مع مقالات حول الموضة والمقاسات، مع دعم الترجمة لعدة لغات.",
+        "screenshots": [
+          {
+            "labelEn": "Blog Page",
+            "labelAr": "صفحة المدونة",
+            "src": "plog page.png"
+          },
+          {
+            "labelEn": "Add New Blog Post",
+            "labelAr": "إضافة مقالة جديدة",
+            "src": "add plog page 1.png"
+          },
+          {
+            "labelEn": "Blog Translation System",
+            "labelAr": "نظام ترجمة المقالات",
+            "src": "add plog page 2 - translation system.png"
+          }
+        ]
+      },
+      {
+        "titleEn": "Lucky Winners",
+        "titleAr": "الفائزون",
+        "descriptionEn": "Showcase of daily winners from store events.",
+        "descriptionAr": "عرض الفائزين اليوميين من فعاليات المتجر.",
+        "screenshots": [
+          {
+            "labelEn": "Winners Page",
+            "labelAr": "صفحة الفائزين",
+            "src": "winner page.png"
+          },
+          {
+            "labelEn": "Add New Winner",
+            "labelAr": "إضافة فائز جديد",
+            "src": "add winner page.png"
+          }
+        ]
+      },
+      {
+        "titleEn": "About Us",
+        "titleAr": "من نحن",
+        "descriptionEn": "Brand story, mission, vision, values, and team introduction.",
+        "descriptionAr": "قصة العلامة التجارية والمهمة والرؤية والقيم وفريق العمل.",
+        "screenshots": [
+          {
+            "labelEn": "About Us Page",
+            "labelAr": "صفحة من نحن",
+            "src": "about us.png"
+          }
+        ]
+      },
+      {
+        "titleEn": "Contact Us",
+        "titleAr": "تواصل معنا",
+        "descriptionEn": "Contact form and contact information.",
+        "descriptionAr": "نموذج التواصل ومعلومات الاتصال.",
+        "screenshots": [
+          {
+            "labelEn": "Contact Page",
+            "labelAr": "صفحة التواصل",
+            "src": "contact.png"
+          }
+        ]
+      },
+      {
+        "titleEn": "Newsletter",
+        "titleAr": "النشرة البريدية",
+        "descriptionEn": "Stay updated section in the footer.",
+        "descriptionAr": "قسم الاشتراك في النشرة البريدية في الفوتر.",
+        "screenshots": [
+          {
+            "labelEn": "Newsletter Subscription",
+            "labelAr": "الاشتراك في النشرة",
+            "src": "stay updated with email.png"
+          }
+        ]
+      },
+      {
+        "titleEn": "Admin Dashboard",
+        "titleAr": "لوحة تحكم الإدارة",
+        "descriptionEn": "Powerful admin panel with full control over products, orders, blog, marketers, messages, winners, and more. Supports multi-language translation.",
+        "descriptionAr": "لوحة تحكم قوية تتحكم في المنتجات والطلبات والمدونة والمسوقين والرسائل والفائزين وغيرها، مع دعم الترجمة متعددة اللغات.",
+        "screenshots": [
+          {
+            "labelEn": "Main Admin Dashboard",
+            "labelAr": "لوحة التحكم الرئيسية",
+            "src": "admin dashboard options.png"
+          },
+          {
+            "labelEn": "Add New Product",
+            "labelAr": "إضافة منتج جديد",
+            "src": "basic info 1 support lang trans.png"
+          },
+          {
+            "labelEn": "Categories Management",
+            "labelAr": "إدارة الفئات",
+            "src": "manage cateoryes.png"
+          },
+          {
+            "labelEn": "Orders Management",
+            "labelAr": "إدارة الطلبات",
+            "src": "orders management.png"
+          },
+          {
+            "labelEn": "Marketers Management",
+            "labelAr": "إدارة المسوقين",
+            "src": "add marketers.png"
+          },
+          {
+            "labelEn": "Contact Messages",
+            "labelAr": "رسائل التواصل",
+            "src": "message page.png"
+          }
+        ]
+      }
+    ],
+    "titleEn": "2Nice - Streetwear E-commerce Store",
+    "titleAr": "تو نايس - متجر ملابس ستريت وير",
+    "descriptionEn": "Modern dark-themed e-commerce platform specialized in comfortable streetwear with extended sizes, daily offers, and a comprehensive admin dashboard.",
+    "descriptionAr": "منصة تجارة إلكترونية عصرية بتصميم داكن متخصصة في الملابس المريحة والستريت وير بمقاسات ممتدة مع عروض يومية ولوحة تحكم شاملة.",
+    "detailedDescriptionEn": "2Nice is a full-featured online clothing store built with modern technologies. It includes a beautiful frontend for customers and a powerful multi-language admin panel for managing products, orders, blog posts, winners, and customer messages.",
+    "detailedDescriptionAr": "تو نايس هو متجر إلكتروني متكامل للملابس مبني بأحدث التقنيات. يحتوي على واجهة أمامية جذابة للعملاء ولوحة تحكم قوية متعددة اللغات لإدارة المنتجات والطلبات والمدونة والفائزين ورسائل العملاء.",
+    "thumbnail": "/projects/2nice-store/main-page-hero.png",
+    "order": 1,
+    "url": "https://2nice.co/",
+    "featured": true,
+    "status": "live",
+    "basePath": "/projects/2nice-store",
+    "slug": "2nice-store",
+    "headerImages": [
+      "main-page-hero.png",
+      "shop page with offers tap.png",
+      "special offers.png",
+      "admin dashboard options.png"
+    ],
+    "techStack": ["Next.js", "React", "Node.js", "MongoDB", "Tailwind CSS", "TypeScript"]
+  }
+]

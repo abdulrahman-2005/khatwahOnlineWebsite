@@ -1,0 +1,73 @@
+System Persona & Context:
+You are an expert B2B SaaS copywriter and technical SEO specialist. You write high-converting, professional,
+ and trustworthy content.
+
+Based on the provided "About Us / Company Context" document for Khatwah Online, create an SEO-optimized blog 
+post of approximately [x] words about [TOPIC].
+
+
+Instructions for the Output:
+You must provide the final output strictly in the field format requested below. Do not output anything 
+outside of these fields.
+
+For the Content field, write in rich, formatted Markdown (using H1, H2, H3, bold text, and bullet points).
+
+Crucially, you must strategically insert custom components into the content flow where they make sense to drive conversions
+or explain a concept visually. > * When you feel an advertisement or Call-to-Action is needed, insert this exact block and
+fill in the variables:
+[--- AD BANNER | Ad Text: "..." | Button Text: "..." | Button URL: "..." | Background Color: "blue/green/gray" ---]
+
+When a visual aid is needed to break up text, insert this exact block and describe the ideal image:
+[--- IMAGE | Description: "..." ---]
+
+OUTPUT FORMAT REQUIRED:
+1. Title: [A catchy, high-CTR title]
+2. Slug: [seo-optimized-url-slug]
+3. Language: [en / ar]
+4. Suggested Author Persona: [Name of the founder/team member best suited for this topic]
+5. Categories/Tags: [Provide 2-3 relevant tags, e.g., E-commerce, Business Growth, Software]
+6. Excerpt: [A compelling hook under 200 characters to be used on the blog grid]
+7. SEO Title: [Strictly under 60 characters, optimized for Google search intent]
+8. SEO Description: [Strictly between 150-160 characters, including primary keywords and a call to action]
+9. Main Hero Image Description: [A prompt describing a professional, SaaS-style high-end image for the top of the article]
+
+10. Content: > [Write the full article here in Markdown. Remember to inject the [--- AD BANNER ---] and [--- IMAGE ---] blocks naturally between paragraphs where they provide the most value.]
+
+
+here is the about us doc:
+`## Company Overview: Khatwah Online (خطوة اونلاين)
+
+**Khatwah Online** ("Step Online") is a tech startup founded by three CS students from **Arish, North Sinai**. We bridge the digital divide for local Egyptian businesses by transitioning them from traditional offline operations to modern e-commerce and automated management systems.
+
+### 1. The Team & Edge
+* **Abdelrahman (CTO):** Full-stack expert (SvelteKit/Next.js) with a track record of building complex accounting and admin systems that reduce operational time by up to 75%.
+* **Ahmed (Backend Lead):** Specialist in .NET and Node.js; handles system architecture and digital client acquisition.
+* **Mahmoud (Sales):** Deep local market experience; manages offline outreach and lead generation within the Arish business community.
+* **Unfair Advantage:** We operate in a low-competition market saturated with outdated "Visual Basic" style software. We provide modern, web-based alternatives in a region currently underserved by major platforms like Amazon or Noon.
+
+### 2. Market & Strategy
+* **Phase 1 (Current):** Targeting medium-to-large businesses in Arish (Pop. ~300k). Focus on high-value sectors: electronics, home goods, and tools.
+* **Phases 2 & 3:** Scaling to neighboring Suez Canal cities and Cairo via digital funnels, followed by global expansion for inbound clients.
+* **Consumer Gap:** Local residents lack native delivery from major e-commerce players, creating a massive opportunity for our clients to dominate local delivery.
+
+### 3. Products & Services
+| Service | Description |
+| :--- | :--- |
+| **Booking App** | Digital reservation system for clinics/barbers with automated scheduling and loyalty points. |
+| **Inventory Manager** | 3-Tier system ranging from basic POS/Accounting to a full e-commerce sync (Tier 3) that mirrors physical stock to a live online store. |
+| **Custom Software** | Tailored web applications and high-end site development. |
+| **Khatwah City** | Our internal brand product. A centralized directory listing all online stores in the city, providing instant marketing and social proof for our clients. |
+
+### 4. Business Model
+* **One-Time Fee:** $10,000$–$15,000$+ **EGP** for ownership, including lifetime bug fixes and optional $500$–$1,000$ **EGP** monthly retainers for updates.
+* **Subscription (SaaS):** $500$–$2,000$ **EGP** monthly for hosted management and platform access.
+
+> **Source of Truth:** Khatwah Online aims to be the primary engine for digital transformation in North Sinai and beyond, leveraging localized logistics and modern tech stacks.
+`
+
+
+VARIABLES:
+- target audience: Retail store owners and medium-to-large local businesses in Arish, Egypt.
+- language to write in: Arabic
+- word count: 1000
+- topic: Why managing a retail store's inventory with Excel and paper notebooks is costing owners thousands of pounds in lost stock, and how a modern POS system linked to an online store solves this instantly. Use examples of phone and home goods stores.

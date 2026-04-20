@@ -1,20 +1,21 @@
-export const metadata = {
-  title: "من نحن — الفريق اللي بيبنى خُطوة اونلاين",
-  description:
-    "تلاتة من العريش، درسنا كمبيوتر ساينس، وقررنا نبدأ. تعرف على فريق خُطوة اونلاين — المؤسسين، الرؤية، والتقنيات اللي بنستخدمها.",
-  alternates: {
-    canonical: "https://khatwah.vercel.app/about",
-  },
-  openGraph: {
-    title: "من نحن — فريق خُطوة اونلاين",
-    description: "تلاتة من العريش. درسنا كمبيوتر ساينس. قررنا نبدأ.",
-    url: "https://khatwah.vercel.app/about",
-    type: "website",
-  },
-};
+import { generateAboutMetadata } from "@/lib/seo";
+
+export const metadata = generateAboutMetadata("ar");
 
 import AboutContent from "./AboutContent";
+import { BreadcrumbSchema, LocalBusinessSchema } from "@/components/seo/StructuredData";
 
 export default function Page() {
-  return <AboutContent />;
+  const breadcrumbs = [
+    { name: "الرئيسية", url: "https://www.khatwah.online" },
+    { name: "من نحن", url: "https://www.khatwah.online/about" },
+  ];
+
+  return (
+    <>
+      <BreadcrumbSchema items={breadcrumbs} />
+      <LocalBusinessSchema />
+      <AboutContent />
+    </>
+  );
 }

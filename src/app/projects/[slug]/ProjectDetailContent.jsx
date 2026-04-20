@@ -3,117 +3,18 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useLocale } from "@/contexts/LocaleContext";
+import { getProjectWhatsAppLink } from "@/utils/whatsapp";
 import i18n from "../../../../data/i18n.json";
 import { Reveal } from "@/components/ui/Reveal";
-import { useEffect, useRef } from "react";
+import { InfiniteMarquee as OptimizedInfiniteMarquee } from "@/components/ui/OptimizedMarquee";
 
-/* --- Infinite Marquee Component --- */
+/* --- Wrapper for Infinite Marquee with gradients --- */
 function InfiniteMarquee({ images, basePath }) {
-  const trackRef = useRef(null);
-  const stateRef = useRef({
-    cards: [],
-    scroll: 0,
-    paused: false,
-    raf: null,
-    nextDataIdx: 0,
-    speed: 1.2,
-  });
-
-  useEffect(() => {
-    if (!images || images.length === 0) return;
-    const track = trackRef.current;
-    if (!track) return;
-
-    const updateMarquee = () => {
-      const viewportW = window.innerWidth;
-      const CARD_W = viewportW < 640 ? 200 : 500;
-      const GAP = viewportW < 640 ? 12 : 24;
-      const SLOT = CARD_W + GAP;
-      
-      const numCards = Math.ceil((viewportW * 2) / SLOT) + 4;
-      const totalWidth = numCards * SLOT;
-      const s = stateRef.current;
-      s.nextDataIdx = numCards;
-
-      track.innerHTML = "";
-      s.cards = [];
-      s.scroll = 0;
-
-      for (let i = 0; i < numCards; i++) {
-        const imgSrc = images[i % images.length];
-        const card = document.createElement("div");
-        card.style.cssText = `
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: ${CARD_W}px;
-          height: ${viewportW < 640 ? "140px" : "320px"};
-          border-radius: ${viewportW < 640 ? "16px" : "32px"};
-          overflow: hidden;
-          border: 1px solid var(--color-border);
-          background: var(--color-surface);
-          cursor: pointer;
-          transform: translate3d(${i * SLOT}px, 0, 0);
-          transition: border-color 0.4s;
-          flex-shrink: 0;
-          will-change: transform;
-        `;
-
-        const img = document.createElement("img");
-        img.src = `${basePath}/${imgSrc}`;
-        img.alt = "Project preview";
-        img.style.cssText = `
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-          filter: brightness(0.95);
-          transition: filter 0.6s ease, transform 0.6s ease;
-        `;
-        card.appendChild(img);
-        track.appendChild(card);
-        s.cards.push({ el: card, img, offset: i * SLOT, cardWidth: CARD_W, slot: SLOT, totalW: totalWidth });
-      }
-    };
-
-    updateMarquee();
-    window.addEventListener('resize', updateMarquee);
-
-    let lastTs = null;
-    function loop(ts) {
-      if (lastTs === null) lastTs = ts;
-      const dt = Math.min(ts - lastTs, 50);
-      lastTs = ts;
-      
-      const s = stateRef.current;
-      if (!s.paused) s.scroll += s.speed * (dt / 16.67);
-
-      for (const card of s.cards) {
-        let x = card.offset - s.scroll;
-        if (x < -card.slot) {
-          card.offset += card.totalW;
-          x = card.offset - s.scroll;
-          const nextImg = images[s.nextDataIdx % images.length];
-          card.img.src = `${basePath}/${nextImg}`;
-          s.nextDataIdx++;
-        }
-        card.el.style.transform = `translate3d(${x}px, 0, 0)`;
-      }
-      s.raf = requestAnimationFrame(loop);
-    }
-    stateRef.current.raf = requestAnimationFrame(loop);
-
-    return () => {
-      window.removeEventListener('resize', updateMarquee);
-      cancelAnimationFrame(stateRef.current.raf);
-    };
-  }, [images, basePath]);
-
   return (
     <section className="relative w-full overflow-hidden bg-[var(--color-surface-elevated)] border-y border-[var(--color-border)] py-6 sm:py-16">
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 sm:w-48 bg-gradient-to-r from-[var(--color-surface-elevated)] to-transparent" />
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 sm:w-48 bg-gradient-to-l from-[var(--color-surface-elevated)] to-transparent" />
-      <div ref={trackRef} className="relative h-[140px] sm:h-[320px] w-full" />
+      <OptimizedInfiniteMarquee images={images} basePath={basePath} speed={1.2} />
     </section>
   );
 }
@@ -283,35 +184,60 @@ export default function ProjectDetailContent({ project }) {
         </section>
       ))}
 
-      {/* 4. CTA */}
-      <section className="px-6 py-20 sm:py-32 bg-[var(--color-background)]">
-        <div className="mx-auto max-w-5xl rounded-[2.5rem] sm:rounded-[3rem] bg-[var(--color-surface-elevated)] border border-[var(--color-border)] p-10 sm:p-24 text-center relative overflow-hidden">
-          <div className="absolute -right-24 -bottom-24 h-96 w-96 opacity-10 blur-[100px] bg-[var(--color-gold)] rounded-full" />
-          
+      {/* CTA Section */}
+      <section className="px-6 py-32 sm:py-40 border-t border-border bg-surface-elevated">
+        <div className="mx-auto max-w-6xl text-center">
           <Reveal direction="up">
-            <h3 className="mb-6 sm:mb-8 text-3xl sm:text-6xl font-black tracking-tighter text-[var(--color-text)]">
+            <h2 className="mb-14 text-5xl sm:text-8xl font-black leading-none tracking-tighter text-(--color-text)" style={{ fontFamily: "var(--font-display)" }}>
               {i18n[locale].common.like_what_you_see}
-            </h3>
+              <br />
+              <span className="text-gold" style={{fontFamily: "var(--font-ui)"}}>{i18n[locale].common.can_build_better}</span>
+            </h2>
           </Reveal>
-          
-          <Reveal direction="up" delay={100}>
-            <p className="mb-10 sm:mb-14 text-base sm:text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto leading-relaxed font-medium">
-              {i18n[locale].common.can_build_better}
-            </p>
-          </Reveal>
-          
+
+
           <Reveal direction="up" delay={200}>
-            <Link 
-              href="/contact" 
-              className="group relative inline-flex items-center gap-4 overflow-hidden rounded-full bg-[var(--color-gold)] px-10 py-5 sm:px-12 sm:py-6 text-xs sm:text-sm font-black uppercase tracking-widest text-[var(--color-ink)] transition-all hover:pr-14 sm:hover:pr-16 active:scale-95"
+            <a
+              href={getProjectWhatsAppLink(project, locale)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative inline-flex items-center gap-6 overflow-hidden rounded-full bg-gold px-12 py-6 sm:px-16 sm:py-8 text-sm font-black uppercase tracking-[0.3em] text-ink transition-all hover:pr-20 active:scale-95"
+              style={{ fontFamily: "var(--font-ui)" }}
             >
-              <span className="relative z-10">{i18n[locale].common.contact_us}</span>
-              <div className="absolute right-4 sm:right-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
-                <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
+              <span className="relative z-10 text-4xl">{i18n[locale].common.contact_us}</span>
+              <div className="absolute right-8 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
+                 <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                 </svg>
               </div>
-            </Link>
+            </a>
+          </Reveal>
+
+          <Reveal direction="up" delay={300}>
+            <div className="mt-16 pt-12 border-t border-border">
+              <p className="text-sm text-text-muted mb-6">
+                {i18n[locale].seo_content.browse_more}
+              </p>
+              <Link
+                href="/projects"
+                className="inline-flex items-center gap-3 text-sm font-bold text-gold hover:text-primary transition-colors"
+              >
+                <span>{i18n[locale].seo_content.all_projects}</span>
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d={locale === 'ar' ? "M15 19l-7-7 7-7" : "M9 5l7 7-7 7"} />
+                </svg>
+              </Link>
+              <span className="mx-4 text-text-muted">|</span>
+              <Link
+                href="/"
+                className="inline-flex items-center gap-3 text-sm font-bold text-gold hover:text-primary transition-colors"
+              >
+                <span>{i18n[locale].seo_content.home}</span>
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d={locale === 'ar' ? "M15 19l-7-7 7-7" : "M9 5l7 7-7 7"} />
+                </svg>
+              </Link>
+            </div>
           </Reveal>
         </div>
       </section>

@@ -30,7 +30,7 @@ export default function ContactForm() {
     );
   }
 
-  const baseInput = "w-full border-2 bg-transparent px-5 py-4 text-sm font-bold transition-all duration-300 focus:outline-none";
+  const baseInput = "w-full border-2 bg-transparent px-5 py-4 text-base font-bold transition-all duration-300 focus:outline-none";
   const focusGold = { borderColor: "var(--color-gold)", boxShadow: "0 0 0 3px var(--color-gold-soft)" };
   const blurDefault = { borderColor: "var(--color-border)", boxShadow: "none" };
 
@@ -42,20 +42,20 @@ export default function ContactForm() {
       <div className="p-8 sm:p-10">
         <div className="mb-8 space-y-6">
           <div>
-            <label htmlFor="name" className="mb-2 block text-xs font-black tracking-wider uppercase" style={{ fontFamily: "var(--font-display)", color: "var(--color-gold)" }}>{i18n[locale].contact_page.form_name}</label>
+            <label htmlFor="name" className="mb-2 block text-sm sm:text-base font-black tracking-wider uppercase" style={{ fontFamily: "var(--font-ui)", color: "var(--color-gold)" }}>{i18n[locale].contact_page.form_name}</label>
             <input id="name" type="text" required className={baseInput} style={{ borderColor: "var(--color-border)", color: "var(--color-text)" }} onFocus={(e) => Object.assign(e.currentTarget.style, focusGold)} onBlur={(e) => Object.assign(e.currentTarget.style, blurDefault)} placeholder={i18n[locale].contact_page.form_name_placeholder} />
           </div>
           <div>
-            <label htmlFor="contact" className="mb-2 block text-xs font-black tracking-wider uppercase" style={{ fontFamily: "var(--font-display)", color: "var(--color-gold)" }}>{i18n[locale].contact_page.form_contact}</label>
+            <label htmlFor="contact" className="mb-2 block text-sm sm:text-base font-black tracking-wider uppercase" style={{ fontFamily: "var(--font-ui)", color: "var(--color-gold)" }}>{i18n[locale].contact_page.form_contact}</label>
             <input id="contact" type="text" required className={baseInput} style={{ borderColor: "var(--color-border)", color: "var(--color-text)" }} onFocus={(e) => Object.assign(e.currentTarget.style, focusGold)} onBlur={(e) => Object.assign(e.currentTarget.style, blurDefault)} placeholder={i18n[locale].contact_page.form_contact_placeholder} />
           </div>
           <div>
-            <label htmlFor="message" className="mb-2 block text-xs font-black tracking-wider uppercase" style={{ fontFamily: "var(--font-display)", color: "var(--color-gold)" }}>{i18n[locale].contact_page.form_message}</label>
+            <label htmlFor="message" className="mb-2 block text-sm sm:text-base font-black tracking-wider uppercase" style={{ fontFamily: "var(--font-ui)", color: "var(--color-gold)" }}>{i18n[locale].contact_page.form_message}</label>
             <textarea id="message" rows={5} required className={`${baseInput} resize-none`} style={{ borderColor: "var(--color-border)", color: "var(--color-text)" }} onFocus={(e) => Object.assign(e.currentTarget.style, focusGold)} onBlur={(e) => Object.assign(e.currentTarget.style, blurDefault)} placeholder={i18n[locale].contact_page.form_message_placeholder} />
           </div>
         </div>
 
-        <button type="submit" disabled={loading} className="w-full rounded-full px-6 py-5 text-sm font-bold transition-all duration-500 hover:shadow-[0_0_30px_var(--color-gold-soft)] disabled:opacity-50" style={{ fontFamily: "var(--font-display)", background: "linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))", color: "var(--color-ink)", letterSpacing: "2px", fontSize: "16px", fontWeight: 700 }}>
+        <button type="submit" disabled={loading} className="w-full rounded-full px-6 py-5 text-base sm:text-lg font-bold transition-all duration-500 hover:shadow-[0_0_30px_var(--color-gold-soft)] disabled:opacity-50" style={{ fontFamily: "var(--font-ui)", background: "linear-gradient(135deg, var(--color-gold), var(--color-gold-dark))", color: "var(--color-ink)", letterSpacing: "2px", fontWeight: 700 }}>
           {loading ? i18n[locale].contact_page.form_sending : i18n[locale].contact_page.form_send}
         </button>
       </div>

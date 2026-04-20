@@ -10,7 +10,7 @@
 **Mission:** Help local businesses in Egypt transition from offline-only operations to a real online presence — e-commerce, reservations, inventory, and delivery.
 **Founded by:** Three CS graduates from Arish, North Sinai, Egypt
 **Stage:** Pre-revenue, launching operations
-**website** https://khatwah.vercel.app/ - in development
+**website** https://www.khatwah.online/ - in development
 ---
 
 ## 2. TEAM
@@ -170,8 +170,8 @@ A Khatwa Online–owned directory website listing all online stores in Arish —
 
 **Frontend:** ReactJS + TailWindCSS
 **Backend:** NextJS + NodeJS + Javascript
-**Database:** Supabase PostgreSQL
-**Hosting / Infrastructure:** Vercel/Netlify
+**Database:** Firebase
+**Hosting / Infrastructure:** Vercel
 **NOTES** absolutely no typescript, online use javascript and JSX, this project doesnt handle typescript
 
 ---

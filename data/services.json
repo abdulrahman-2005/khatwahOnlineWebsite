@@ -1,0 +1,21 @@
+{
+  "en": [
+    {
+      "id": "phone-story",
+      "slug": "phone-story",
+      "title": "PhoneStory",
+      "subtitle": "Story Card Generator for Used Phones",
+      "description": "Create professional story cards for used phones in 30 seconds. Perfect for phone sellers on WhatsApp and Instagram.",
+      "icon": "📱",
+      "category": "Tools",
+      "features": [
+        "Add up to 4 phones in one card",
+        "Ready templates for quick start",
+        "High-quality export (1080×1920)",
+        "Live preview while editing",
+        "English interface"
+      ],
+      "tags": ["Free", "No signup", "Instant export"]
+    }
+  ]
+}

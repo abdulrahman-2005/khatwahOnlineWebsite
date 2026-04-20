@@ -1,0 +1,37 @@
+{
+  "name": "خطوة اونلاين | Khatwah Online",
+  "short_name": "Khatwah",
+  "description": "حلول تقنية للتجارة المحلية — شركة تقنية من العريش، شمال سيناء",
+  "icons": [
+    {
+      "src": "/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#0A0D0B",
+  "background_color": "#0A0D0B",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/",
+  "orientation": "portrait-primary",
+  "dir": "rtl",
+  "lang": "ar"
+}

@@ -10,17 +10,34 @@ export function useReveal(options = {}) {
     const el = ref.current;
     if (!el) return;
 
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      setVisible(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) setVisible(true);
-        else if (options.reversible) setVisible(false);
+        if (entry.isIntersecting) {
+          setVisible(true);
+          // Disconnect after first reveal for better performance
+          if (!options.reversible) {
+            observer.disconnect();
+          }
+        } else if (options.reversible) {
+          setVisible(false);
+        }
       },
-      { threshold: options.threshold ?? 0.12, rootMargin: options.rootMargin ?? "0px 0px -50px 0px" }
+      { 
+        threshold: options.threshold ?? 0.1, // Reduced from 0.12 for earlier trigger
+        rootMargin: options.rootMargin ?? "0px 0px -80px 0px" // Trigger earlier
+      }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [options.reversible, options.threshold, options.rootMargin]);
 
   return [ref, visible];
 }
@@ -30,8 +47,8 @@ export function Reveal({
   children,
   delay = 0,
   direction = "up",
-  distance = 28,
-  duration = 600,
+  distance = 24, // Reduced from 28 for subtler effect
+  duration = 500, // Reduced from 600 for snappier feel
   reversible = false,
   className = "",
   style = {},
@@ -43,7 +60,7 @@ export function Reveal({
     down: `translateY(${visible ? 0 : -distance}px)`,
     left: `translateX(${visible ? 0 : distance}px)`,
     right: `translateX(${visible ? 0 : -distance}px)`,
-    scale: `scale(${visible ? 1 : 0.96})`,
+    scale: `scale(${visible ? 1 : 0.97})`, // Reduced from 0.96 for subtler effect
     none: "none",
   };
 
@@ -54,8 +71,9 @@ export function Reveal({
       style={{
         opacity: visible ? 1 : 0,
         transform: t[direction],
-        transition: `opacity ${duration}ms cubic-bezier(0.25,0.8,0.25,1) ${delay}ms, transform ${duration}ms cubic-bezier(0.25,0.8,0.25,1) ${delay}ms`,
-        willChange: "opacity, transform",
+        transition: `opacity ${duration}ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms, transform ${duration}ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms`,
+        // Remove will-change after animation completes
+        willChange: visible ? 'auto' : 'opacity, transform',
         ...style,
       }}
     >

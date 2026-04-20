@@ -1,15 +1,23 @@
-﻿import { Outfit, IBM_Plex_Sans_Arabic } from "next/font/google";
+import { Outfit, IBM_Plex_Sans_Arabic } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/layout/NavBar";
 import Footer from "@/components/layout/Footer";
 import { LocaleProvider } from "@/contexts/LocaleContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import Script from "next/script";
+import { OrganizationSchema, WebsiteSchema, LocalBusinessSchema } from "@/components/seo/StructuredData";
+import { seoConfig } from "@/lib/seo";
+import contact from "../../data/contact.json";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
+  preload: true,
+  fallback: ['system-ui', 'arial'],
+  adjustFontFallback: true,
 });
 
 const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
@@ -17,62 +25,41 @@ const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic"],
   variable: "--font-body",
   display: "swap",
+  preload: true,
+  fallback: ['system-ui', 'arial'],
+  adjustFontFallback: true,
 });
 
 export const metadata = {
-  metadataBase: new URL("https://khatwah.vercel.app/"),
+  metadataBase: new URL("https://www.khatwah.online"),
   title: {
-    default: "خطوة اونلاين | Khatwah Online — حلول تقنية للتجارة المحلية",
+    default: "خطوة اونلاين | Khatwah Online — شركة برمجة مصرية | أفضل شركة تصميم مواقع في مصر",
     template: "%s | خطوة اونلاين",
   },
   description:
-    "خطوة اونلاين — شركة تقنية من العريش، شمال سيناء. بنبني متاجر أونلاين، أنظمة حجوزات، إدارة مخزون، وحلول برمجية مخصصة للتجارة المحلية في مصر.",
-  keywords: [
-    "خطوة اونلاين",
-    "كطوة اونلاين",
-    "khatwah online",
-    "متاجر اونلاين العريش",
-    "تصميم مواقع العريش",
-    "برمجة تطبيقات مصر",
-    "نظام حجوزات اونلاين",
-    "نظام مخزون مصر",
-    "حلول رقمية للتجارة",
-    "شركة تقنية شمال سيناء",
-    "e-commerce arish",
-    "web development egypt",
-  ],
-  authors: [{ name: "خطوة اونلاين", url: "https://khatwah.vercel.app/" }],
+    "شركة برمجة مصرية متخصصة في تصميم وتطوير المواقع الإلكترونية وبرمجة تطبيقات الجوال. نقدم حلول برمجية مخصصة للتجارة المحلية في مصر مع دعم فني مستمر وجودة عالية.",  
+  keywords: seoConfig.coreKeywords.ar,
+  authors: [{ name: "خطوة اونلاين", url: seoConfig.baseUrl }],
   creator: "خطوة اونلاين",
   publisher: "خطوة اونلاين",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
+  manifest: "/site.webmanifest",
   openGraph: {
     type: "website",
     locale: "ar_EG",
     alternateLocale: ["en_US"],
-    url: "https://khatwah.vercel.app/",
+    url: seoConfig.baseUrl,
     siteName: "خطوة اونلاين | Khatwah Online",
-    title: "خطوة اونلاين — حلول تقنية للتجارة المحلية",
+    title: "خطوة اونلاين — شركة برمجة مصرية | أفضل شركة تصميم مواقع في مصر",
     description:
-      "شركة تقنية من العريش، شمال سيناء. بنبني متاجر أونلاين، أنظمة حجوزات، إدارة مخزون، وحلول برمجية مخصصة.",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "خطوة اونلاين — Khatwah Online",
-      },
-    ],
+      "شركة برمجة مصرية متخصصة في تصميم وتطوير المواقع الإلكترونية وبرمجة تطبيقات الجوال. نقدم حلول برمجية مخصصة للتجارة المحلية في مصر.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "خطوة اونلاين — حلول تقنية للتجارة المحلية",
+    site: contact.social.twitter.handle,
+    creator: contact.social.twitter.handle,
+    title: "خطوة اونلاين — شركة برمجة مصرية | أفضل شركة تصميم مواقع في مصر",
     description:
-      "شركة تقنية من العريش، شمال سيناء. بنبني متاجر أونلاين، أنظمة حجوزات، إدارة مخزون.",
-    images: ["/og-image.png"],
+      "شركة برمجة مصرية متخصصة في تصميم وتطوير المواقع الإلكترونية وبرمجة تطبيقات الجوال. نقدم حلول برمجية مخصصة للتجارة المحلية في مصر.",
   },
   robots: {
     index: true,
@@ -80,26 +67,29 @@ export const metadata = {
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
-  verification: {
-    // google: "your-google-verification-code",
+  alternates: {
+    canonical: seoConfig.baseUrl,
+    languages: {
+      'ar': seoConfig.baseUrl,
+      'en': `${seoConfig.baseUrl}/en`,
+      'x-default': seoConfig.baseUrl
+    }
   },
-  category: "technology",
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+    yandex: process.env.YANDEX_VERIFICATION,
+    bing: process.env.BING_VERIFICATION,
+  }
 };
-
 export const viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 5,
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0A0D0B" },
-    { media: "(prefers-color-scheme: light)", color: "#FFFEF9" },
-  ],
-  colorScheme: "dark light",
+  themeColor: "#0A0D0B",
 };
 
 export default function RootLayout({ children }) {
@@ -111,23 +101,48 @@ export default function RootLayout({ children }) {
             __html: `
               (function() {
                 try {
-                  var savedTheme = localStorage.getItem('theme');
+                  var savedTheme = localStorage.getItem('khatwah-theme');
                   var prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-                  if (savedTheme === 'light' || (!savedTheme && prefersLight)) {
-                    document.documentElement.setAttribute('data-theme', 'light');
-                  } else {
+                  if (savedTheme === 'dark' || (!savedTheme && !prefersLight)) {
                     document.documentElement.setAttribute('data-theme', 'dark');
+                  } else {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                  }
+
+                  var savedLocale = localStorage.getItem('khatwah-locale');
+                  var browserLang = navigator.language;
+                  if (savedLocale === 'en' || (!savedLocale && browserLang && !browserLang.startsWith('ar'))) {
+                    document.documentElement.dir = 'ltr';
+                    document.documentElement.lang = 'en';
+                  } else {
+                    document.documentElement.dir = 'rtl';
+                    document.documentElement.lang = 'ar';
                   }
                 } catch (e) {}
               })();
             `,
           }}
         />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/apple-icon.png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        
+        <link 
+          rel="preload" 
+          href="/fonts/terrabica.otf" 
+          as="font" 
+          type="font/otf" 
+          crossOrigin="anonymous"
+        />
+        
+        <link rel="dns-prefetch" href="https://cdn.sanity.io" />
+        
+        <OrganizationSchema />
+        <WebsiteSchema />
+        <LocalBusinessSchema />
       </head>
       <body className="min-h-screen antialiased">
-        {/* Google Analytics - Strategy afterInteractive is best for production */}
+        {/* Changed from lazyOnload to afterInteractive */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-2G26Q35GPF"
           strategy="afterInteractive"
@@ -146,6 +161,8 @@ export default function RootLayout({ children }) {
               <NavBar />
               <main>{children}</main>
               <Footer />
+              <Analytics />
+              <SpeedInsights />
           </LocaleProvider>
         </ThemeProvider>
       </body>

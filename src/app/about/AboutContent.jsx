@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useLocale } from "@/contexts/LocaleContext";
 import i18n from "../../../data/i18n.json";
+import ScrollIndicator from "@/components/ui/ScrollIndicator";
+import Eyebrow from "@/components/ui/Eyebrow";
 
 export default function AboutContent() {
   const { locale } = useLocale();
@@ -14,8 +17,8 @@ export default function AboutContent() {
     "@type": "AboutPage",
     mainEntity: {
       "@type": "Organization",
-      name: locale === "ar" ? "خُطوة اونلاين" : "Khatwah Online",
-      description: locale === "ar" ? "شركة تقنية من العريش، شمال سيناء" : "A tech company from Arish, North Sinai",
+      name: t.about_page.org_name,
+      description: t.about_page.org_description,
       employees: team.map((m) => ({
         "@type": "Person",
         name: m.name,
@@ -24,6 +27,7 @@ export default function AboutContent() {
       })),
     },
   };
+
   return (
     <>
       {/* Structured Data */}
@@ -34,27 +38,52 @@ export default function AboutContent() {
         }}
       />
       {/* Page Hero */}
-      <section className="relative w-full overflow-hidden px-6 pt-32 pb-12 sm:px-12 sm:pt-44 sm:pb-20 lg:px-20" style={{ backgroundColor: "var(--color-background)" }}>
+      <section className="relative flex min-h-screen w-full items-center overflow-hidden px-6 py-32 sm:px-12 lg:px-20" style={{ backgroundColor: "var(--color-background)" }}>
         {/* Vibrant background accents */}
-        <div className="absolute -right-32 top-20 h-96 w-96 opacity-20 blur-3xl" style={{ backgroundColor: "var(--color-primary)", transform: "rotate(45deg)" }} />
-        <div className="absolute -left-20 bottom-0 h-64 w-64 opacity-15 blur-3xl" style={{ backgroundColor: "var(--color-gold)", transform: "rotate(45deg)" }} />
+        <div className="absolute -right-32 top-20 h-96 w-96 animate-pulse opacity-20 blur-3xl" style={{ backgroundColor: "var(--color-primary)", transform: "rotate(45deg)", animationDuration: "5s" }} />
+        <div className="absolute -left-20 bottom-0 h-64 w-64 animate-pulse opacity-15 blur-3xl" style={{ backgroundColor: "var(--color-gold)", transform: "rotate(45deg)", animationDuration: "4s" }} />
 
         <div className="relative mx-auto max-w-6xl">
-          <div className="mb-8 flex items-center gap-4">
-            <span className="h-1 w-16" style={{ backgroundColor: "var(--color-gold)" }} />
-            <span className="text-3xl font-black tracking-wider uppercase" style={{ fontFamily: "var(--font-display)", color: "var(--color-gold)" }}>{i18n[locale].about_page.hero_eyebrow}</span>
+          <div className="mb-8">
+            <Eyebrow color="var(--color-gold)" size="lg">
+              {i18n[locale].about_page.hero_eyebrow}
+            </Eyebrow>
           </div>
-          <h1 className="max-w-4xl text-5xl font-black leading-[0.95] sm:text-7xl lg:text-[110px]" style={{ color: "var(--color-text)", letterSpacing: "-2px" }}>
+          <h1 className="max-w-4xl text-5xl font-black leading-[0.95] sm:text-7xl lg:text-[110px]" style={{ fontFamily: "var(--font-display)", color: "var(--color-text)", letterSpacing: "-2px" }}>
             {i18n[locale].about_page.hero_headline_1}
             <br />
-            <span className="relative" style={{ color: "var(--color-primary)" }}>
+            <span className="relative inline-block animate-gradient bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-accent)] to-[var(--color-primary)] bg-clip-text text-transparent" style={{ backgroundSize: "200% auto" }}>
               {i18n[locale].about_page.hero_headline_2}
             </span>
           </h1>
-          <p className="mt-8 max-w-md text-base leading-7" style={{ color: "var(--color-text-muted)" }}>
-            {i18n[locale].about_page.hero_subtitle}
-          </p>
         </div>
+
+        {/* Scroll Indicator */}
+        <ScrollIndicator color="var(--color-primary)" />
+
+        <style jsx>{`
+          @keyframes float-slow {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-15px) scale(1.05); }
+          }
+          @keyframes expand {
+            0%, 100% { width: 4rem; }
+            50% { width: 5rem; }
+          }
+          @keyframes gradient {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+          }
+          .animate-float-slow {
+            animation: float-slow 4s ease-in-out infinite;
+          }
+          .animate-expand {
+            animation: expand 2s ease-in-out infinite;
+          }
+          .animate-gradient {
+            animation: gradient 3s linear infinite;
+          }
+        `}</style>
       </section>
 
       {/* Team Cards */}
@@ -62,7 +91,7 @@ export default function AboutContent() {
         <div className="mx-auto max-w-6xl">
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {team.map((member, index) => {
-              const images = ["/abdelrahman-about-image.jpg", "/ahmed-about-image.jpg", "/mahmoud-about-image.jpg"];
+              const images = ["/abdelrahman-about-image.webp", "/ahmed-about-image.webp", "/mahmoud-about-image.webp"];
               const accents = [
                 { accent: "var(--color-primary)", accentSoft: "var(--color-primary-soft)", accentGlow: "var(--color-primary-glow)" },
                 { accent: "var(--color-gold)", accentSoft: "var(--color-gold-soft)", accentGlow: "var(--color-gold-glow)" },
@@ -99,10 +128,13 @@ export default function AboutContent() {
 
                   {/* Image — tall, dominant */}
                   <div className="relative h-[75vh] min-h-[500px] w-full overflow-hidden">
-                    <img
+                    <Image
                       src={images[index]}
                       alt={member.name}
-                      className="h-full w-full object-cover transition-all duration-700 group-hover:scale-105 group-hover:brightness-110"
+                      fill
+                      className="object-cover transition-all duration-700 group-hover:scale-105 group-hover:brightness-110"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      priority={index === 0}
                     />
                     {/* Gradient */}
                     <div className="absolute inset-0" style={{ background: "linear-gradient(to top, var(--color-surface) 0%, transparent 50%)" }} />
@@ -124,7 +156,7 @@ export default function AboutContent() {
                         {index === 1 && <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" /></svg>}
                         {index === 2 && <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" /></svg>}
                       </div>
-                      <span className="block text-xs font-black tracking-wider uppercase" style={{ fontFamily: "var(--font-display)", color: accent }}>
+                      <span className="block text-xs font-black tracking-wider uppercase" style={{ fontFamily: "var(--font-ui)", color: accent }}>
                         {member.role}
                       </span>
                     </div>
@@ -133,14 +165,14 @@ export default function AboutContent() {
                   {/* Content */}
                   <div className="border-t p-6" style={{ borderColor: "var(--color-border)" }}>
                     <div className="mb-3 flex items-center justify-between">
-                      <h3 className="text-2xl font-black" style={{ color: "var(--color-text)", letterSpacing: "-0.5px" }}>
+                      <h3 className="text-2xl font-black" style={{ fontFamily: "var(--font-heading)", color: "var(--color-text)", letterSpacing: "-0.5px" }}>
                         {member.name}
                       </h3>
                       <svg className="h-5 w-5 transition-transform duration-500 group-hover:-translate-x-2" style={{ color: accent }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
                       </svg>
                     </div>
-                    <p className="text-sm leading-7" style={{ color: "var(--color-text-secondary)" }}>
+                    <p className="text-sm leading-7" style={{ fontFamily: "var(--font-body)", color: "var(--color-text-secondary)" }}>
                       {member.bio}
                     </p>
                   </div>
@@ -159,11 +191,12 @@ export default function AboutContent() {
 
             {/* Story */}
             <div>
-              <div className="mb-10 flex items-center gap-4">
-                <span className="h-1 w-16" style={{ backgroundColor: "var(--color-gold)" }} />
-                <span className="text-3xl font-black tracking-wider uppercase" style={{ fontFamily: "var(--font-display)", color: "var(--color-gold)" }}>{i18n[locale].about_page.story_eyebrow}</span>
+              <div className="mb-10">
+                <Eyebrow color="var(--color-gold)" size="lg">
+                  {i18n[locale].about_page.story_eyebrow}
+                </Eyebrow>
               </div>
-              <div className="space-y-6 text-base leading-8" style={{ color: "var(--color-text-secondary)" }}>
+              <div className="space-y-6 text-base leading-8" style={{ fontFamily: "var(--font-body)", color: "var(--color-text-secondary)" }}>
                 <p className="text-xl font-bold leading-9" style={{ color: "var(--color-text)" }}>
                   {i18n[locale].about_page.story_p1}
                 </p>
@@ -172,15 +205,15 @@ export default function AboutContent() {
                     {i18n[locale].about_page.story_quote}
                   </p>
                 </div>
-                <p style={{ color: "var(--color-text-muted)" }}>{i18n[locale].about_page.story_p2}</p>
               </div>
             </div>
 
             {/* Vision */}
             <div>
-              <div className="mb-10 flex items-center gap-4">
-                <span className="h-1 w-16" style={{ backgroundColor: "var(--color-primary)" }} />
-                <span className="text-3xl font-black tracking-wider uppercase" style={{ fontFamily: "var(--font-display)", color: "var(--color-primary)" }}>{i18n[locale].about_page.vision_eyebrow}</span>
+              <div className="mb-10">
+                <Eyebrow color="var(--color-primary)" size="lg">
+                  {i18n[locale].about_page.vision_eyebrow}
+                </Eyebrow>
               </div>
               <div className="space-y-0">
                 {[
@@ -193,8 +226,8 @@ export default function AboutContent() {
                       {item.icon}
                     </div>
                     <div>
-                      <h4 className="mb-1.5 text-base font-bold" style={{ color: "var(--color-text)" }}>{item.title}</h4>
-                      <p className="text-sm leading-6" style={{ color: "var(--color-text-secondary)" }}>{item.desc}</p>
+                      <h4 className="mb-1.5 text-base font-bold" style={{ fontFamily: "var(--font-heading)", color: "var(--color-text)" }}>{item.title}</h4>
+                      <p className="text-sm leading-6" style={{ fontFamily: "var(--font-body)", color: "var(--color-text-secondary)" }}>{item.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -207,9 +240,10 @@ export default function AboutContent() {
       {/* Tech Stack */}
       <section className="w-full px-6 py-20 sm:px-12 sm:py-24 lg:px-20" style={{ backgroundColor: "var(--color-background)" }}>
         <div className="mx-auto max-w-6xl">
-          <div className="mb-12 flex items-center gap-4">
-            <span className="h-1 w-16" style={{ backgroundColor: "var(--color-accent)" }} />
-            <span className="text-3xl font-black tracking-wider uppercase" style={{ fontFamily: "var(--font-display)", color: "var(--color-accent)" }}>{i18n[locale].about_page.tech_eyebrow}</span>
+          <div className="mb-12">
+            <Eyebrow color="var(--color-accent)" size="lg">
+              {i18n[locale].about_page.tech_eyebrow}
+            </Eyebrow>
           </div>
           <div className="grid grid-cols-2 gap-px sm:grid-cols-4" style={{ backgroundColor: "var(--color-border)" }}>
             {[
@@ -223,7 +257,7 @@ export default function AboutContent() {
               { name: "Node.js", color: "var(--color-gold)" },
             ].map((tech) => (
               <div key={tech.name} className="group flex items-center justify-between px-6 py-5 transition-all duration-300" style={{ backgroundColor: "var(--color-surface)" }}>
-                <span className="text-sm font-bold" style={{ color: "var(--color-text)" }}>{tech.name}</span>
+                <span className="text-sm font-bold" style={{ fontFamily: "var(--font-ui)", color: "var(--color-text)" }}>{tech.name}</span>
                 <div className="h-1 w-4 transition-all duration-300 group-hover:w-10" style={{ backgroundColor: tech.color }} />
               </div>
             ))}

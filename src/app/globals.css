@@ -1,33 +1,50 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
+
+@font-face {
+  font-family: "terrabica";
+  src: url('/fonts/terrabica.otf') format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap; /* Critical for performance! */
+}
 
 :root {
   /* === CORE BRAND === */
-  --color-primary: #0247FE; /* Royal Blue (Glows/Lighting) */
+  --color-primary: #0247FE;
+  /* Royal Blue (Glows/Lighting) */
   --color-primary-soft: rgba(2, 71, 254, 0.12);
   --color-primary-glow: rgba(2, 71, 254, 0.45);
   --color-primary-light: #4A7AFA;
 
-  --color-gold: #ee930c; /* Royal Gold (Primary Icon/Growth) */
+  --color-gold: #ee930c;
+  /* Royal Gold (Primary Icon/Growth) */
   --color-gold-soft: rgba(212, 136, 55, 0.1);
   --color-gold-glow: rgba(212, 141, 55, 0.35);
   --color-gold-dark: #c07928;
-  --color-gold-light: #c36e0e; /* Light Gold (Highlights) */
+  --color-gold-light: #c36e0e;
+  /* Light Gold (Highlights) */
 
   --color-accent: #FF3D6B;
   --color-accent-soft: rgba(255, 61, 107, 0.1);
   --color-accent-glow: rgba(255, 61, 107, 0.4);
 
   /* === SURFACES === */
-  --color-surface: #00225A; /* Surface based on Deep Navy */
-  --color-surface-elevated: #002D7A;
-  --color-background: #001B48; /* Deep Navy Blue (Base bg) */
-  --color-ink: #00112D; /* Very dark navy for deepest areas */
-  --color-ink-overlay: rgba(0, 17, 45, 0.95);
+  --color-surface: #0A1628;
+  /* Darker, richer navy */
+  --color-surface-elevated: #0F1D35;
+  --color-background: #050D1A;
+  /* Deep rich navy - better contrast */
+  --color-ink: #020814;
+  /* Very dark navy for deepest areas */
+  --color-ink-overlay: rgba(2, 8, 20, 0.95);
 
   /* === TEXT === */
-  --color-text: #FFFFFF; /* Crisp White */
-  --color-text-secondary: #BDD0E7; /* Soft blueish white */
-  --color-text-muted: #7A9BCA;
+  --color-text: #F8FAFC;
+  /* Slightly softer white for better readability */
+  --color-text-secondary: #CBD5E1;
+  /* Improved contrast */
+  --color-text-muted: #94A3B8;
+  /* Better visibility */
   --color-text-on-dark: #FFFFFF;
   --color-text-on-dark-muted: rgba(255, 255, 255, 0.7);
 
@@ -38,17 +55,17 @@
   --color-border-dark-strong: rgba(212, 175, 55, 0.3);
 
   /* === NAVBAR GLASS === */
-  --navbar-bg-top: rgba(0, 27, 72, 0.45);
-  --navbar-bg-scrolled: rgba(0, 17, 45, 0.82);
+  --navbar-bg-top: rgba(5, 13, 26, 0.45);
+  --navbar-bg-scrolled: rgba(2, 8, 20, 0.82);
   --navbar-border: rgba(255, 255, 255, 0.08);
   --navbar-highlight: rgba(255, 255, 255, 0.06);
   --navbar-divider: rgba(255, 255, 255, 0.08);
   --navbar-link-active-bg: rgba(255, 255, 255, 0.06);
-  --navbar-dropdown-bg: rgba(0, 17, 45, 0.92);
-  --navbar-drawer-bg: rgba(0, 17, 45, 0.95);
+  --navbar-dropdown-bg: rgba(2, 8, 20, 0.92);
+  --navbar-drawer-bg: rgba(2, 8, 20, 0.95);
 }
 
-/* â”€â”€â”€ Light theme overrides â”€â”€â”€ */
+/* ─── Light theme overrides ─── */
 [data-theme="light"] {
   --color-primary: #0247FE;
   --color-primary-soft: rgba(2, 71, 254, 0.08);
@@ -61,19 +78,20 @@
   --color-accent: #FF3D6B;
   --color-accent-soft: rgba(255, 61, 107, 0.08);
   --color-accent-glow: rgba(255, 61, 107, 0.15);
-  
+
   --color-surface: #FFFFFF;
   --color-surface-elevated: #F8F9FC;
   --color-background: #F0F4F8;
   --color-ink: #E2E8F4;
   --color-ink-overlay: rgba(240, 244, 248, 0.95);
-  
+
   --color-text: #0B1930;
   --color-text-secondary: #3A4B6B;
   --color-text-muted: #6B7C9E;
-  --color-text-on-dark: #07101E; /* matches ink deep color readability */
+  --color-text-on-dark: #07101E;
+  /* matches ink deep color readability */
   --color-text-on-dark-muted: rgba(7, 16, 30, 0.7);
-  
+
   --color-border: rgba(2, 71, 254, 0.15);
   --color-border-strong: rgba(2, 71, 254, 0.3);
   --color-border-dark: rgba(2, 71, 254, 0.1);
@@ -90,7 +108,7 @@
   --navbar-drawer-bg: rgba(248, 249, 252, 0.97);
 }
 
-/* â”€â”€â”€ Tailwind v4 theme mapping â”€â”€â”€ */
+/* ─── Tailwind v4 theme mapping ─── */
 @theme inline {
   --color-background: var(--color-background);
   --color-foreground: var(--color-text);
@@ -100,6 +118,8 @@
   --color-gold: var(--color-gold);
   --color-gold-soft: var(--color-gold-soft);
   --color-gold-glow: var(--color-gold-glow);
+  --color-gold-dark: var(--color-gold-dark);
+  --color-gold-light: var(--color-gold-light);
   --color-accent: var(--color-accent);
   --color-accent-soft: var(--color-accent-soft);
   --color-accent-glow: var(--color-accent-glow);
@@ -111,21 +131,54 @@
   --color-text-muted: var(--color-text-muted);
   --color-border: var(--color-border);
   --color-border-strong: var(--color-border-strong);
+
+  /* === FONTS - Semantic Typography System === */
+  /* 
+   * DISPLAY: Large decorative text (hero titles, page titles, large numbers)
+   * HEADING: Section headings, card titles, h2-h3 elements
+   * BODY: Paragraphs, descriptions, readable content
+   * UI: Buttons, labels, badges, eyebrows, small uppercase text
+   */
+
+  --font-display: "Outfit", sans-serif;
+  /* Large hero text, page titles, large decorative numbers */
+  --font-heading: "Outfit", sans-serif;
+  /* Section headings, card titles, h2-h3 elements */
+  --font-body: "IBM Plex Sans Arabic", sans-serif;
+  /* Paragraphs, descriptions, readable content */
+  --font-ui: "Outfit", sans-serif;
+  /* Buttons, labels, badges, eyebrows, small uppercase text */
+
+  /* Legacy support */
   --font-sans: var(--font-body);
-  --font-display: var(--font-display);
-  --font-body: var(--font-body);
 }
+
 
 @keyframes ping-out {
-  0%   { transform: scale(0.6); opacity: 0.7; }
-  100% { transform: scale(1.8); opacity: 0; }
-}
-@keyframes pulse-core {
-  0%, 100% { transform: scale(1); }
-  50%       { transform: scale(1.4); }
+  0% {
+    transform: scale(0.6);
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
 }
 
-/* â”€â”€â”€ Base styles â”€â”€â”€ */
+@keyframes pulse-core {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.4);
+  }
+}
+
+/* ─── Base styles ─── */
 html {
   -webkit-text-size-adjust: 100%;
 }
@@ -133,15 +186,39 @@ html {
 body {
   background: var(--color-background);
   color: var(--color-text);
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+}
+
+/* Language-specific font overrides */
+html[lang="ar"] {
+  /* Arabic: Aggressive fonts for display/heading/UI, IBM Plex for body only */
+  --font-display: "terrabica", "IBM Plex Sans Arabic", sans-serif;
+  --font-heading: "IBM Plex Sans Arabic", sans-serif;
+  --font-body: "IBM Plex Sans Arabic", sans-serif;
+  --font-ui: "IBM Plex Sans Arabic", sans-serif;
+  /* UI should use aggressive font, not body font */
+}
+
+
+html[lang="en"] {
+  /* English: Outfit for display/headings/UI, IBM Plex for body text */
+  --font-display: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  --font-heading: "Outfit", sans-serif;
+  --font-body: "IBM Plex Sans Arabic", sans-serif;
+  --font-ui: "Outfit", sans-serif;
 }
 
 /* Consistent typography */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   text-rendering: optimizeLegibility;
+  letter-spacing: 1px !important;
 }
 
 /* Tabular numbers for stats */
@@ -149,7 +226,7 @@ h1, h2, h3, h4, h5, h6 {
   font-variant-numeric: tabular-nums;
 }
 
-/* Scroll reveal base â€” for JS-powered reveals */
+/* Scroll reveal base — for JS-powered reveals */
 .reveal-hidden {
   opacity: 0;
   will-change: opacity, transform;
@@ -157,11 +234,15 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+
   .reveal-hidden {
     opacity: 1;
   }
@@ -171,7 +252,15 @@ h1, h2, h3, h4, h5, h6 {
   scroll-behavior: smooth;
 }
 
-/* â”€â”€â”€ Navbar styles â”€â”€â”€ */
+/* Ensure sections account for fixed navbar */
+section {
+  scroll-margin-top: 80px;
+  /* Optimize rendering for off-screen sections */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
+
+/* ─── Navbar styles ─── */
 .navbar-link:hover {
   color: var(--color-text) !important;
   background-color: var(--navbar-link-active-bg) !important;
@@ -187,8 +276,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @keyframes navbar-icon-spin {
-  from { transform: rotate(0deg) scale(0.6); opacity: 0; }
-  to   { transform: rotate(360deg) scale(1); opacity: 1; }
+  from {
+    transform: rotate(0deg) scale(0.6);
+    opacity: 0;
+  }
+
+  to {
+    transform: rotate(360deg) scale(1);
+    opacity: 1;
+  }
 }
 
 .navbar-icon-rotate {
@@ -200,29 +296,43 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Marquee Animation */
 @keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
+
 .animate-marquee {
   display: flex;
   width: max-content;
   animation: marquee 40s linear infinite;
 }
+
 .animate-marquee:hover {
   animation-play-state: paused;
 }
 
 /* Enhanced Infinite Marquee */
 @keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
+
 .animate-marquee {
   display: flex;
   width: max-content;
   animation: marquee 60s linear infinite;
   will-change: transform;
 }
+
 .animate-marquee:hover {
   animation-play-state: paused;
 }
@@ -252,6 +362,7 @@ h1, h2, h3, h4, h5, h6 {
   from {
     transform: translateX(0);
   }
+
   to {
     transform: translateX(calc(-100% - 32px));
   }
@@ -274,8 +385,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @keyframes k-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-100%); }
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 /* Pause on hover */
@@ -301,8 +417,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @keyframes marquee-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(calc(-100% - 32px)); }
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-100% - 32px));
+  }
 }
 
 .marquee-wrapper:hover .marquee-inner {
@@ -311,14 +432,21 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Standard Loop Marquee */
 @keyframes marquee-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
+
 .marquee-row {
   display: flex;
   width: max-content;
   animation: marquee-scroll 50s linear infinite;
 }
+
 .marquee-row:hover {
   animation-play-state: paused;
 }

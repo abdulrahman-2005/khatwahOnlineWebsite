@@ -1,0 +1,302 @@
+{
+  "ar": [
+    {
+      "num": "01",
+      "slug": "booking-system",
+      "title": "نظام الحجوزات",
+      "subtitle": "خلّي عملائك يحجزوا معاك وأنت نايم",
+      "description": "نظام حجوزات أونلاين سهل وبسيط للحلاقين، العيادات، الصالونات والخدمات.",
+      "longDescription": "نظام حجوزات أونلاين سهل وبسيط للحلاقين، العيادات، الصالونات والخدمات في العريش وشمال سيناء. يخليك تدير مواعيدك بكل سهولة والعميل يحجز من موبايله في أي وقت.",
+      "features": [
+        "حجز فوري من الموبايل",
+        "تذكيرات أوتوماتيكية على الواتساب",
+        "تقويم ذكي يمنع الازدحام",
+        "نقاط ولاء عشان العملاء يرجعوا",
+        "تقارير يومية"
+      ],
+      "benefits": [
+        {
+          "title": "وفر وقتك",
+          "description": "العملاء يحجزوا 24/7 بدون ما تتدخل. النظام يشتغل لوحده حتى لو أنت مش موجود."
+        },
+        {
+          "title": "قلل الازدحام",
+          "description": "التقويم الذكي ينظم المواعيد تلقائياً ويمنع التعارض. كل عميل يعرف موعده بالظبط."
+        },
+        {
+          "title": "زود رجوع العملاء",
+          "description": "نظام الولاء يخلي العميل يرجعلك. كل حجز يكسب نقاط يقدر يستبدلها بخصومات."
+        },
+        {
+          "title": "نام مرتاح",
+          "description": "التذكيرات الأوتوماتيكية تمنع النسيان. العميل يوصله تذكير قبل الموعد بـ 24 ساعة."
+        }
+      ],
+      "useCases": [
+        "صالونات الحلاقة والتجميل",
+        "العيادات الطبية والأسنان",
+        "مراكز الصيانة والخدمات",
+        "الصالات الرياضية والنوادي",
+        "مراكز التدريب والدروس الخصوصية"
+      ],
+      "pricing": {
+        "starting": "تواصل معنا للحصول على استشارة وعرض سعر مجاني",
+        "note": "نقدم حلول مخصصة تناسب احتياجاتك وميزانيتك"
+      },
+      "cta": "عايز نظام حجوزات لمحلي",
+      "whatsapp_message": {
+        "ar": "مرحباً، عايز نظام حجوزات لمحلي 📅",
+        "en": "Hello, I want a booking system for my business 📅"
+      }
+    },
+    {
+      "num": "02",
+      "slug": "inventory-pos",
+      "title": "إدارة المخزون والـ POS",
+      "subtitle": "تخلص من ضياع المخزون والأخطاء في الحساب",
+      "description": "إدارة مخزون ذكية + نقطة بيع + ربط بالمتجر الأونلاين.",
+      "longDescription": "إدارة مخزون ذكية + نقطة بيع احترافية + ربط بالمتجر الأونلاين. كل حاجة في نظام واحد مصمم خصيصاً للتجار في العريش وشمال سيناء.",
+      "features": [
+        "تابع مخزونك لحظيًا",
+        "محاسبة أوتوماتيكية بدون أخطاء",
+        "بيع من المحل والأونلاين في نظام واحد",
+        "تقارير مبيعات واضحة",
+        "٣ باقات تناسب حجم تجارتك"
+      ],
+      "benefits": [
+        {
+          "title": "لا مزيد من الضياع",
+          "description": "تابع كل منتج لحظياً. اعرف بالظبط إيه اللي عندك في المخزن وإيه اللي محتاج تطلبه."
+        },
+        {
+          "title": "لا مزيد من الأخطاء",
+          "description": "المحاسبة الأوتوماتيكية دقيقة 100%. النظام يحسب كل حاجة تلقائياً بدون أخطاء بشرية."
+        },
+        {
+          "title": "بيع من أي مكان",
+          "description": "المحل والأونلاين في نظام واحد. المخزون يتحدث تلقائياً سواء بعت من المحل أو الموقع."
+        },
+        {
+          "title": "اتخذ قرارات أفضل",
+          "description": "تقارير واضحة تساعدك تفهم تجارتك. اعرف المنتجات الأكثر مبيعاً، أوقات الذروة، والأرباح الحقيقية."
+        }
+      ],
+      "useCases": [
+        "محلات البقالة والسوبر ماركت",
+        "محلات الملابس والأحذية",
+        "الصيدليات ومحلات الأدوية",
+        "محلات قطع الغيار والإلكترونيات",
+        "المطاعم والكافيهات"
+      ],
+      "pricing": {
+        "starting": "تواصل معنا للحصول على استشارة وعرض سعر مجاني",
+        "note": "نقدم حلول مخصصة تناسب احتياجاتك وميزانيتك"
+      },
+      "cta": "عايز أتحكم في مخزوني",
+      "whatsapp_message": {
+        "ar": "مرحباً، عايز نظام إدارة مخزون و POS لمحلي 📦",
+        "en": "Hello, I want an inventory & POS system for my business 📦"
+      }
+    },
+    {
+      "num": "03",
+      "slug": "custom-development",
+      "title": "برمجة خاصة",
+      "subtitle": "أي فكرة أو نظام تحتاجه… بننفذه لك",
+      "description": "حلول مخصصة 100% حسب احتياجك (مواقع، تطبيقات، أنظمة إدارة…).",
+      "longDescription": "حلول برمجية مخصصة 100% حسب احتياجك. مواقع، تطبيقات، أنظمة إدارة، أو أي فكرة عندك. فريقنا من العريش يقدر يحول أي فكرة لواقع.",
+      "features": [
+        "برمجة حسب طلبك بالظبط",
+        "مواقع وتطبيقات احترافية",
+        "أنظمة إدارة متكاملة",
+        "ربط مع الواتساب والأنظمة الأخرى",
+        "دعم فني محلي مستمر"
+      ],
+      "benefits": [
+        {
+          "title": "حل فريد",
+          "description": "نظام مصمم خصيصاً لاحتياجاتك. مش حل جاهز، ده حل مبني عشانك أنت."
+        },
+        {
+          "title": "مرونة كاملة",
+          "description": "عدّل وطور حسب ما تجارتك تكبر. النظام ينمو معاك ويتطور حسب احتياجاتك."
+        },
+        {
+          "title": "دعم محلي",
+          "description": "فريق من العريش يفهم السوق المحلي. متاحين على طول لأي استفسار أو مشكلة."
+        },
+        {
+          "title": "تكامل سهل",
+          "description": "اربط مع أي نظام تستخدمه حالياً. نقدر نربط مع واتساب، فيسبوك، أنظمة الدفع، وأي خدمة تانية."
+        }
+      ],
+      "useCases": [
+        "منصات حجز وخدمات",
+        "متاجر إلكترونية مخصصة",
+        "أنظمة إدارة المدارس والمراكز",
+        "تطبيقات توصيل وخدمات",
+        "أنظمة CRM وإدارة العملاء",
+        "بوابات دفع ومحافظ إلكترونية"
+      ],
+      "pricing": {
+        "starting": "تواصل معنا للحصول على استشارة وعرض سعر مجاني",
+        "note": "نقدم حلول مخصصة تناسب احتياجاتك وميزانيتك"
+      },
+      "cta": "عندي فكرة خاصة",
+      "whatsapp_message": {
+        "ar": "مرحباً، عندي فكرة مشروع خاص وعايز أناقشها معاكم 💡",
+        "en": "Hello, I have a custom project idea and would like to discuss it 💡"
+      }
+    }
+  ],
+  "en": [
+    {
+      "num": "01",
+      "slug": "booking-system",
+      "title": "Booking System",
+      "subtitle": "Let customers book while you sleep",
+      "description": "Simple online booking for barbers, clinics, salons, and service businesses.",
+      "longDescription": "A simple online booking system for barbers, clinics, salons, and service businesses in Arish and North Sinai. Manage appointments effortlessly while customers book from their phones anytime.",
+      "features": [
+        "Instant mobile booking",
+        "Automatic WhatsApp reminders",
+        "Smart calendar prevents double-booking",
+        "Loyalty points keep customers coming back",
+        "Daily performance reports"
+      ],
+      "benefits": [
+        {
+          "title": "Save Time",
+          "description": "Customers book 24/7 without your involvement. The system runs itself even when you're away."
+        },
+        {
+          "title": "Reduce No-Shows",
+          "description": "Smart calendar organizes appointments automatically and prevents conflicts. Every customer knows their exact time."
+        },
+        {
+          "title": "Boost Retention",
+          "description": "Loyalty system brings customers back. Every booking earns points they can redeem for discounts."
+        },
+        {
+          "title": "Sleep Easy",
+          "description": "Automatic reminders prevent missed appointments. Customers get a reminder 24 hours before their booking."
+        }
+      ],
+      "useCases": [
+        "Barbershops and beauty salons",
+        "Medical and dental clinics",
+        "Maintenance and service centers",
+        "Gyms and fitness clubs",
+        "Training centers and tutoring"
+      ],
+      "pricing": {
+        "starting": "Reach out for a free consultation and quote",
+        "note": "We offer custom solutions tailored to your needs and budget"
+      },
+      "cta": "Get a booking system",
+      "whatsapp_message": {
+        "ar": "مرحباً، عايز نظام حجوزات لمحلي 📅",
+        "en": "Hello, I want a booking system for my business 📅"
+      }
+    },
+    {
+      "num": "02",
+      "slug": "inventory-pos",
+      "title": "Inventory & POS",
+      "subtitle": "Stop losing inventory and making accounting mistakes",
+      "description": "Smart inventory management + point of sale + online store integration.",
+      "longDescription": "Smart inventory management + professional point of sale + online store integration. Everything in one system designed specifically for merchants in Arish and North Sinai.",
+      "features": [
+        "Real-time inventory tracking",
+        "Error-free automatic accounting",
+        "Sell in-store and online from one system",
+        "Clear sales reports",
+        "3 packages to fit your business size"
+      ],
+      "benefits": [
+        {
+          "title": "No More Losses",
+          "description": "Track every product in real-time. Know exactly what's in stock and what needs reordering."
+        },
+        {
+          "title": "No More Errors",
+          "description": "Automatic accounting is 100% accurate. The system calculates everything automatically without human error."
+        },
+        {
+          "title": "Sell Anywhere",
+          "description": "In-store and online in one unified system. Inventory updates automatically whether you sell in-store or online."
+        },
+        {
+          "title": "Make Smarter Decisions",
+          "description": "Clear reports help you understand your business. Know your best-sellers, peak times, and real profits."
+        }
+      ],
+      "useCases": [
+        "Grocery stores and supermarkets",
+        "Clothing and shoe stores",
+        "Pharmacies and drugstores",
+        "Auto parts and electronics shops",
+        "Restaurants and cafes"
+      ],
+      "pricing": {
+        "starting": "Reach out for a free consultation and quote",
+        "note": "We offer custom solutions tailored to your needs and budget"
+      },
+      "cta": "Take control of inventory",
+      "whatsapp_message": {
+        "ar": "مرحباً، عايز نظام إدارة مخزون و POS لمحلي 📦",
+        "en": "Hello, I want an inventory & POS system for my business 📦"
+      }
+    },
+    {
+      "num": "03",
+      "slug": "custom-development",
+      "title": "Custom Development",
+      "subtitle": "Any idea or system you need… we build it",
+      "description": "100% custom solutions tailored to your needs (websites, apps, management systems…).",
+      "longDescription": "100% custom software solutions tailored to your needs. Websites, apps, management systems, or any idea you have. Our team from Arish can turn any idea into reality.",
+      "features": [
+        "Built exactly to your specifications",
+        "Professional websites and mobile apps",
+        "Integrated management systems",
+        "WhatsApp and third-party integrations",
+        "Ongoing local technical support"
+      ],
+      "benefits": [
+        {
+          "title": "Unique Solution",
+          "description": "System designed specifically for your needs. Not an off-the-shelf solution, but one built just for you."
+        },
+        {
+          "title": "Complete Flexibility",
+          "description": "Modify and scale as your business grows. The system grows with you and evolves based on your needs."
+        },
+        {
+          "title": "Local Support",
+          "description": "Team from Arish who understands the local market. Always available for any questions or issues."
+        },
+        {
+          "title": "Easy Integration",
+          "description": "Connect with any system you currently use. We can integrate with WhatsApp, Facebook, payment systems, and any other service."
+        }
+      ],
+      "useCases": [
+        "Booking and service platforms",
+        "Custom e-commerce stores",
+        "School and center management systems",
+        "Delivery and service apps",
+        "CRM and customer management systems",
+        "Payment gateways and digital wallets"
+      ],
+      "pricing": {
+        "starting": "Reach out for a free consultation and quote",
+        "note": "We offer custom solutions tailored to your needs and budget"
+      },
+      "cta": "I have a custom idea",
+      "whatsapp_message": {
+        "ar": "مرحباً، عندي فكرة مشروع خاص وعايز أناقشها معاكم 💡",
+        "en": "Hello, I have a custom project idea and would like to discuss it 💡"
+      }
+    }
+  ]
+}
