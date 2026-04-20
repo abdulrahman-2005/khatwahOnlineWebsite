@@ -76,7 +76,7 @@ export default function Hero() {
           {/* Brand Name - Mobile */}
           <Reveal direction="up" distance={30} duration={800}>
             <div className="flex flex-col items-center gap-4">
-              <h1 
+              <div 
                 className={`font-black uppercase transition-all duration-700 ${
                   locale === 'ar' 
                     ? 'text-[32vw] sm:text-[18vw] leading-[0.85]' 
@@ -88,7 +88,7 @@ export default function Hero() {
                 }}
               >
                 {brandName}
-              </h1>
+              </div>
               <div className="flex items-center gap-3 sm:gap-4">
                 <span className={`h-px w-10 sm:w-16 bg-gold `} />
                 <span 
@@ -104,9 +104,9 @@ export default function Hero() {
 
           {/* Headline - Mobile */}
           <Reveal direction="up" distance={20} delay={150} duration={700}>
-            <h2 className={`text-3xl sm:text-4xl font-black leading-tight max-w-2xl`} style={{ fontFamily: "var(--font-body)", textShadow: isLight ? 'none' : '0 4px 12px rgba(0,0,0,0.3)' }}>
+            <h1 className={`text-3xl sm:text-4xl font-black leading-tight max-w-2xl`} style={{ fontFamily: "var(--font-body)", textShadow: isLight ? 'none' : '0 4px 12px rgba(0,0,0,0.3)' }}>
               {locale === 'ar' ? i18n[locale].hero.headline_ar : i18n[locale].hero.headline_en}
-            </h2>
+            </h1>
           </Reveal>
 
           {/* Description - Mobile */}
@@ -160,7 +160,7 @@ export default function Hero() {
           <div className="flex flex-col items-start justify-center">
             <Reveal direction="up" distance={40} duration={900}>
               <div className="flex flex-col items-start gap-6">
-                <h1 
+                <div 
                   className={`font-black uppercase transition-all duration-700 ${
                     locale === 'ar' 
                       ? 'text-[240px] xl:text-[280px] leading-[0.85]' 
@@ -173,7 +173,7 @@ export default function Hero() {
                   }}
                 >
                   {brandName}
-                </h1>
+                </div>
                 <div className="flex items-center gap-6 w-full">
                   <span className={`h-[2px] w-16 bg-gold ${isLight ? 'opacity-60' : 'opacity-50'}`} />
                   <span 
@@ -193,16 +193,16 @@ export default function Hero() {
             
             {/* Headline */}
             <Reveal direction="up" distance={30} delay={200} duration={800}>
-              <h2 className={`text-4xl xl:text-5xl 2xl:text-6xl font-bold leading-tight`} style={{ fontFamily: "var(--font-body)"}}>
+              <h1 className={`text-4xl xl:text-5xl 2xl:text-6xl font-bold leading-tight`} style={{ fontFamily: "var(--font-body)"}}>
                 {locale === 'ar' ? i18n[locale].hero.headline_ar : i18n[locale].hero.headline_en}
-              </h2>
+              </h1>
             </Reveal>
 
             {/* Description */}
             <Reveal direction="up" distance={30} delay={300} duration={800}>
-              <h2 className={`text-lg xl:text-2xl 2xl:text-3xl leading-relaxed`} style={{ fontFamily: "var(--font-body)" }}>
+              <p className={`text-lg xl:text-2xl 2xl:text-3xl leading-relaxed`} style={{ fontFamily: "var(--font-body)" }}>
                 {i18n[locale].hero.body}
-              </h2>
+              </p>
             </Reveal>
 
             {/* CTA Buttons */}

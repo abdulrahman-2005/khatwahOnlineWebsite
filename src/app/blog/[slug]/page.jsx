@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getSinglePost, getPostSlugs, urlFor } from '@/sanity/client';
 import { BlogPostPage } from '@/components/blog/BlogPostPage';
+import { seoConfig } from '@/lib/seo';
 
 // Generate static params for all posts
 export async function generateStaticParams() {
@@ -22,11 +23,11 @@ export async function generateMetadata({ params }) {
 
   const ogImage = post.mainImage 
     ? urlFor(post.mainImage).width(1200).height(630).url()
-    : 'https://khatwah.online/og-image.png';
+    : `${seoConfig.baseUrl}/og-image.png`;
 
   const title = post.seoTitle || post.title;
   const description = post.seoDescription || post.excerpt || post.title;
-  const url = `https://khatwah.online/blog/${post.slug}`;
+  const url = `${seoConfig.baseUrl}/blog/${post.slug}`;
 
   return {
     title: `${title} | Khatwah Blog`,
@@ -104,19 +105,19 @@ export default async function BlogPost({ params }) {
       } : {
         '@type': 'Organization',
         name: 'Khatwah Online',
-        url: 'https://khatwah.online'
+        url: seoConfig.baseUrl
       },
       publisher: {
         '@type': 'Organization',
         name: 'Khatwah Online',
-        url: 'https://khatwah.online',
+        url: seoConfig.baseUrl,
         logo: {
           '@type': 'ImageObject',
-          url: 'https://khatwah.online/og-image.png'
+          url: `${seoConfig.baseUrl}/og-image.png`
         }
       },
       image: post.mainImage ? urlFor(post.mainImage).width(1200).height(630).url() : undefined,
-      url: `https://khatwah.online/blog/${post.slug}`
+      url: `${seoConfig.baseUrl}/blog/${post.slug}`
     };
 
     return (

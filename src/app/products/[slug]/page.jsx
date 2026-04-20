@@ -1,37 +1,97 @@
-"use client";
-
-import { Reveal } from "@/components/ui/Reveal";
-import Eyebrow from "@/components/ui/Eyebrow";
-import Link from "next/link";
-import { useLocale } from "@/contexts/LocaleContext";
 import { notFound } from "next/navigation";
 import productsData from "../../../../data/products.json";
-import ScrollIndicator from "@/components/ui/ScrollIndicator";
+import { seoConfig } from "@/lib/seo";
 import ProductDetailClient from "./ProductDetailClient";
-import { useEffect, useState } from "react";
 
-export default function ProductDetailPage({ params }) {
-  const { locale } = useLocale();
-  const [slug, setSlug] = useState(null);
-  const [product, setProduct] = useState(null);
+// Generate static params for all products
+export function generateStaticParams() {
+  const arProducts = productsData.ar || [];
+  return arProducts.map((product) => ({
+    slug: product.slug,
+  }));
+}
 
-  useEffect(() => {
-    async function loadParams() {
-      const resolvedParams = await params;
-      setSlug(resolvedParams.slug);
-      const foundProduct = productsData[locale]?.find((p) => p.slug === resolvedParams.slug);
-      setProduct(foundProduct);
-    }
-    loadParams();
-  }, [params, locale]);
+// Generate metadata for SEO and OpenGraph
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  
+  // Try to find product in Arabic first (default)
+  const productAr = productsData.ar?.find((p) => p.slug === slug);
+  
+  if (!productAr) {
+    return {
+      title: "المنتج غير موجود | خطوة اونلاين",
+      description: "المنتج الذي تبحث عنه غير متوفر.",
+    };
+  }
 
-  if (slug && !product) {
+  // Use Arabic product data for metadata
+  const ogImageUrl = `${seoConfig.baseUrl}/og-image.png`; // Fallback to default OG image
+  const title = `${productAr.title} | منتجات خطوة اونلاين`;
+  const description = productAr.longDescription || productAr.description;
+
+  return {
+    title,
+    description,
+    keywords: [
+      productAr.title,
+      ...(productAr.features || []),
+      "خطوة اونلاين",
+      "حلول برمجية",
+      "العريش",
+      "شمال سيناء",
+    ],
+    openGraph: {
+      title: productAr.title,
+      description,
+      url: `${seoConfig.baseUrl}/products/${slug}`,
+      type: "website",
+      siteName: "خطوة اونلاين | Khatwah Online",
+      locale: "ar_EG",
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: productAr.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: productAr.title,
+      description,
+      images: [ogImageUrl],
+      site: "@khatwah_online",
+      creator: "@khatwah_online",
+    },
+    alternates: {
+      canonical: `${seoConfig.baseUrl}/products/${slug}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+  };
+}
+
+export default async function ProductDetailPage({ params }) {
+  const { slug } = await params;
+  
+  // Find product in both languages
+  const productAr = productsData.ar?.find((p) => p.slug === slug);
+  const productEn = productsData.en?.find((p) => p.slug === slug);
+
+  if (!productAr) {
     notFound();
   }
 
-  if (!product) {
-    return null; // Loading state
-  }
-
-  return <ProductDetailClient product={product} slug={slug} />;
+  return <ProductDetailClient productAr={productAr} productEn={productEn} slug={slug} />;
 }

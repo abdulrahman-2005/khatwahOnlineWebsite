@@ -31,7 +31,7 @@ const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
 });
 
 export const metadata = {
-  metadataBase: new URL("https://www.khatwah.online"),
+  metadataBase: new URL(seoConfig.baseUrl),
   title: {
     default: "خطوة اونلاين | Khatwah Online — شركة برمجة مصرية | أفضل شركة تصميم مواقع في مصر",
     template: "%s | خطوة اونلاين",
@@ -43,15 +43,35 @@ export const metadata = {
   creator: "خطوة اونلاين",
   publisher: "خطوة اونلاين",
   manifest: "/site.webmanifest",
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-48x48.png', sizes: '48x48', type: 'image/png' },
+      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   openGraph: {
     type: "website",
     locale: "ar_EG",
-    alternateLocale: ["en_US"],
     url: seoConfig.baseUrl,
     siteName: "خطوة اونلاين | Khatwah Online",
     title: "خطوة اونلاين — شركة برمجة مصرية | أفضل شركة تصميم مواقع في مصر",
     description:
       "شركة برمجة مصرية متخصصة في تصميم وتطوير المواقع الإلكترونية وبرمجة تطبيقات الجوال. نقدم حلول برمجية مخصصة للتجارة المحلية في مصر.",
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'خطوة اونلاين — Khatwah Online',
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -60,6 +80,7 @@ export const metadata = {
     title: "خطوة اونلاين — شركة برمجة مصرية | أفضل شركة تصميم مواقع في مصر",
     description:
       "شركة برمجة مصرية متخصصة في تصميم وتطوير المواقع الإلكترونية وبرمجة تطبيقات الجوال. نقدم حلول برمجية مخصصة للتجارة المحلية في مصر.",
+    images: ['/og-image.png'],
   },
   robots: {
     index: true,
@@ -74,11 +95,6 @@ export const metadata = {
   },
   alternates: {
     canonical: seoConfig.baseUrl,
-    languages: {
-      'ar': seoConfig.baseUrl,
-      'en': `${seoConfig.baseUrl}/en`,
-      'x-default': seoConfig.baseUrl
-    }
   },
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION,
@@ -96,6 +112,7 @@ export default function RootLayout({ children }) {
   return (
     <html className={`${outfit.variable} ${ibmPlexSansArabic.variable}`} data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
+        <meta charSet="utf-8" />
         <script
           dangerouslySetInnerHTML={{
             __html: `

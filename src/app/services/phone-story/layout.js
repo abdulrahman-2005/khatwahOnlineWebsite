@@ -1,4 +1,5 @@
 import servicesData from '../../../../data/services.json';
+import { seoConfig } from '@/lib/seo';
 
 export const metadata = {
   title: "PhoneStory - Story Card Generator | خطوة اونلاين",
@@ -20,14 +21,13 @@ export const metadata = {
   openGraph: {
     title: "PhoneStory - Story Card Generator",
     description: "Create professional story cards for used phones in 30 seconds. Perfect for phone sellers on WhatsApp and Instagram.",
-    url: "https://www.khatwah.online/services/phone-story",
+    url: `${seoConfig.baseUrl}/services/phone-story`,
     siteName: "خطوة اونلاين | Khatwah Online",
     type: "website",
     locale: "en_US",
-    alternateLocale: ["ar_EG"],
     images: [
       {
-        url: "https://www.khatwah.online/services/phone-story/assets/banner.png",
+        url: `${seoConfig.baseUrl}/services/phone-story/assets/banner.png`,
         width: 1200,
         height: 630,
         alt: "PhoneStory - Create professional phone story cards"
@@ -38,10 +38,10 @@ export const metadata = {
     card: "summary_large_image",
     title: "PhoneStory - Story Card Generator",
     description: "Create professional story cards for used phones in 30 seconds. Perfect for phone sellers on WhatsApp and Instagram.",
-    images: ["https://www.khatwah.online/services/phone-story/assets/banner.png"]
+    images: [`${seoConfig.baseUrl}/services/phone-story/assets/banner.png`]
   },
   alternates: {
-    canonical: "https://www.khatwah.online/services/phone-story",
+    canonical: `${seoConfig.baseUrl}/services/phone-story`,
   },
   robots: {
     index: true,
@@ -88,11 +88,11 @@ export default function PhoneStoryLayout({ children }) {
             "provider": {
               "@type": "Organization",
               "name": "خطوة اونلاين | Khatwah Online",
-              "url": "https://www.khatwah.online",
-              "logo": "https://www.khatwah.online/logo.png"
+              "url": seoConfig.baseUrl,
+              "logo": `${seoConfig.baseUrl}/logo.png`
             },
-            "url": "https://www.khatwah.online/services/phone-story",
-            "screenshot": "https://www.khatwah.online/images/services/phone-story-screenshot.jpg",
+            "url": `${seoConfig.baseUrl}/services/phone-story`,
+            "screenshot": `${seoConfig.baseUrl}/images/services/phone-story-screenshot.jpg`,
             "aggregateRating": {
               "@type": "AggregateRating",
               "ratingValue": "4.8",
@@ -167,19 +167,19 @@ export default function PhoneStoryLayout({ children }) {
                 "@type": "ListItem",
                 "position": 1,
                 "name": "Home",
-                "item": "https://www.khatwah.online"
+                "item": seoConfig.baseUrl
               },
               {
                 "@type": "ListItem",
                 "position": 2,
                 "name": "Services",
-                "item": "https://www.khatwah.online/services"
+                "item": `${seoConfig.baseUrl}/services`
               },
               {
                 "@type": "ListItem",
                 "position": 3,
                 "name": "PhoneStory",
-                "item": "https://www.khatwah.online/services/phone-story"
+                "item": `${seoConfig.baseUrl}/services/phone-story`
               }
             ]
           })

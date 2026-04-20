@@ -8,9 +8,10 @@ import { useLocale } from "@/contexts/LocaleContext";
 import { getProductWhatsAppLink } from "@/utils/whatsapp";
 import i18n from "../../../../data/i18n.json";
 
-export default function ProductDetailClient({ product, slug }) {
+export default function ProductDetailClient({ productAr, productEn, slug }) {
   const { locale } = useLocale();
   const t = i18n[locale];
+  const product = locale === 'ar' ? productAr : (productEn || productAr);
   
   const accents = {
     "booking-system": { 
