@@ -33,7 +33,7 @@ const ControlPanel = ({
   showNoise, setShowNoise, showPromo, setShowPromo, 
   bgEffect, setBgEffect, themeKey, setThemeKey 
 }) => (
-  <div className="bg-gray-100 p-3 rounded-2xl space-y-3 shadow-inner border border-gray-200">
+  <div className="bg-gray-100 p-3 rounded-2xl space-y-3 shadow-inner border border-gray-200" dir="ltr">
     {/* Layout & Mix */}
     <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
       <div className="flex flex-1 items-center bg-white rounded-lg p-1 shadow-sm shrink-0">
@@ -252,21 +252,17 @@ const PhoneCard = ({ phone, layoutMode, activeTheme, useGlass, count }) => {
   const isGrid = layoutMode === 'grid';
   const isCompact = layoutMode === 'compact';
   
-  // TYPOGRAPHY SCALING
   const getTypo = () => {
     if (isGrid) return { title: 'text-xs', price: 'text-sm', label: 'text-[9px]', spec: 'text-[9px]', padding: 'p-2' };
     if (isCompact) return { title: count > 2 ? 'text-sm' : 'text-base', price: 'text-base', label: 'text-[10px]', spec: 'text-[10px]', padding: 'p-3' };
     
-    // Standard (Hero Layout) Typography
     if (count === 1) return { title: 'text-3xl', price: 'text-5xl', label: 'text-sm', spec: 'text-sm', padding: 'p-6 py-8' };
     if (count === 2) return { title: 'text-2xl', price: 'text-3xl', label: 'text-xs', spec: 'text-xs', padding: 'p-4' };
     if (count === 3) return { title: 'text-xl', price: 'text-2xl', label: 'text-[10px]', spec: 'text-[10px]', padding: 'p-3' };
-    return { title: 'text-lg', price: 'text-xl', label: 'text-[9px]', spec: 'text-[9px]', padding: 'p-2' }; // count >= 4
+    return { title: 'text-lg', price: 'text-xl', label: 'text-[9px]', spec: 'text-[9px]', padding: 'p-2' };
   };
   const typo = getTypo();
 
-  // LAYOUT ENGINE & CENTERING FIXES
-  // For a single standard hero phone, we strip "h-full" and limit its height so the parent justify-center can center it nicely.
   let containerHeight = 'h-full';
   if (isStandard && count === 1) {
     containerHeight = 'h-auto max-h-[85%] w-[95%] mx-auto shadow-2xl';
@@ -275,18 +271,16 @@ const PhoneCard = ({ phone, layoutMode, activeTheme, useGlass, count }) => {
   const containerLayout = isGrid ? 'flex-col text-center' : isCompact ? 'flex-row items-center gap-3' : 'flex-col items-center text-center';
   const contentLayout = isGrid ? 'shrink-0 items-center' : isCompact ? 'flex-1 min-w-0 items-start' : 'shrink-0 items-center w-full';
 
-  // IMAGE CONSTRAINTS
   let imgWrapperLayout = '';
   if (isGrid) {
     imgWrapperLayout = 'flex-1 min-h-0 mb-1';
   } else if (isCompact) {
     imgWrapperLayout = 'w-1/3 h-full shrink-0';
   } else { 
-    // Standard (Hero Layout) Image Sizing
-    if (count === 1) imgWrapperLayout = 'flex-1 min-h-0 max-h-[45%] mb-6'; // Big but capped
+    if (count === 1) imgWrapperLayout = 'flex-1 min-h-0 max-h-[45%] mb-6'; 
     else if (count === 2) imgWrapperLayout = 'flex-1 min-h-0 mb-2';
-    else if (count === 3) imgWrapperLayout = 'h-24 shrink-0 mb-1.5'; // Forced thumbnail for space
-    else imgWrapperLayout = 'h-16 shrink-0 mb-1'; // Forced smaller thumbnail
+    else if (count === 3) imgWrapperLayout = 'h-24 shrink-0 mb-1.5'; 
+    else imgWrapperLayout = 'h-16 shrink-0 mb-1'; 
   }
 
   const glassStyles = useGlass ? {
@@ -298,7 +292,6 @@ const PhoneCard = ({ phone, layoutMode, activeTheme, useGlass, count }) => {
   return (
     <div className={`relative flex w-full overflow-hidden ${containerHeight} ${containerLayout} ${typo.padding} ${useGlass ? 'rounded-2xl' : ''}`} style={glassStyles}>
       
-      {/* IMAGE CONTAINER */}
       {hasImg && (
         <div className={`flex justify-center items-center ${imgWrapperLayout}`}>
           <img
@@ -309,10 +302,8 @@ const PhoneCard = ({ phone, layoutMode, activeTheme, useGlass, count }) => {
         </div>
       )}
 
-      {/* CONTENT CONTAINER */}
       <div className={`flex flex-col ${contentLayout}`}>
         
-        {/* Badges */}
         <div className={`flex flex-wrap gap-1 mb-1.5 ${!isCompact && 'justify-center'}`}>
           <span className={`rounded-sm font-black uppercase tracking-widest px-1.5 py-0.5 ${typo.label}`} style={{ backgroundColor: phone.taxPaid ? "#16a34a" : "#dc2626", textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
             {phone.taxPaid ? 'NO TAX' : 'TAX'}
@@ -322,12 +313,10 @@ const PhoneCard = ({ phone, layoutMode, activeTheme, useGlass, count }) => {
           </span>
         </div>
 
-        {/* Title */}
         <h2 className={`font-black uppercase tracking-tight leading-none mb-1.5 w-full ${typo.title}`} style={{ textShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
           {phone.model}
         </h2>
 
-        {/* Specs */}
         <div className={`flex flex-wrap gap-1 mb-1.5 ${!isCompact && 'justify-center'}`}>
           <div className={`rounded md px-1.5 py-0.5 flex items-center gap-1 border ${typo.spec}`} style={{ backgroundColor: "rgba(34, 197, 94, 0.15)", borderColor: "rgba(34, 197, 94, 0.3)" }}>
             <span className="opacity-80">🔋</span>
@@ -345,23 +334,18 @@ const PhoneCard = ({ phone, layoutMode, activeTheme, useGlass, count }) => {
           )}
         </div>
 
-        {/* Condition & Color */}
         <p style={{ color: "#9ca3af" }} className={`${typo.label} font-semibold uppercase tracking-wider mb-1.5 truncate w-full`}>
           {phone.color} {phone.color && condition && '•'} <span className="text-white">{condition?.label}</span>
         </p>
 
-        {/* Price Section */}
         {hasValidPrice && (
           <div className={`w-full mt-auto pt-1.5 border-t border-white/10 ${!isCompact ? 'text-center' : 'text-left'}`}>
             <div className={`flex items-baseline gap-1 ${!isCompact && 'justify-center'}`}>
-              
-              {/* FIXED CSS CLIPPING BUG: Drop shadow moved to parent wrapper */}
               <span style={{ filter: `drop-shadow(0 2px 6px ${activeTheme.c1}60)` }}>
                 <span className={`font-black tracking-tighter leading-none ${typo.price}`} style={{ backgroundImage: `linear-gradient(to bottom right, #ffffff, ${activeTheme.c3})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent', backgroundClip: 'text' }}>
                   {Number(phone.price).toLocaleString()}
                 </span>
               </span>
-
               <span className={`font-bold uppercase tracking-widest ${typo.label}`} style={{ color: activeTheme.c1 }}>
                 {getCurrency(phone.currency)}
               </span>
@@ -391,10 +375,11 @@ export default function LivePreview({ phones, brandName }) {
   const [showPromo, setShowPromo] = useState(true);
   const [seed, setSeed] = useState(1);
   
-  let html2canvasModule = null;
-  const getHtml2Canvas = async () => {
-    if (!html2canvasModule) html2canvasModule = (await import('html2canvas-pro')).default;
-    return html2canvasModule;
+  // SWITCHED FROM html2canvas TO html-to-image to fix Arabic rendering
+  let htmlToImageModule = null;
+  const getHtmlToImage = async () => {
+    if (!htmlToImageModule) htmlToImageModule = await import('html-to-image');
+    return htmlToImageModule;
   };
 
   const displayPhones = phones ? phones.slice(0, 4) : [];
@@ -405,13 +390,18 @@ export default function LivePreview({ phones, brandName }) {
   const downloadImage = async () => {
     if (!previewRef.current) return;
     try {
-      const html2canvas = await getHtml2Canvas();
-      const canvas = await html2canvas(previewRef.current, {
-        scale: 3, useCORS: true, allowTaint: true, backgroundColor: null, logging: false,
+      const htmlToImage = await getHtmlToImage();
+      
+      // Native SVG-based renderer perfectly preserves Arabic ligatures
+      const dataUrl = await htmlToImage.toPng(previewRef.current, {
+        quality: 1.0,
+        pixelRatio: 3,
+        skipFonts: false,
       });
+
       const link = document.createElement('a');
       link.download = `Story_${brandName || 'Promo'}_${Date.now()}.png`;
-      link.href = canvas.toDataURL('image/png', 1.0);
+      link.href = dataUrl;
       link.click();
     } catch (error) {
       console.error('Capture Error:', error);
@@ -431,7 +421,6 @@ export default function LivePreview({ phones, brandName }) {
   return (
     <div className="space-y-4">
       
-      {/* 1. EXTRACTED CONTROL PANEL */}
       <ControlPanel 
         layoutMode={layoutMode} setLayoutMode={setLayoutMode} setSeed={setSeed}
         useGlass={useGlass} setUseGlass={setUseGlass} showNoise={showNoise} 
@@ -439,17 +428,21 @@ export default function LivePreview({ phones, brandName }) {
         bgEffect={bgEffect} setBgEffect={setBgEffect} themeKey={themeKey} setThemeKey={setThemeKey}
       />
 
-      {/* 2. PREVIEW CANVAS */}
       <div
         ref={previewRef}
         className="relative mx-auto w-full max-w-[380px] aspect-[9/16] overflow-hidden rounded-[2.5rem] flex flex-col shadow-2xl ring-1 ring-black/5"
-        style={{ backgroundColor: activeTheme.bg, color: "#ffffff", fontFamily: '"Inter", "Space Grotesk", system-ui, -apple-system, sans-serif' }}
+        style={{ 
+          backgroundColor: activeTheme.bg, 
+          color: "#ffffff", 
+          // Appended standard Arabic font fallbacks so shaping looks native
+          fontFamily: '"Inter", "Cairo", "Tajawal", "Space Grotesk", system-ui, -apple-system, sans-serif' 
+        }}
+        dir="auto" 
       >
         <VfxLayer activeTheme={activeTheme} bgEffect={bgEffect} showNoise={showNoise} seed={seed} />
 
         <div className="relative z-10 flex flex-col h-full p-4">
           
-          {/* Header */}
           <div className="shrink-0 mb-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="h-4 w-4 rounded-full flex items-center justify-center" style={{ backgroundColor: activeTheme.c1, boxShadow: `0 0 15px ${activeTheme.c1}` }}>
@@ -466,7 +459,6 @@ export default function LivePreview({ phones, brandName }) {
             )}
           </div>
 
-          {/* Dynamic Grid Layouts - Using justify-center here ensures a single item gets vertically centered perfectly! */}
           <div className={`flex-1 min-h-0 w-full ${layoutMode === 'grid' ? (count <= 2 ? 'grid grid-cols-2 gap-2' : 'grid grid-cols-2 grid-rows-2 gap-2') : `flex flex-col justify-center ${count > 2 ? 'gap-2' : 'gap-3'}`}`}>
             {displayPhones.map((phone, idx) => (
               <PhoneCard 
@@ -480,7 +472,6 @@ export default function LivePreview({ phones, brandName }) {
         </div>
       </div>
 
-      {/* 3. EXPORT BUTTON */}
       <button
         onClick={downloadImage}
         className="w-full py-4 rounded-2xl font-black uppercase tracking-widest text-sm flex items-center justify-center gap-3 transition-transform hover:scale-[1.02] active:scale-95 shadow-xl relative overflow-hidden group"
