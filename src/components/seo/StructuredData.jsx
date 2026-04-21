@@ -5,6 +5,7 @@
  */
 
 import { seoConfig } from "@/lib/seo";
+import contact from "../../../data/contact.json";
 
 export function OrganizationSchema() {
   const schema = {
@@ -24,6 +25,7 @@ export function OrganizationSchema() {
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "Customer Service",
+      telephone: contact.phones[0].number,
       availableLanguage: ["Arabic", "English"],
     },
     aggregateRating: {
@@ -34,13 +36,11 @@ export function OrganizationSchema() {
       worstRating: "1",
     },
     sameAs: [
-      "https://www.instagram.com/khatwahonline",
-      "https://www.tiktok.com/@khatwahonline",
-      "https://www.facebook.com/khatwahonline",
-      "https://twitter.com/khatwahonline",
-      "https://www.linkedin.com/company/khatwahonline",
-      "https://github.com/khatwahonline",
-      "https://www.youtube.com/@khatwahonline",
+      contact.social.instagram.url,
+      contact.social.tiktok.url,
+      contact.social.facebook.url,
+      contact.social.twitter.url,
+      contact.social.youtube.url,
     ],
   };
 
@@ -158,7 +158,8 @@ export function LocalBusinessSchema() {
       longitude: 33.80,
     },
     url: seoConfig.baseUrl,
-    telephone: "+201000000000",
+    telephone: contact.phones[0].number,
+    email: contact.email,
     priceRange: "$$",
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
@@ -173,6 +174,13 @@ export function LocalBusinessSchema() {
       bestRating: "5",
       worstRating: "1",
     },
+    sameAs: [
+      contact.social.instagram.url,
+      contact.social.tiktok.url,
+      contact.social.facebook.url,
+      contact.social.twitter.url,
+      contact.social.youtube.url,
+    ],
   };
 
   return (

@@ -1,17 +1,28 @@
 "use client";
 
 import { useRef } from "react";
-import html2canvas from "html2canvas";
 import { Battery, BatteryFull, BatteryMedium, BatteryLow, HardDrive, Smartphone, Palette, Package, Receipt, Globe, Star, ShieldCheck, Tag } from "lucide-react";
 import { PHONE_BRANDS, CONDITION_GRADES, CURRENCIES } from "../assets/brands";
 
 export default function StoryPreview({ phones, brandName, brandLogo, theme }) {
   const previewRef = useRef(null);
 
+  // Lazy load html2canvas only when first needed (cached after first import)
+  let html2canvasModule = null;
+  const getHtml2Canvas = async () => {
+    if (!html2canvasModule) {
+      html2canvasModule = (await import('html2canvas')).default;
+    }
+    return html2canvasModule;
+  };
+
   const downloadImage = async () => {
     if (!previewRef.current || phones.length === 0) return;
 
     try {
+      // Get cached html2canvas module (only downloads once)
+      const html2canvas = await getHtml2Canvas();
+      
       const canvas = await html2canvas(previewRef.current, {
         scale: 2,
         backgroundColor: theme.bg,

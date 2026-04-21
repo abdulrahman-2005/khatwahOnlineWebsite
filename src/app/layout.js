@@ -4,12 +4,12 @@ import NavBar from "@/components/layout/NavBar";
 import Footer from "@/components/layout/Footer";
 import { LocaleProvider } from "@/contexts/LocaleContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import Script from "next/script";
 import { OrganizationSchema, WebsiteSchema, LocalBusinessSchema } from "@/components/seo/StructuredData";
 import { seoConfig } from "@/lib/seo";
 import contact from "../../data/contact.json";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { GoogleTagManager } from '@next/third-parties/google';
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -159,19 +159,7 @@ export default function RootLayout({ children }) {
         <LocalBusinessSchema />
       </head>
       <body className="min-h-screen antialiased">
-        {/* Changed from lazyOnload to afterInteractive */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-2G26Q35GPF"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-2G26Q35GPF');
-          `}
-        </Script>
+        <GoogleTagManager gtmId="G-2G26Q35GPF" />
 
         <ThemeProvider>
           <LocaleProvider>

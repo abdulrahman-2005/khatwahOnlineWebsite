@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useMemo } from "react";
-import html2canvas from "html2canvas-pro";
 import { 
   Download, LayoutGrid, AlignJustify, List, Sparkles, Grid3X3, 
   Zap, Globe, Shuffle, Palette, Smartphone, Waves, Sparkle, 
@@ -28,6 +27,15 @@ export default function LivePreview({ phones, brandName }) {
   const [useGlass, setUseGlass] = useState(true);
   const [showNoise, setShowNoise] = useState(true);
   const [showPromo, setShowPromo] = useState(true);
+
+  // Lazy load html2canvas only when first needed (cached after first import)
+  let html2canvasModule = null;
+  const getHtml2Canvas = async () => {
+    if (!html2canvasModule) {
+      html2canvasModule = (await import('html2canvas-pro')).default;
+    }
+    return html2canvasModule;
+  };
   const [seed, setSeed] = useState(1);
   
   const displayPhones = phones ? phones.slice(0, 4) : [];
@@ -90,6 +98,9 @@ export default function LivePreview({ phones, brandName }) {
   const downloadImage = async () => {
     if (!previewRef.current) return;
     try {
+      // Get cached html2canvas module (only downloads once)
+      const html2canvas = await getHtml2Canvas();
+      
       const canvas = await html2canvas(previewRef.current, {
         scale: 3, useCORS: true, allowTaint: true, backgroundColor: null, logging: false,
       });

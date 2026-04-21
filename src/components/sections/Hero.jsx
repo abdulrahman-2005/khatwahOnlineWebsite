@@ -10,7 +10,15 @@ import i18n from "../../../data/i18n.json";
 // Lazy load the heavy Three.js globe only when needed
 const ArishGlobe = dynamic(() => import("@/components/ui/GlobeAnimation").then(mod => ({ default: mod.ArishGlobe })), {
   ssr: false,
-  loading: () => <div className="w-full h-full" />
+  loading: () => (
+    <div className="w-full h-full min-h-[300px] flex items-center justify-center bg-transparent">
+      <div className="animate-pulse rounded-full border border-gold/20 p-8">
+        <span className="text-gold/50 text-sm" style={{ fontFamily: "var(--font-body)" }}>
+          Loading 3D Experience...
+        </span>
+      </div>
+    </div>
+  )
 });
 
 export default function Hero() {

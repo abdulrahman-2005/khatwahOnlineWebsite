@@ -15,26 +15,18 @@
   },
   "phones": [
     {
-      "number": "+20 107 014 0780",
+      "number": "+20 109 897 9226",
       "label": {
-        "ar": "عبدالرحمن",
-        "en": "Abdelrahman"
+        "ar": "الرقم الرئيسي",
+        "en": "Main Number"
       },
       "primary": true
     },
     {
-      "number": "+20 100 123 4567",
+      "number": "+20 107 014 0780",
       "label": {
-        "ar": "أحمد",
-        "en": "Ahmed"
-      },
-      "primary": false
-    },
-    {
-      "number": "+20 111 987 6543",
-      "label": {
-        "ar": "محمود",
-        "en": "Mahmoud"
+        "ar": "عبدالرحمن",
+        "en": "Abdelrahman"
       },
       "primary": false
     }
@@ -43,32 +35,24 @@
   "social": {
     "instagram": {
       "handle": "@khatwah.online",
-      "url": "https://instagram.com/khatwah.online"
+      "url": "https://www.instagram.com/khatwah.online?igsh=NmlraDMxbXkxcHRu"
     },
     "tiktok": {
       "handle": "@khatwah.online",
-      "url": "https://tiktok.com/@khatwah.online"
+      "url": "https://www.tiktok.com/@khatwah.online?_r=1&_t=ZS-95hUKStkAx"
     },
     "facebook": {
       "handle": "khatwah.online",
-      "url": "https://facebook.com/khatwah.online",
+      "url": "https://www.facebook.com/share/1B1AcxH9XG/",
       "messenger": "https://m.me/khatwah.online"
     },
-    "github": {
-      "handle": "@khatwah",
-      "url": "https://github.com/khatwah"
-    },
-    "linkedin": {
-      "handle": "khatwah-online",
-      "url": "https://linkedin.com/company/khatwah-online"
-    },
     "twitter": {
-      "handle": "@khatwah_online",
-      "url": "https://twitter.com/khatwah_online"
+      "handle": "@KhatwaOnline",
+      "url": "https://x.com/KhatwaOnline"
     },
     "youtube": {
       "handle": "@khatwah.online",
-      "url": "https://youtube.com/@khatwah.online"
+      "url": "https://youtube.com/@khatwah.online?si=TGVnrow45IX2i7r7"
     }
   },
   "address": {
