@@ -1,4 +1,4 @@
-export const metadata = {
+﻿export const metadata = {
   title: "Free Business Tools & Services | خطوة اونلاين",
   description: "Professional-grade free tools designed to streamline your business operations. Create phone story cards, manage inventory, and more. No signup required.",
   keywords: [
@@ -96,6 +96,18 @@ export default function ServicesLayout({ children }) {
                   "@type": "Offer",
                   "price": "0",
                   "priceCurrency": "USD"
+                }
+              },
+              {
+                "@type": "WebApplication",
+                "name": "على كيفك — alakeifak",
+                "description": "Free interactive digital menus for restaurants in Arish with WhatsApp ordering",
+                "url": "https://www.khatwah.online/services/alakeifak",
+                "applicationCategory": "FoodOrderingApplication",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "0",
+                  "priceCurrency": "EGP"
                 }
               }
             ]

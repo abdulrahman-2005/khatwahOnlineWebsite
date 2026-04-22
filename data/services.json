@@ -1,4 +1,41 @@
 {
+  "ar": [
+    {
+      "id": "phone-story",
+      "slug": "phone-story",
+      "title": "PhoneStory",
+      "subtitle": "صانع صور الحالات للهواتف المستعملة",
+      "description": "اصنع صور احترافية لحالات الواتساب والإنستجرام للهواتف المستعملة في ٣٠ ثانية. مثالي لتجار الموبايلات.",
+      "icon": "📱",
+      "category": "أدوات",
+      "features": [
+        "إضافة حتى ٤ هواتف في صورة واحدة",
+        "قوالب جاهزة للبدء السريع",
+        "تصدير بجودة عالية (1080×1920)",
+        "معاينة مباشرة أثناء التعديل",
+        "واجهة عربية سهلة"
+      ],
+      "tags": ["مجاني", "بدون تسجيل", "تصدير فوري"]
+    },
+    {
+      "id": "alakeifak",
+      "slug": "alakeifak",
+      "title": "على كيفك",
+      "subtitle": "منيو ديجيتال ذكي لمطاعم العريش",
+      "description": "منيو إلكتروني تفاعلي مجاني للمطاعم. العميل يتصفح، يبني طلبه، ويرسله عبر الواتساب — بدون تسجيل، بدون تعقيد.",
+      "icon": "🍽️",
+      "category": "خدمات",
+      "features": [
+        "منيو ديجيتال تفاعلي بالأقسام",
+        "نظام طلبات عبر الواتساب",
+        "لا يتطلب تسجيل دخول للعميل",
+        "لوحة تحكم للتاجر لإدارة المنيو",
+        "تخصيص مناطق ورسوم التوصيل",
+        "حالة المحل (مفتوح/مغلق) لحظيًا"
+      ],
+      "tags": ["مجاني", "عربي", "طلبات واتساب"]
+    }
+  ],
   "en": [
     {
       "id": "phone-story",
@@ -16,6 +53,24 @@
         "English interface"
       ],
       "tags": ["Free", "No signup", "Instant export"]
+    },
+    {
+      "id": "alakeifak",
+      "slug": "alakeifak",
+      "title": "على كيفك",
+      "subtitle": "Smart Digital Menus for Arish Restaurants",
+      "description": "Free interactive digital menus for restaurants. Customers browse, build their order, and send it via WhatsApp — zero signup, zero hassle.",
+      "icon": "🍽️",
+      "category": "Services",
+      "features": [
+        "Interactive digital menu with categories",
+        "WhatsApp-based ordering system",
+        "Zero customer signup required",
+        "Merchant dashboard for menu management",
+        "Custom delivery zones & fees",
+        "Real-time open/closed status"
+      ],
+      "tags": ["Free", "Arabic", "WhatsApp Orders"]
     }
   ]
 }

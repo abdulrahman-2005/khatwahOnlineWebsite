@@ -1,4 +1,5 @@
 import { Outfit, IBM_Plex_Sans_Arabic } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import NavBar from "@/components/layout/NavBar";
 import Footer from "@/components/layout/Footer";
@@ -113,7 +114,9 @@ export default function RootLayout({ children }) {
       <html lang="ar" dir="rtl" className={`${outfit.variable} ${ibmPlexSansArabic.variable}`} data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
-        <script
+        <Script
+          id="theme-initializer"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
@@ -163,9 +166,11 @@ export default function RootLayout({ children }) {
 
         <ThemeProvider>
           <LocaleProvider>
-              <NavBar />
+              <div className="khatwah-chrome">
+                <NavBar />
+              </div>
               <main>{children}</main>
-              <Footer />
+                <Footer />
               <Analytics />
               <SpeedInsights />
           </LocaleProvider>

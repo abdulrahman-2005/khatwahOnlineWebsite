@@ -95,7 +95,7 @@
     "titleEn": "Educational Courses Platform",
     "descriptionAr": "نظام متكامل لإدارة وبيع الكورسات عبر الإنترنت مع حماية متقدمة للمحتوى ولوحة تحكم شاملة.",
     "status": "live",
-    "basePath": "/projects/courses-website",
+    "basePath": "https://pub-8c989b2938e645099dabc08ff3b747e0.r2.dev/projects/courses-website",
     "slug": "courses-platform",
     "headerImages": [
       "landing-hero.webp",
@@ -164,7 +164,7 @@
     "titleEn": "Integrated E-commerce System",
     "descriptionAr": "متجر إلكتروني متطور مع نظام إدارة مخزون ومحاسبة وإدارة طلبيات.",
     "status": "live",
-    "basePath": "/projects/eccomerce-website",
+    "basePath": "https://pub-8c989b2938e645099dabc08ff3b747e0.r2.dev/projects/eccomerce-website",
     "slug": "ecommerce-system",
     "headerImages": [
       "storefront.webp",
@@ -200,7 +200,7 @@
     "titleEn": "Arish City Catalogue",
     "descriptionAr": "دليل أونلاين لكل المتاجر في العريش — اكتشاف وإدارة للتجارة المحلية.",
     "status": "wip",
-    "basePath": "/projects/arish-catalogue",
+    "basePath": "https://pub-8c989b2938e645099dabc08ff3b747e0.r2.dev/projects/arish-catalogue",
     "slug": "arish-catalogue",
     "headerImages": ["thumbnail.webp"],
     "titleAr": "كتالوج مدينة العريش",
@@ -313,7 +313,7 @@
     "url": "https://courses.khatwah.online",
     "featured": false,
     "status": "live",
-    "basePath": "/projects/crypto-platform",
+    "basePath": "https://pub-8c989b2938e645099dabc08ff3b747e0.r2.dev/projects/crypto-platform",
     "slug": "crypto-platform",
     "headerImages": [
       "main-intro.webp",
@@ -438,7 +438,7 @@
     "url": "https://www.khatwah.online",
     "featured": false,
     "status": "live",
-    "basePath": "/projects/khatwahonline-website",
+    "basePath": "https://pub-8c989b2938e645099dabc08ff3b747e0.r2.dev/projects/khatwahonline-website",
     "slug": "khatwah-portfolio",
     "headerImages": [
       "landingpage-herosection.webp",
@@ -684,7 +684,7 @@
     "url": "https://2nice.co/",
     "featured": true,
     "status": "live",
-    "basePath": "/projects/2nice-store",
+    "basePath": "https://pub-8c989b2938e645099dabc08ff3b747e0.r2.dev/projects/2nice-store",
     "slug": "2nice-store",
     "headerImages": [
       "main-page-hero.webp",

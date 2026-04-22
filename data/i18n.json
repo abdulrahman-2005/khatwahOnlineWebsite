@@ -412,6 +412,19 @@
       "related_articles": "مقالات ذات صلة",
       "no_content": "لا يوجد محتوى متاح لهذا المقال.",
       "seo_section_title": "شركة برمجة مصرية رائدة في تصميم وتطوير المواقع الإلكترونية"
+    },
+    "services_page": {
+      "hero_eyebrow": "أدواتنا المجانية",
+      "hero_headline_1": "أدوات تبسّط",
+      "hero_headline_2": "تجارة العريش",
+      "hero_subtitle": "أدوات مجانية طورها فريق خطوة عشان تساعدك تدير شغلك باحترافية وسهولة من موبايلك.",
+      "view_tool": "استخدم الأداة",
+      "features_title": "المميزات",
+      "ecosystem": "نظام خُطوة المتكامل",
+      "coming_soon_title": "المزيد من الحلول قريباً...",
+      "coming_soon_body": "فريقنا الهندسي شغال حالياً على تطوير أدوات مجانية تانية عشان يساعدك في شغلك. خليك متابع.",
+      "start_building": "ابدأ الآن",
+      "free_forever": "مجاني للأبد"
     }
   },
   "en": {
@@ -827,6 +840,19 @@
       "related_articles": "Related Articles",
       "no_content": "No content available for this article.",
       "seo_section_title": "Leading Egyptian Software Development Company"
+    },
+    "services_page": {
+      "hero_eyebrow": "Our Free Tools",
+      "hero_headline_1": "Next-Gen",
+      "hero_headline_2": "Digital Services.",
+      "hero_subtitle": "We build independent, production-grade tools and micro-SaaS platforms to solve real problems. Zero friction. Zero cost.",
+      "view_tool": "Use Tool",
+      "features_title": "Features",
+      "ecosystem": "Khatwah Ecosystem",
+      "coming_soon_title": "More Solutions Architecting...",
+      "coming_soon_body": "Our engineering team is actively cooking up new free tools to automate boring business operations. Stay tuned.",
+      "start_building": "Start Building",
+      "free_forever": "Free Forever"
     }
   }
 }

@@ -1,4 +1,10 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
+
+/* Hide main site navbar/footer inside alakeifak service */
+.alakeifak-active ~ .khatwah-chrome,
+body:has(.alakeifak-active) .khatwah-chrome {
+  display: none !important;
+}
 
 @font-face {
   font-family: "terrabica";

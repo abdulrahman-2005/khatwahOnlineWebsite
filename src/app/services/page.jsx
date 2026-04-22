@@ -1,91 +1,86 @@
 "use client";
 
 import { Reveal } from "@/components/ui/Reveal";
-import Eyebrow from "@/components/ui/Eyebrow";
 import Link from "next/link";
 import Image from "next/image";
 import servicesData from "../../../data/services.json";
-import { ArrowRight, Star, Zap, Users, Clock3 } from "lucide-react";
+import i18n from "../../../data/i18n.json";
+import { useLocale } from "@/contexts/LocaleContext";
+import { ArrowUpRight, Sparkles, Zap, Layers } from "lucide-react";
 
 export default function ServicesPage() {
-  const services = servicesData.en;
+  const { locale } = useLocale();
+  const t = i18n[locale].services_page;
+  const services = servicesData[locale] || servicesData.en;
 
   return (
-    <main className="min-h-screen" style={{ backgroundColor: "var(--color-surface)" }}>
-      {/* Hero Section */}
-      <section className="relative overflow-hidden px-6 py-20 sm:px-12 sm:py-32 lg:px-20">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-[0.02]">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 25% 25%, var(--color-gold) 2px, transparent 2px),
-                             radial-gradient(circle at 75% 75%, var(--color-gold) 1px, transparent 1px)`,
-            backgroundSize: '60px 60px, 40px 40px'
-          }} />
+    <main className="min-h-screen bg-[var(--color-surface)] selection:bg-[var(--color-gold)] selection:text-white pb-32">
+      {/* 🌟 ULTRA HIGH-END HERO SECTION */}
+      <section className="relative overflow-hidden pt-32 pb-24 lg:pt-48 lg:pb-32 px-6">
+        {/* Dynamic Abstract Background Glows */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-0 right-1/4 h-[500px] w-[500px] rounded-full sm:h-[800px] sm:w-[800px] bg-[var(--color-gold-glow)] blur-[150px] opacity-[0.15]" />
+          <div className="absolute bottom-[-10%] left-[-10%] h-[500px] w-[500px] rounded-full sm:h-[800px] sm:w-[800px] bg-blue-500/20 blur-[150px] opacity-[0.1]" />
+          
+          {/* Subtle Grid Netting */}
+          <div className="absolute inset-0 bg-[length:40px_40px] opacity-[0.03] [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
         </div>
 
         <div className="relative mx-auto max-w-7xl">
-          <Reveal direction="up" distance={30}>
-            <div className="mb-20 text-center">
-              <h1 
-                className="mb-6 mt-6 text-5xl font-black leading-tight sm:text-6xl lg:text-7xl" 
-                style={{ 
-                  fontFamily: "var(--font-display)", 
-                  color: "var(--color-gold)",
-                }}
-              >
-                Free Business Tools
+          <Reveal direction="up" distance={40}>
+            <div className="flex flex-col items-center text-center">
+              {/* Premium Floating Badge */}
+              <div className="mb-8 inline-flex items-center gap-3 rounded-full bg-[var(--color-background)] px-5 py-2.5 border border-[var(--color-border)] shadow-sm animate-fade-in">
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-gold)] text-white shadow-md">
+                  <Sparkles size={14} fill="currentColor" />
+                </span>
+                <span className="text-[14px] font-bold tracking-wider uppercase text-[var(--color-text)] mx-2">
+                  {t.ecosystem}
+                </span>
+              </div>
+
+              {/* Massive Modern Headline */}
+              <h1 className="mb-8 text-[50px] md:text-[80px] lg:text-[100px] font-black leading-[0.95] tracking-[-0.04em]" 
+                style={{ fontFamily: "var(--font-display)", color: "var(--color-text)" }}>
+                {t.hero_headline_1} <br className="hidden sm:block" />
+                <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, var(--color-gold) 0%, #ff8c00 100%)" }}>
+                  {t.hero_headline_2}
+                </span>
               </h1>
-              <p 
-                className="mx-auto max-w-3xl text-lg leading-8 sm:text-xl" 
-                style={{ 
-                  fontFamily: "var(--font-body)", 
-                  color: "var(--color-text-muted)" 
-                }}
-              >
-                Professional-grade tools designed to streamline your business operations. 
-                No signup required, completely free to use.
+
+              {/* Sophisticated Subheadline */}
+              <p className="mx-auto max-w-2xl text-[18px] md:text-[22px] font-medium leading-relaxed" 
+                style={{ color: "var(--color-text-muted)" }}>
+                {t.hero_subtitle}
               </p>
             </div>
           </Reveal>
+        </div>
+      </section>
 
-          {/* Services Grid */}
-          <div className="grid gap-8 lg:grid-cols-2 xl:grid-cols-2">
+      {/* 🚀 BENTO GRID MARKETPLACE */}
+      <section className="px-4 sm:px-8 relative z-10">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 lg:gap-12">
             {services.map((service, index) => (
               <Reveal key={service.slug} direction="up" distance={40} delay={index * 150}>
-                <ServiceCard service={service} index={index} />
+                <ServiceCard service={service} index={index} t={t} />
               </Reveal>
             ))}
           </div>
 
-      
-
-          {/* Coming Soon */}
-          <Reveal direction="up" distance={30} delay={800}>
-            <div 
-              className="mt-20 overflow-hidden rounded-3xl border p-12 text-center"
-              style={{ 
-                borderColor: "var(--color-border)",
-                background: `linear-gradient(135deg, var(--color-background) 0%, var(--color-surface) 100%)`
-              }}
-            >
-              <div 
-                className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl"
-                style={{ backgroundColor: "var(--color-gold)20" }}
-              >
-                <Clock3 size={32} style={{ color: "var(--color-gold)" }} />
-              </div>
-              <h3 
-                className="mb-3 text-2xl font-bold" 
-                style={{ color: "var(--color-text)" }}
-              >
-                More Tools Coming Soon
-              </h3>
-              <p 
-                className="mx-auto max-w-md text-base" 
-                style={{ color: "var(--color-text-muted)" }}
-              >
-                We're constantly developing new tools to help streamline your business processes
-              </p>
+          {/* Coming Soon Premium Card */}
+          <Reveal direction="up" distance={40} delay={400}>
+            <div className="mt-12 lg:mt-16 w-full rounded-[40px] border border-dashed border-[var(--color-border)] bg-[var(--color-background)] opacity-80 backdrop-blur-sm p-12 lg:p-20 flex flex-col items-center justify-center text-center transition-all duration-500 hover:opacity-100 hover:border-solid hover:shadow-2xl group">
+               <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-[32px] bg-[var(--color-surface)] shadow-inner transition-transform duration-500 group-hover:scale-110 group-hover:bg-[var(--color-gold)] group-hover:text-white">
+                  <Layers size={40} className="text-[var(--color-text-muted)] group-hover:text-white transition-colors duration-500" />
+               </div>
+               <h3 className="mb-4 text-[32px] font-black tracking-tight" style={{ color: "var(--color-text)", fontFamily: "var(--font-display)" }}>
+                 {t.coming_soon_title}
+               </h3>
+               <p className="text-[18px] font-medium max-w-lg" style={{ color: "var(--color-text-muted)" }}>
+                 {t.coming_soon_body}
+               </p>
             </div>
           </Reveal>
         </div>
@@ -94,136 +89,57 @@ export default function ServicesPage() {
   );
 }
 
-function ServiceCard({ service, index }) {
+function ServiceCard({ service, index, t }) {
   return (
-    <Link href={`/services/${service.slug}`} className="group block h-full">
-      <article 
-        className="relative h-full overflow-hidden rounded-3xl border transition-all duration-700 hover:border-opacity-100 hover:shadow-2xl hover:-translate-y-1"
-        style={{ 
-          borderColor: "var(--color-border)",
-          backgroundColor: "var(--color-background)"
-        }}
-      >
-        {/* Image Header */}
-        <div className="relative h-70 overflow-hidden">
-          <Image
-            src={`/services/${service.slug}/assets/banner.png`}
-            alt={`${service.title} - ${service.subtitle}`}
-            fill
-            className="object-fit transition-transform duration-700 group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-          
-          {/* Overlay Gradient */}
-          <div 
-            className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"
-          />
-          
-          {/* Tags */}
-          <div className="absolute right-4 top-4 flex gap-2">
-            {service.tags.slice(0, 2).map((tag, idx) => (
-              <span
-                key={idx}
-                className="rounded-full px-3 py-1 text-xs font-bold backdrop-blur-sm"
-                style={{
-                  backgroundColor: "var(--color-gold)",
-                  color: "var(--color-ink)"
-                }}
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="p-6">
-          {/* Title & Subtitle */}
-          <div className="mb-4">
-            <h2 
-              className="mb-2 text-2xl font-black leading-tight" 
-              style={{ 
-                fontFamily: "var(--font-display)", 
-                color: "var(--color-text)"
-              }}
-            >
-              {service.title}
-            </h2>
-            <p 
-              className="text-base font-semibold" 
-              style={{ color: "var(--color-gold)" }}
-            >
-              {service.subtitle}
-            </p>
-          </div>
-
-          {/* Description */}
-          <p 
-            className="mb-6 leading-relaxed" 
-            style={{ 
-              fontFamily: "var(--font-body)", 
-              color: "var(--color-text-muted)" 
-            }}
-          >
-            {service.description}
-          </p>
-
-          {/* Features */}
-          <ul className="mb-6 space-y-2">
-            {service.features.slice(0, 3).map((feature, idx) => (
-              <li 
-                key={idx}
-                className="flex items-start gap-3 text-sm"
-                style={{ color: "var(--color-text)" }}
-              >
-                <div 
-                  className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full"
-                  style={{ backgroundColor: "var(--color-gold)" }}
-                >
-                  <div className="h-1.5 w-1.5 rounded-full bg-white" />
-                </div>
-                <span className="font-medium">{feature}</span>
-              </li>
-            ))}
-            {service.features.length > 3 && (
-              <li 
-                className="flex items-start gap-3 text-sm"
-                style={{ color: "var(--color-text-muted)" }}
-              >
-                <div 
-                  className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full"
-                  style={{ backgroundColor: "var(--color-border)" }}
-                >
-                  <div className="h-1.5 w-1.5 rounded-full bg-gray-400" />
-                </div>
-                <span>+{service.features.length - 3} more features</span>
-              </li>
-            )}
-          </ul>
-
-          {/* CTA */}
-          <div 
-            className="inline-flex w-full items-center justify-center gap-3 rounded-2xl px-6 py-4 text-base font-bold transition-all duration-300 group-hover:gap-4"
-            style={{ 
-              backgroundColor: "var(--color-gold)",
-              color: "#FFFFFF"
-            }}
-          >
-            <span>Launch Tool</span>
-            <ArrowRight 
-              size={20} 
-              className="transition-transform duration-300 group-hover:translate-x-1"
+    <Link href={`/services/${service.slug}`} className="group block h-full outline-none">
+      <article className="flex flex-col h-full overflow-hidden rounded-[48px] bg-[var(--color-background)] border border-[var(--color-border)] shadow-sm transition-all duration-700 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] hover:-translate-y-4 relative">
+        
+        {/* Visual Showcase (70% of height) */}
+        <div className="relative h-[420px] w-full overflow-hidden p-4">
+          <div className="relative h-full w-full overflow-hidden rounded-[40px] bg-[var(--color-surface)]">
+            {/* Mesh Glow Background */}
+            <div className="absolute inset-0 opacity-[0.05]" />
+            <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-[var(--color-gold)] opacity-10 blur-3xl group-hover:opacity-20 transition-opacity duration-700" />
+            <div className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-blue-500 opacity-5 blur-3xl group-hover:opacity-10 transition-opacity duration-700" />
+            
+            <Image
+              src={`/services/${service.slug}/assets/banner.png`}
+              alt={service.title}
+              fill
+              className="object-fit transition-transform duration-[2s] ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-110"
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
+           
+            {/* Bottom Content Overlay */}
+            <div className="absolute bottom-0 left-0 right-0 p-8 pt-20 bg-gradient-to-t from-black/90 via-black/40 to-transparent">
+              <p className="mb-2 text-[12px] font-black text-[var(--color-gold)] uppercase tracking-[0.3em]">{service.category}</p>
+              <h2 className="mb-3 text-[36px] md:text-[44px] font-black leading-[0.9] tracking-tight text-white" 
+                 style={{ fontFamily: "var(--font-display)" }}>
+                {service.title}
+              </h2>
+              <p className="text-[16px] font-bold text-white/70 line-clamp-2 max-w-sm">
+                {service.subtitle}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Hover Effect Overlay */}
-        <div 
-          className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none"
-          style={{
-            background: `linear-gradient(135deg, var(--color-gold)05 0%, var(--color-gold)05 100%)`
-          }}
-        />
+        {/* Action Bar (Simplified) */}
+        <div className="flex items-center justify-between px-10 pb-10 pt-2">
+          <div className="flex flex-col">
+            <span className="text-[14px] font-bold text-[var(--color-text-muted)] group-hover:text-[var(--color-text)] transition-colors">{t.start_building}</span>
+            <span className="text-[11px] font-black text-[var(--color-gold)] uppercase tracking-wider">{t.free_forever}</span>
+          </div>
+          
+          <div className="flex h-16 w-16 items-center justify-center rounded-[24px] bg-[var(--color-surface)] border border-[var(--color-border)] group-hover:bg-[var(--color-gold)] group-hover:border-transparent transition-all duration-500 shadow-sm group-hover:shadow-[0_10px_30px_-10px_var(--color-gold)] group-hover:-rotate-12">
+            <ArrowUpRight size={28} className="text-[var(--color-text)] group-hover:text-white transition-colors" />
+          </div>
+        </div>
+
+        {/* Hover Hover Overlay Detail */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-10 pointer-events-none transition-opacity duration-700">
+           <Zap size={300} fill="currentColor" className="text-[var(--color-gold)]" />
+        </div>
       </article>
     </Link>
   );
