@@ -9,7 +9,7 @@ export const metadata = {
     siteName: 'Khatwah Online',
     images: [
       {
-        url: 'https://www.khatwah.online/services/phone-story/assets/banner.png',
+        url: 'https://www.khatwah.online/services/phone-story/assets/banner.webp',
         width: 1200,
         height: 630,
         alt: 'PhoneStory - Story Card Generator',
@@ -22,7 +22,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'PhoneStory - Story Card Generator for Used Phones',
     description: 'Create professional story cards for used phones in 30 seconds.',
-    images: ['https://www.khatwah.online/services/phone-story/assets/banner.png'],
+    images: ['https://www.khatwah.online/services/phone-story/assets/banner.webp'],
   },
   alternates: {
     canonical: 'https://www.khatwah.online/services/phone-story',

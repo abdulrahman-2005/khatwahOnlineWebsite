@@ -15,9 +15,9 @@
       "theme_light": "فاتح",
       "lang_ar": "عربي",
       "lang_en": "English",
-      "home_label": "خُطوة اونلاين — الرئيسية",
+      "home_label": "خط اونلاين — الرئيسية",
       "blog": "المدونة",
-      "home":"الصفحة الرئيسية",
+      "home": "الصفحة الرئيسية",
       "services": "أدوات"
     },
     "hero": {
@@ -33,73 +33,73 @@
     },
     "products_section": {
       "eyebrow": "حلولنا الثلاثة",
-      "headline_part1": "اللي هتغير تجارتك",
-      "headline_part2": "",
-      "body": "كل حل مصمم خصيصًا لسوق العريش وشمال سيناء عشان يحل مشاكلك اليومية ويزود أرباحك."
+      "headline_part1": "حلول رقمية متكاملة",
+      "headline_part2": "لنمو أعمالك",
+      "body": "بدل ما نبيعلك نظام جاهز، بنبني لك الحل اللي سوق العريش محتاجه فعلاً عشان تكبّر مشروعك."
     },
     "products": [
       {
         "num": "01",
-        "slug": "booking-system",
-        "title": "نظام الحجوزات",
-        "subtitle": "خلّي عملائك يحجزوا معاك وأنت نايم",
-        "description": "نظام حجوزات أونلاين سهل وبسيط للحلاقين، العيادات، الصالونات والخدمات.",
+        "slug": "company-websites",
+        "title": "تصميم وتطوير المواقع التعريفية",
+        "subtitle": "واجهتك الاحترافية أمام العالم",
+        "description": "في 2026، موقعك هو مقرك الرئيسي على الإنترنت. بنصمم لك موقع سريع، عصري، ومتوافق مع الموبايل يعكس قوة براندك ويخلي العملاء يثقوا فيك من أول نظرة.",
         "features": [
-          "حجز فوري من الموبايل",
-          "تذكيرات أوتوماتيكية على الواتساب",
-          "تقويم ذكي يمنع الازدحام",
-          "نقاط ولاء عشان العملاء يرجعوا",
-          "تقارير يومية"
+          "تصميم واجهات تجربة مستخدم (UI/UX) عالمية",
+          "سرعة فائقة وأداء مستقر",
+          "تهيئة كاملة لمحركات البحث (SEO)",
+          "تصميم متجاوب مع جميع الأجهزة",
+          "لوحة تحكم لإدارة المحتوى"
         ],
         "benefits": [
-          "وفر وقتك: العملاء يحجزوا 24/7 بدون ما تتدخل",
-          "قلل الازدحاد: التقويم الذكي ينظم المواعيد تلقائياً",
-          "زود رجوع العملاء: نظام الولاء يخلي العميل يرجعلك",
-          "نام مرتاح: التذكيرات الأوتوماتيكية تمنع النسيان"
+          "ثقة فورية: تصميم احترافي يخلي العميل يثق في براندك بمجرد دخوله الموقع.",
+          "ظهور أفضل: موقع مهيأ لمحركات البحث (SEO) عشان العملاء يلاقوك بسهولة على جوجل.",
+          "واجهة عصرية: تصميم متجاوب بيشتغل بشكل مثالي على الموبايل واللابتوب.",
+          "دعم مستمر: إحنا جنبك بعد التسليم لأي تحديث أو تعديل تحتاجه."
         ],
-        "cta": "عايز نظام حجوزات لمحلي"
+        "cta": "عايز موقع لشركتي"
       },
       {
         "num": "02",
-        "slug": "inventory-pos",
-        "title": "إدارة المخزون والـ POS",
-        "subtitle": "تخلص من ضياع المخزون والأخطاء في الحساب",
-        "description": "إدارة مخزون ذكية + نقطة بيع + ربط بالمتجر الأونلاين.",
+        "slug": "management-systems",
+        "title": "أنظمة الإدارة المخصصة",
+        "subtitle": "ودع الورقة والقلم.. وأدر عملك بذكاء",
+        "description": "محتاج نظام يدير حجوزات عيادتك؟ أو سيستم يتابع مبيعات محلك؟ بنصمم لك نظام إدارة \"على مقاسك\" بالظبط، يحل مشاكلك الإدارية ويوفر وقتك.",
         "features": [
-          "تابع مخزونك لحظيًا",
-          "محاسبة أوتوماتيكية بدون أخطاء",
-          "بيع من المحل والأونلاين في نظام واحد",
-          "تقارير مبيعات واضحة",
-          "٣ باقات تناسب حجم تجارتك"
+          "لوحة تحكم سهلة الاستخدام بالعربي",
+          "ربط مباشر مع الواتساب للإشعارات",
+          "تقارير وتحليلات دقيقة لأداء عملك",
+          "إدارة المخزون والمبيعات",
+          "إدارة شؤون الموظفين والعملاء"
         ],
         "benefits": [
-          "لا مزيد من الضياع: تابع كل منتج لحظيًا",
-          "لا مزيد من الأخطاء: المحاسبة الأوتوماتيكية دقيقة 100%",
-          "بيع من أي مكان: المحل والأونلاين في نظام واحد",
-          "اتخذ قرارات أفضل: تقارير واضحة تساعدك تفهم تجارتك"
+          "وفر وقتك: الأنظمة الآلية بتوفر عليك ساعات من العمل اليدوي المرهق.",
+          "قرارات أذكى: تقارير دقيقة بتوضحلك أداء عملك وتساعدك تاخد قرارات صح.",
+          "أخطاء أقل: النظام الآلي بيقلل الأخطاء البشرية في الحسابات والمواعيد لنسبة 0%.",
+          "نمو مستدام: نظام بيكبر معاك وقابل للتوسع مع زيادة حجم شغلك."
         ],
-        "cta": "عايز أتحكم في مخزوني"
+        "cta": "عايز نظام إدارة لعملي"
       },
       {
         "num": "03",
-        "slug": "custom-development",
-        "title": "برمجة خاصة",
-        "subtitle": "أي فكرة أو نظام تحتاجه… بننفذه لك",
-        "description": "حلول مخصصة 100% حسب احتياجك (مواقع، تطبيقات، أنظمة إدارة…).",
+        "slug": "digital-marketing",
+        "title": "التسويق الرقمي وإدارة الهوية",
+        "subtitle": "مش بس بنبني النظام، بنوصلك لجمهورك",
+        "description": "بنساعدك تظهر لعملائك في العريش وشمال سيناء من خلال استراتيجيات تسويق ذكية على منصات التواصل الاجتماعي وGoogle، عشان نضمن إن استثمارك الرقمي جاب نتيجته.",
         "features": [
-          "برمجة حسب طلبك بالظبط",
-          "مواقع وتطبيقات احترافية",
-          "أنظمة إدارة متكاملة",
-          "ربط مع الواتساب والأنظمة الأخرى",
-          "دعم فني محلي مستمر"
+          "إدارة حملات إعلانية ممولة",
+          "صناعة محتوى يبيع ويجذب العملاء",
+          "تحليل المنافسين وتطوير خطة نمو",
+          "إدارة صفحات التواصل الاجتماعي",
+          "تحسين محركات البحث (SEO)"
         ],
         "benefits": [
-          "حل فريد: نظام مصمم خصيصًا لاحتياجاتك",
-          "مرونة كاملة: عدّل وطور حسب ما تجارتك تكبر",
-          "دعم محلي: فريق من العريش يفهم السوق المحلي",
-          "تكامل سهل: اربط مع أي نظام تستخدمه حاليًا"
+          "وصول أكبر: إعلاناتك بتوصل للعميل المهتم فعلاً بخدماتك في الوقت الصح.",
+          "هوية قوية: بنصنع لك محتوى وهوية بصرية بتخليك متميز عن منافسينك.",
+          "عائد استثمار: كل جنيه بتصرفه في الإعلانات محسوب وبنركز إنه يجيب لك مبيعات.",
+          "استراتيجية نمو: مش مجرد إعلانات، إحنا بنحط خطة تسويق متكاملة لنمو البيزنس بتاعك."
         ],
-        "cta": "عندي فكرة خاصة"
+        "cta": "عايز خطة تسويق لعملي"
       }
     ],
     "products_page": {
@@ -282,7 +282,7 @@
     "about_page": {
       "hero_eyebrow": "من نحن",
       "hero_headline_1": "الناس اللي",
-      "hero_headline_2": "بتبني خُطوة",
+      "hero_headline_2": "بتبني خطوة",
       "hero_subtitle": "تلاتة من العريش. درسنا كمبيوتر ساينس. قررنا نبدأ.",
       "story_eyebrow": "قصتنا",
       "story_p1": "إحنا تلاتة أصحاب من العريش. درسنا كمبيوتر ساينس ومن أول يوم كنا حاسين إن السوق المحلي محتاج حاجة مختلفة تماماً.",
@@ -295,7 +295,7 @@
       "vision_3_title": "من العريش للعالم",
       "vision_3_desc": "نبدأ محلي، نثبت النموذج، وبعدين نتوسع لباقي مصر وبعدين أبعد.",
       "tech_eyebrow": "التقنيات",
-      "org_name": "خُطوة اونلاين",
+      "org_name": "خطوة اونلاين",
       "org_description": "شركة تقنية من العريش، شمال سيناء"
     },
     "about_team": {
@@ -351,7 +351,7 @@
       "sections": [
         {
           "heading": "أفضل شركات برمجة مواقع في مصر",
-          "content": "خُطوة اونلاين هي شركة برمجة مصرية متخصصة في تصميم وتطوير المواقع الإلكترونية وبرمجة تطبيقات الجوال. نقدم حلول برمجية مخصصة لمختلف القطاعات في مصر، من المتاجر الإلكترونية إلى أنظمة إدارة المخزون والحجوزات. نحن من أكبر شركات البرمجيات في العريش، شمال سيناء، ونعمل على خدمة التجارة المحلية في مصر بجودة عالية ودعم فني مستمر."
+          "content": "خطوة اونلاين هي شركة برمجة مصرية متخصصة في تصميم وتطوير المواقع الإلكترونية وحلول التسويق الرقمي. نقدم حلول برمجية مخصصة لمختلف القطاعات، من المواقع التعريفية إلى أنظمة الإدارة المخصصة. نحن من أكبر شركات البرمجيات في العريش، شمال سيناء، ونعمل على مساعدة الشركات في النمو بجودة عالية ودعم فني مستمر."
         },
         {
           "heading": "تصميم وتطوير المواقع الإلكترونية بجودة عالية",
@@ -363,10 +363,10 @@
         },
         {
           "heading": "خدماتنا للتجارة المحلية في مصر",
-          "content": "نساعد الشركات والمتاجر المحلية في مصر على الانتقال إلى العالم الرقمي من خلال بناء متاجر أونلاين، أنظمة إدارة المخزون، وأنظمة الحجوزات الإلكترونية. نحن نفهم السوق المصري ونقدم حلول تقنية تناسب احتياجات التجارة المحلية مع أسعار تنافسية ودعم فني باللغة العربية."
+          "content": "نساعد الشركات والمؤسسات المحلية في مصر على الانتقال إلى العالم الرقمي من خلال بناء مواقع تعريفية، أنظمة إدارة مخصصة، وإدارة الهوية الرقمية والتسويق. نحن نفهم السوق المصري ونقدم حلول تقنية تناسب احتياجات الأعمال مع أسعار تنافسية ودعم فني باللغة العربية."
         }
       ],
-      "footer_text": "خُطوة اونلاين - شركة برمجة مصرية من العريش، شمال سيناء. نقدم خدمات تصميم المواقع الإلكترونية، برمجة التطبيقات، وحلول برمجية مخصصة لمختلف القطاعات في مصر.",
+      "footer_text": "خطوة اونلاين - شركة برمجة مصرية من العريش، شمال سيناء. نقدم خدمات تصميم المواقع الإلكترونية، برمجة التطبيقات، وحلول برمجية مخصصة لمختلف القطاعات في مصر.",
       "hero_description": "شركة برمجة مصرية متخصصة في تصميم وتطوير المواقع الإلكترونية وتطبيقات الجوال. نقدم حلول برمجية مخصصة للتجارة المحلية في مصر مع دعم فني مستمر وجودة عالية.",
       "market_additional": "كأفضل شركة برمجة مواقع في مصر، نعمل على تصميم تطبيقات الجوال وبرمجة تطبيقات مخصصة لمختلف القطاعات. نحن من أكبر شركات البرمجيات في العريش، نقدم خدمات تصميم وتطوير المواقع الإلكترونية بجودة عالية.",
       "browse_more": "تصفح المزيد من مشاريعنا",
@@ -377,8 +377,8 @@
       "title": "الأسئلة الشائعة",
       "questions": [
         {
-          "question": "ما هي خدمات خُطوة اونلاين؟",
-          "answer": "نقدم ثلاث خدمات رئيسية: نظام الحجوزات الأونلاين للحلاقين والعيادات، نظام إدارة المخزون والـ POS مع ربط المتجر الإلكتروني، والبرمجة الخاصة لأي نظام أو موقع تحتاجه."
+          "question": "ما هي خدمات خطوة اونلاين؟",
+          "answer": "نقدم ثلاث خدمات رئيسية: تصميم وتطوير المواقع التعريفية للشركات، أنظمة الإدارة المخصصة للمبيعات والحجوزات والمخزون، والتسويق الرقمي وإدارة الهوية لمساعدتك في الوصول لعملائك."
         },
         {
           "question": "كم تكلفة تصميم موقع إلكتروني؟",
@@ -404,7 +404,7 @@
     },
     "blog": {
       "eyebrow": "رؤى وتحليلات",
-      "headline": "مدونة خُطوة",
+      "headline": "مدونة خطوة",
       "subtitle": "رؤى تقنية، تحليلات استراتيجية، ومنظورات صناعية من فريقنا.",
       "read_article": "اقرأ المقال",
       "no_posts": "لا توجد مقالات منشورة حتى الآن. تحقق مرة أخرى قريباً.",
@@ -420,7 +420,7 @@
       "hero_subtitle": "أدوات مجانية طورها فريق خطوة عشان تساعدك تدير شغلك باحترافية وسهولة من موبايلك.",
       "view_tool": "استخدم الأداة",
       "features_title": "المميزات",
-      "ecosystem": "نظام خُطوة المتكامل",
+      "ecosystem": "نظام خطوة المتكامل",
       "coming_soon_title": "المزيد من الحلول قريباً...",
       "coming_soon_body": "فريقنا الهندسي شغال حالياً على تطوير أدوات مجانية تانية عشان يساعدك في شغلك. خليك متابع.",
       "start_building": "ابدأ الآن",
@@ -461,73 +461,73 @@
     },
     "products_section": {
       "eyebrow": "Our Three Solutions",
-      "headline_part1": "That Will Transform Your Business",
-      "headline_part2": "",
-      "body": "Each solution is custom-designed for the Arish and North Sinai market to solve your daily problems and increase your profits."
+      "headline_part1": "Integrated Digital Solutions",
+      "headline_part2": "For Your Business Growth",
+      "body": "Instead of selling you an off-the-shelf system, we build the exact solution the Arish market needs to scale your business."
     },
     "products": [
       {
         "num": "01",
-        "slug": "booking-system",
-        "title": "Booking System",
-        "subtitle": "Let customers book while you sleep",
-        "description": "Simple online booking for barbers, clinics, salons, and service businesses.",
+        "slug": "company-websites",
+        "title": "Company Websites",
+        "subtitle": "Your Professional Face to the World",
+        "description": "In 2026, your website is your digital headquarters. We design fast, modern, and mobile-friendly websites that reflect your brand's power and build instant trust with your customers.",
         "features": [
-          "Instant mobile booking",
-          "Automatic WhatsApp reminders",
-          "Smart calendar prevents double-booking",
-          "Loyalty points keep customers coming back",
-          "Daily performance reports"
+          "World-class UI/UX design",
+          "Blazing fast performance",
+          "Full Search Engine Optimization (SEO)",
+          "Fully responsive design across all devices",
+          "Easy-to-use Content Management System"
         ],
         "benefits": [
-          "Save time: Customers book 24/7 without your involvement",
-          "Reduce no-shows: Smart calendar organizes appointments automatically",
-          "Boost retention: Loyalty system brings customers back",
-          "Sleep easy: Automatic reminders prevent missed appointments"
+          "Instant Trust: Professional design makes customers trust your brand the moment they land on your site.",
+          "Better Visibility: SEO optimized site ensures customers can easily find you on Google.",
+          "Modern Interface: Responsive design works flawlessly on mobile phones and laptops.",
+          "Ongoing Support: We stand by you after delivery for any updates or modifications you need."
         ],
-        "cta": "Get a booking system"
+        "cta": "I want a website for my company"
       },
       {
         "num": "02",
-        "slug": "inventory-pos",
-        "title": "Inventory & POS",
-        "subtitle": "Stop losing inventory and making accounting mistakes",
-        "description": "Smart inventory management + point of sale + online store integration.",
+        "slug": "management-systems",
+        "title": "Management Systems",
+        "subtitle": "Ditch the Pen and Paper.. Manage Smart",
+        "description": "Need a system for clinic bookings? Or a POS for your store? We build custom management systems tailored to your exact needs, saving your time and solving operational headaches.",
         "features": [
-          "Real-time inventory tracking",
-          "Error-free automatic accounting",
-          "Sell in-store and online from one system",
-          "Clear sales reports",
-          "3 packages to fit your business size"
+          "User-friendly Arabic dashboard",
+          "Direct WhatsApp integration for alerts",
+          "Accurate reports and analytics",
+          "Inventory and sales management",
+          "Employee and customer management"
         ],
         "benefits": [
-          "No more losses: Track every product in real-time",
-          "No more errors: Automatic accounting is 100% accurate",
-          "Sell anywhere: In-store and online in one unified system",
-          "Make smarter decisions: Clear reports help you understand your business"
+          "Save Time: Automated systems save you hours of exhausting manual work.",
+          "Smarter Decisions: Accurate reports show your business performance and help you make right decisions.",
+          "Fewer Errors: Automated system reduces human errors in calculations and appointments to 0%.",
+          "Sustainable Growth: A scalable system that grows with your business volume."
         ],
-        "cta": "Take control of inventory"
+        "cta": "I need a management system"
       },
       {
         "num": "03",
-        "slug": "custom-development",
-        "title": "Custom Development",
-        "subtitle": "Any idea or system you need… we build it",
-        "description": "100% custom solutions tailored to your needs (websites, apps, management systems…).",
+        "slug": "digital-marketing",
+        "title": "Digital Marketing",
+        "subtitle": "We Don't Just Build, We Connect You",
+        "description": "We help you reach your audience in Arish and North Sinai through smart marketing strategies on Social Media and Google, ensuring your digital investment delivers real results.",
         "features": [
-          "Built exactly to your specifications",
-          "Professional websites and mobile apps",
-          "Integrated management systems",
-          "WhatsApp and third-party integrations",
-          "Ongoing local technical support"
+          "Paid ad campaign management",
+          "Content creation that attracts and converts",
+          "Competitor analysis and growth strategies",
+          "Social media page management",
+          "Search Engine Optimization (SEO)"
         ],
         "benefits": [
-          "Unique solution: System designed specifically for your needs",
-          "Complete flexibility: Modify and scale as your business grows",
-          "Local support: Team from Arish who understands the local market",
-          "Easy integration: Connect with any system you currently use"
+          "Greater Reach: Your ads reach the customers truly interested in your services at the right time.",
+          "Strong Identity: We create visual identity and content that makes you stand out from competitors.",
+          "Return on Investment: Every pound spent on ads is calculated and focused on bringing you sales.",
+          "Growth Strategy: Not just ads, we set a complete marketing plan for your business growth."
         ],
-        "cta": "I have a custom idea"
+        "cta": "I want a marketing plan"
       }
     ],
     "products_page": {
@@ -779,7 +779,7 @@
       "sections": [
         {
           "heading": "Best Web Development Companies in Egypt",
-          "content": "Khatwah Online is an Egyptian software development company specializing in web design, mobile app development, and custom software solutions. We provide tailored programming solutions for various sectors in Egypt, from e-commerce stores to inventory management and booking systems. We are among the largest software companies in Arish, North Sinai, serving local businesses in Egypt with high quality and continuous technical support."
+          "content": "Khatwah Online is an Egyptian software development company specializing in web design and digital marketing solutions. We provide tailored programming solutions for various sectors, from company websites to custom management systems. We are among the largest software companies in Arish, North Sinai, serving businesses with high quality and continuous technical support."
         },
         {
           "heading": "High-Quality Web Design and Development",
@@ -791,7 +791,7 @@
         },
         {
           "heading": "Our Services for Local Businesses in Egypt",
-          "content": "We help local companies and stores in Egypt transition to the digital world by building online stores, inventory management systems, and electronic booking systems. We understand the Egyptian market and provide technical solutions that suit local business needs with competitive prices and technical support in Arabic."
+          "content": "We help local companies in Egypt transition to the digital world by building company websites, custom management systems, and digital marketing strategies. We understand the Egyptian market and provide technical solutions that suit business needs with competitive prices and technical support."
         }
       ],
       "footer_text": "Khatwah Online - Egyptian software company from Arish, North Sinai. We provide web design services, application development, and custom software solutions for various sectors in Egypt.",

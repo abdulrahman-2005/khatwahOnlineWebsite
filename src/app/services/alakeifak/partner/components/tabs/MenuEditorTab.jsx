@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../../../lib/supabaseClient";
@@ -41,6 +41,13 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
   const [compressing, setCompressing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState("");
+
+  useEffect(() => {
+    if (showQR) {
+      document.body.classList.add('modal-open');
+      return () => document.body.classList.remove('modal-open');
+    }
+  }, [showQR]);
 
   const fetchData = useCallback(async () => {
     const [catRes, subRes, itemRes] = await Promise.all([
@@ -158,11 +165,14 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
       <div className="print:hidden">
       {/* Item Form Modal */}
       {showItemForm && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 backdrop-blur-sm pt-10 px-4 overflow-y-auto pb-10" onClick={(e) => { if (e.target === e.currentTarget) resetItemForm(); }}>
-          <div className="w-full max-w-2xl rounded-[36px] bg-white p-6 sm:p-8 shadow-2xl border border-gray-100 animate-in fade-in slide-in-from-bottom-6 duration-500">
+        <div 
+          className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 backdrop-blur-sm pt-4 sm:pt-10 px-4 overflow-y-auto pb-10 overscroll-none" 
+          onClick={(e) => { if (e.target === e.currentTarget) resetItemForm(); }}
+        >
+          <div className="w-full max-w-2xl rounded-[36px] bg-white p-5 sm:p-8 shadow-2xl border border-gray-100 animate-in fade-in slide-in-from-bottom-6 duration-500">
             <div className="mb-6 flex items-center justify-between border-b border-gray-100 pb-5">
-              <h3 className="text-[20px] font-black text-gray-900" style={{ fontFamily: "var(--font-display)" }}>{editingItem ? "تعديل الصنف" : "صنف جديد"}</h3>
-              <IconButton icon={X} onClick={resetItemForm} />
+              <h3 className="text-[18px] sm:text-[20px] font-black text-gray-900" style={{ fontFamily: "var(--font-display)" }}>{editingItem ? "تعديل الصنف" : "صنف جديد"}</h3>
+              <IconButton icon={X} onClick={resetItemForm} className="h-10 w-10 sm:h-11 sm:w-11" />
             </div>
             <div className="space-y-6">
               <InputField label="اسم الصنف" placeholder="مثلاً: برجر كلاسيك..." value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
@@ -170,37 +180,40 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
               <div className="space-y-3">
                 <label className="text-[14px] font-bold text-gray-500 px-1">صورة الصنف</label>
                 <div className="flex items-center gap-4">
-                  {compressing ? (<div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-[20px] bg-gray-50 border border-gray-100"><Loader2 size={28} className="animate-spin text-[var(--dynamic-color)]" /></div>)
-                   : imagePreview ? (<div className="h-24 w-24 shrink-0 overflow-hidden rounded-[20px] border-2 border-white shadow-md bg-gray-100"><img src={imagePreview} alt="" className="h-full w-full object-cover" /></div>)
-                   : (<div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-[20px] bg-gray-50 border-2 border-dashed border-gray-200"><UploadCloud size={28} className="text-gray-300" /></div>)}
-                  <label className="cursor-pointer inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-[13px] font-bold text-gray-700 border border-gray-200 shadow-sm hover:bg-gray-50">
+                  {compressing ? (<div className="flex h-20 w-20 sm:h-24 sm:w-24 shrink-0 items-center justify-center rounded-[20px] bg-gray-50 border border-gray-100"><Loader2 size={24} className="animate-spin text-[var(--dynamic-color)]" /></div>)
+                   : imagePreview ? (<div className="h-20 w-20 sm:h-24 sm:w-24 shrink-0 overflow-hidden rounded-[20px] border-2 border-white shadow-md bg-gray-100"><img src={imagePreview} alt="" className="h-full w-full object-cover" /></div>)
+                   : (<div className="flex h-20 w-20 sm:h-24 sm:w-24 shrink-0 items-center justify-center rounded-[20px] bg-gray-50 border-2 border-dashed border-gray-200"><UploadCloud size={24} className="text-gray-300" /></div>)}
+                  <label className="cursor-pointer inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-[12px] sm:text-[13px] font-bold text-gray-700 border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
                     <span>رفع صورة</span><input type="file" accept="image/*" onChange={handleImageChange} disabled={compressing} className="hidden" />
                   </label>
                 </div>
               </div>
-              <div className="rounded-[24px] bg-gray-50 p-5 border border-gray-100">
+              <div className="rounded-[24px] bg-gray-50 p-4 sm:p-5 border border-gray-100">
                 <div className="mb-4 flex items-center justify-between">
-                  <label className="text-[16px] font-black text-gray-900">الأحجام والتسعير</label>
-                  <button onClick={addSize} className="rounded-full bg-white px-3 py-1 text-[12px] font-bold text-[var(--dynamic-color)] border border-gray-200 hover:shadow-sm">+ تسعيرة</button>
+                  <label className="text-[15px] sm:text-[16px] font-black text-gray-900">الأحجام والتسعير</label>
+                  <button onClick={addSize} className="rounded-full bg-white px-3 py-1 text-[11px] sm:text-[12px] font-bold text-[var(--dynamic-color)] border border-gray-200 hover:shadow-sm">+ إضافة</button>
                 </div>
                 <div className="space-y-3">
                   {formData.sizes.map((size, idx) => (
-                    <div key={idx} className="flex gap-2 items-center">
-                      <input type="text" value={size.name} onChange={(e) => updateSize(idx, "name", e.target.value)} placeholder="الحجم" className="flex-1 rounded-[16px] bg-white px-4 py-3 text-[14px] font-bold outline-none border border-gray-200 focus:border-[var(--dynamic-color)] text-gray-900" />
-                      <input type="number" value={size.price} onChange={(e) => updateSize(idx, "price", e.target.value)} placeholder="السعر" dir="ltr" className="w-[100px] rounded-[16px] bg-white px-4 py-3 text-[14px] font-bold outline-none border border-gray-200 focus:border-[var(--dynamic-color)] text-gray-900" />
-                      {formData.sizes.length > 1 && <IconButton icon={Trash2} colorClass="text-red-400" borderClass="h-10 w-10 bg-red-50 border-red-100 !rounded-[12px]" onClick={() => removeSize(idx)} />}
+                    <div key={idx} className="flex flex-col sm:flex-row gap-2 items-start sm:items-center">
+                      <div className="flex w-full gap-2 items-center min-w-0">
+                        <input type="text" value={size.name} onChange={(e) => updateSize(idx, "name", e.target.value)} placeholder="الحجم (مثلاً: كبير)" className="flex-1 min-w-0 rounded-[16px] bg-white px-4 py-3 text-[14px] font-bold outline-none border border-gray-200 focus:border-[var(--dynamic-color)] text-gray-900" />
+                        <input type="number" value={size.price} onChange={(e) => updateSize(idx, "price", e.target.value)} placeholder="السعر" dir="ltr" className="w-[90px] sm:w-[100px] rounded-[16px] bg-white px-4 py-3 text-[14px] font-bold outline-none border border-gray-200 focus:border-[var(--dynamic-color)] text-gray-900" />
+                        {formData.sizes.length > 1 && <IconButton icon={Trash2} colorClass="text-red-400" borderClass="h-10 w-10 bg-red-50 border-red-100 !rounded-[12px]" onClick={() => removeSize(idx)} className="sm:hidden" />}
+                      </div>
+                      {formData.sizes.length > 1 && <IconButton icon={Trash2} colorClass="text-red-400" borderClass="h-10 w-10 bg-red-50 border-red-100 !rounded-[12px]" onClick={() => removeSize(idx)} className="hidden sm:flex" />}
                     </div>
                   ))}
                 </div>
               </div>
               <div className="flex items-center justify-between rounded-[20px] bg-[var(--dynamic-color)]/5 p-4 border border-[var(--dynamic-color)]/20">
-                <span className="text-[15px] font-black text-gray-900">إتاحة الصنف</span>
+                <span className="text-[14px] sm:text-[15px] font-black text-gray-900">إتاحة الصنف للطلب</span>
                 <button onClick={() => setFormData({ ...formData, is_available: !formData.is_available })} className="hover:scale-105 transition-transform">
-                  {formData.is_available ? <ToggleRight size={40} className="text-[var(--dynamic-color)]" /> : <ToggleLeft size={40} className="text-gray-300" />}
+                  {formData.is_available ? <ToggleRight className="text-[var(--dynamic-color)] w-9 h-9 sm:w-10 sm:h-10" /> : <ToggleLeft className="text-gray-300 w-9 h-9 sm:w-10 sm:h-10" />}
                 </button>
               </div>
               {formError && <div className="rounded-[16px] border border-red-100 bg-red-50 p-4 text-center text-[14px] font-bold text-red-600">{formError}</div>}
-              <PrimaryBtn onClick={handleSaveItem} disabled={saving || compressing} className="w-full">
+              <PrimaryBtn onClick={handleSaveItem} disabled={saving || compressing} className="w-full py-4 sm:py-5">
                 {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
                 {editingItem ? "حفظ التعديلات" : "إضافة الصنف"}
               </PrimaryBtn>
@@ -230,8 +243,9 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
         </div>
       </div>
 
-      {/* QR Code Modal  */}
-      {showQR && (
+
+  // QR Code Modal 
+  {showQR && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={() => setShowQR(false)}>
           <div className="w-full max-w-sm rounded-[32px] bg-white p-8 text-center shadow-2xl relative" onClick={e => e.stopPropagation()}>
             <IconButton icon={X} onClick={() => setShowQR(false)} borderClass="absolute top-4 right-4 bg-gray-100" />
@@ -260,7 +274,7 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
       <div className="mb-8 rounded-[28px] bg-white p-5 shadow-sm border border-gray-100">
         <h3 className="text-[15px] font-black text-gray-500 mb-4">➕ إضافة قسم رئيسي جديد</h3>
         <div className="flex flex-col sm:flex-row gap-3 mb-4">
-          <InputField placeholder="اسم القسم (مثال: الوجبات، المشروبات)" value={newCatName} onChange={(e) => setNewCatName(e.target.value)} onKeyDown={(e) => e.key === "Enter" && addCategory()} />
+          <InputField placeholder="اسم القسم (مثال: الوجبات، المشروبات)" value={newCatName} onChange={(e) => setNewCatName(e.target.value)} onKeyDown={(e) => e.key === "Enter" && addCategory()} className="flex-1 min-w-0" />
           <PrimaryBtn icon={Plus} onClick={addCategory} className="sm:w-44 shrink-0 py-3 h-max mt-auto">إنشاء قسم</PrimaryBtn>
         </div>
         <label className="text-[12px] font-bold text-gray-400 px-1 mb-2 block">اختر أيقونة للقسم:</label>
@@ -279,31 +293,31 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
             <div key={cat.id} className="rounded-[28px] overflow-hidden border border-gray-200 shadow-[0_4px_20px_-8px_rgba(0,0,0,0.06)]">
               {/* ── CATEGORY HEADER (Tier 1 — Bold colored band) ── */}
               {editingCat === cat.id ? (
-                <div className="p-5 space-y-3" style={{ backgroundColor: `${themeColor}08` }}>
-                  <div className="flex items-center gap-3">
-                    <input type="text" value={editCatName} onChange={(e) => setEditCatName(e.target.value)} onKeyDown={(e) => e.key === "Enter" && updateCategory(cat.id)} className="flex-1 rounded-[20px] bg-white px-4 py-3 text-[17px] font-black text-gray-900 outline-none border-2 border-[var(--dynamic-color)]" autoFocus />
-                    <IconButton icon={Save} colorClass="text-green-600" borderClass="bg-green-50 border-green-200" onClick={() => updateCategory(cat.id)} />
-                    <IconButton icon={X} onClick={() => setEditingCat(null)} />
+                <div className="p-4 sm:p-5 space-y-3" style={{ backgroundColor: `${themeColor}08` }}>
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <input type="text" value={editCatName} onChange={(e) => setEditCatName(e.target.value)} onKeyDown={(e) => e.key === "Enter" && updateCategory(cat.id)} className="flex-1 min-w-0 rounded-[16px] sm:rounded-[20px] bg-white px-3 sm:px-4 py-2.5 sm:py-3 text-[15px] sm:text-[17px] font-black text-gray-900 outline-none border-2 border-[var(--dynamic-color)]" autoFocus />
+                    <IconButton icon={Save} colorClass="text-green-600" borderClass="bg-green-50 border-green-200 h-9 w-9 sm:h-11 sm:w-11 !rounded-[12px]" onClick={() => updateCategory(cat.id)} />
+                    <IconButton icon={X} borderClass="h-9 w-9 sm:h-11 sm:w-11 !rounded-[12px]" onClick={() => setEditingCat(null)} />
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {EMOJI_OPTIONS.map((emoji) => (<button key={emoji} onClick={() => setEditCatIcon(emoji)} className={`flex h-8 w-8 items-center justify-center rounded-[10px] text-[16px] border-2 ${editCatIcon === emoji ? "border-[var(--dynamic-color)] bg-[var(--dynamic-color)]/10" : "border-gray-100 bg-white"}`}>{emoji}</button>))}
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center justify-between gap-4 px-5 py-4" style={{ background: `linear-gradient(135deg, ${themeColor}12 0%, ${themeColor}06 100%)` }}>
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-[14px] bg-white shadow-sm border border-gray-100 text-[22px]">{cat.icon || "🔥"}</div>
-                    <div>
-                      <h3 className="text-[18px] font-black text-gray-900 leading-tight" style={{ fontFamily: "var(--font-display)" }}>{cat.name}</h3>
-                      <span className="text-[12px] font-bold text-gray-400">{catSubs.length} تصنيف · {items.filter(i => catSubs.some(s => s.id === i.subcategory_id)).length} صنف</span>
+                <div className="flex items-center justify-between gap-4 px-4 sm:px-5 py-3 sm:py-4" style={{ background: `linear-gradient(135deg, ${themeColor}12 0%, ${themeColor}06 100%)` }}>
+                  <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                    <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-[12px] sm:rounded-[14px] bg-white shadow-sm border border-gray-100 text-[18px] sm:text-[22px] shrink-0 z-10">{cat.icon || "🔥"}</div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-[16px] sm:text-[18px] font-black text-gray-900 leading-tight truncate pr-1" style={{ fontFamily: "var(--font-display)" }}>{cat.name}</h3>
+                      <span className="text-[11px] font-bold text-gray-400 block mt-0.5">{catSubs.length} تصنيف · {items.filter(i => catSubs.some(s => s.id === i.subcategory_id)).length} صنف</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <button onClick={() => { setEditingCat(cat.id); setEditCatName(cat.name); setEditCatIcon(cat.icon || "🔥"); }} className="flex h-9 items-center gap-1.5 rounded-full bg-white px-3 text-[12px] font-bold text-gray-500 border border-gray-200 shadow-sm hover:bg-gray-50 transition-all">
-                      <Edit3 size={13} /> تعديل
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <button onClick={() => { setEditingCat(cat.id); setEditCatName(cat.name); setEditCatIcon(cat.icon || "🔥"); }} className="flex h-8 sm:h-9 items-center gap-1.5 rounded-full bg-white px-2.5 sm:px-3 text-[11px] sm:text-[12px] font-bold text-gray-500 border border-gray-200 shadow-sm hover:bg-gray-50 transition-all">
+                      <Edit3 size={12} className="sm:w-[13px]" /> <span className="hidden xs:inline">تعديل</span>
                     </button>
-                    <button onClick={() => deleteCategory(cat.id)} className="flex h-9 w-9 items-center justify-center rounded-full bg-white border border-red-100 text-red-400 shadow-sm hover:bg-red-50 transition-all">
-                      <Trash2 size={14} />
+                    <button onClick={() => deleteCategory(cat.id)} className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-white border border-red-100 text-red-400 shadow-sm hover:bg-red-50 transition-all">
+                      <Trash2 size={13} className="sm:w-3.5" />
                     </button>
                   </div>
                 </div>
@@ -318,27 +332,27 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
                   return (
                     <div key={sub.id} className={!isLast ? "border-b border-gray-100" : ""}>
                       {/* ── Subcategory header (Tier 2 — Subtle gray bar) ── */}
-                      <div className="flex items-center justify-between gap-3 px-5 py-3 bg-gray-50/80">
+                      <div className="flex items-center justify-between gap-3 px-4 sm:px-5 py-2.5 sm:py-3 bg-gray-50/80">
                         {editingSub === sub.id ? (
                           <div className="flex w-full items-center gap-2">
-                            <input type="text" value={editSubName} onChange={(e) => setEditSubName(e.target.value)} onKeyDown={(e) => e.key === "Enter" && updateSubcategory(sub.id)} className="flex-1 rounded-[14px] bg-white px-3 py-2 text-[14px] font-bold outline-none border border-[var(--dynamic-color)]" autoFocus />
-                            <IconButton icon={Save} colorClass="text-green-600" borderClass="bg-green-50 border-green-200 h-8 w-8 !rounded-[10px]" onClick={() => updateSubcategory(sub.id)} />
-                            <IconButton icon={X} onClick={() => setEditingSub(null)} borderClass="h-8 w-8 !rounded-[10px] bg-gray-200 border-transparent" />
+                            <input type="text" value={editSubName} onChange={(e) => setEditSubName(e.target.value)} onKeyDown={(e) => e.key === "Enter" && updateSubcategory(sub.id)} className="flex-1 min-w-0 rounded-[12px] sm:rounded-[14px] bg-white px-3 py-2 text-[13px] sm:text-[14px] font-bold outline-none border border-[var(--dynamic-color)]" autoFocus />
+                            <IconButton icon={Save} colorClass="text-green-600" borderClass="bg-green-50 border-green-200 h-8 w-8 sm:h-9 sm:w-9 !rounded-[10px]" onClick={() => updateSubcategory(sub.id)} />
+                            <IconButton icon={X} onClick={() => setEditingSub(null)} borderClass="h-8 w-8 sm:h-9 sm:w-9 !rounded-[10px] bg-gray-200 border-transparent" />
                           </div>
                         ) : (
                           <>
-                            <div className="flex items-center gap-2.5">
-                              <div className="w-[6px] h-[6px] rounded-full" style={{ backgroundColor: themeColor }} />
-                              <span className="text-[14px] font-black text-gray-700">{sub.name}</span>
-                              <span className="text-[11px] font-medium text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">{subItems.length}</span>
+                            <div className="flex items-center gap-2 sm:gap-2.5 flex-1 min-w-0">
+                              <div className="w-[5px] h-[5px] sm:w-[6px] sm:h-[6px] rounded-full shrink-0" style={{ backgroundColor: themeColor }} />
+                              <span className="text-[13px] sm:text-[14px] font-black text-gray-700 truncate">{sub.name}</span>
+                              <span className="text-[10px] sm:text-[11px] font-medium text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full shrink-0">{subItems.length}</span>
                             </div>
-                            <div className="flex items-center gap-3">
-                              <div className="flex items-center gap-1 border-l border-gray-200 pl-3">
-                                <button onClick={() => { setEditingSub(sub.id); setEditSubName(sub.name); }} className="text-gray-400 hover:text-gray-600 transition-colors p-1"><Edit3 size={13} /></button>
-                                <button onClick={() => deleteSubcategory(sub.id)} className="text-gray-400 hover:text-red-500 transition-colors p-1"><Trash2 size={13} /></button>
+                            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                              <div className="flex items-center gap-1 border-l border-gray-200 pl-2 sm:pl-3">
+                                <button onClick={() => { setEditingSub(sub.id); setEditSubName(sub.name); }} className="text-gray-400 hover:text-gray-600 transition-colors p-1.5"><Edit3 size={12} /></button>
+                                <button onClick={() => deleteSubcategory(sub.id)} className="text-gray-400 hover:text-red-500 transition-colors p-1.5"><Trash2 size={12} /></button>
                               </div>
-                              <button onClick={() => openAddItem(sub.id)} className="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[12px] font-black text-white transition-all active:scale-95 shadow-sm" style={{ backgroundColor: themeColor }}>
-                                <Plus size={14} strokeWidth={3} /> إضافة صنف
+                              <button onClick={() => openAddItem(sub.id)} className="flex items-center gap-1 sm:gap-1.5 rounded-full px-2.5 sm:px-3.5 py-1.5 text-[10px] sm:text-[12px] font-black text-white transition-all active:scale-95 shadow-sm" style={{ backgroundColor: themeColor }}>
+                                <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" strokeWidth={3} /> <span className="hidden xs:inline">إضافة صنف</span>
                               </button>
                             </div>
                           </>
@@ -368,14 +382,14 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
                               {/* Tags */}
                               {!item.is_available && <span className="shrink-0 text-[10px] font-black text-red-500 bg-red-100 px-2 py-0.5 rounded-full">نفذت</span>}
                               {/* Actions — Separated with gap */}
-                              <div className="shrink-0 flex items-center gap-0.5 opacity-50 group-hover:opacity-100 transition-opacity">
-                                <button onClick={() => toggleAvailability(item)} className="p-1.5 rounded-lg hover:bg-white transition-colors" title={item.is_available ? "إيقاف" : "تفعيل"}>
+                              <div className="shrink-0 flex items-center gap-0.5 opacity-100 sm:opacity-50 sm:group-hover:opacity-100 transition-opacity">
+                                <button onClick={() => toggleAvailability(item)} className="p-1 sm:p-1.5 rounded-lg hover:bg-white transition-colors" title={item.is_available ? "إيقاف" : "تفعيل"}>
                                   {item.is_available ? <ToggleRight size={20} className="text-green-500" /> : <ToggleLeft size={20} className="text-gray-300" />}
                                 </button>
-                                <button onClick={() => openEditItem(item)} className="p-1.5 rounded-lg hover:bg-white transition-colors" title="تعديل">
+                                <button onClick={() => openEditItem(item)} className="p-1 sm:p-1.5 rounded-lg hover:bg-white transition-colors" title="تعديل">
                                   <Edit3 size={14} className="text-gray-400" />
                                 </button>
-                                <button onClick={() => deleteItem(item.id)} className="p-1.5 rounded-lg hover:bg-red-50 transition-colors" title="حذف">
+                                <button onClick={() => deleteItem(item.id)} className="p-1 sm:p-1.5 rounded-lg hover:bg-red-50 transition-colors" title="حذف">
                                   <Trash2 size={14} className="text-gray-300 hover:text-red-500" />
                                 </button>
                               </div>

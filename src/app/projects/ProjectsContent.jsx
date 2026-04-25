@@ -6,7 +6,6 @@ import i18n from "../../../data/i18n.json";
 import projects from "../../../data/projects.json";
 import { Reveal } from "@/components/ui/Reveal";
 import Eyebrow from "@/components/ui/Eyebrow";
-import ScrollIndicator from "@/components/ui/ScrollIndicator";
 import { VerticalMarquee } from "@/components/ui/OptimizedMarquee";
 
 export default function ProjectsContent() {
@@ -49,9 +48,6 @@ export default function ProjectsContent() {
           </Reveal>
 
         </div>
-
-        {/* Scroll Indicator */}
-        <ScrollIndicator color="var(--color-gold)" />
 
         <style jsx>{`
           @keyframes float-slow {

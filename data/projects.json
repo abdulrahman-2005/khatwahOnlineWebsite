@@ -362,7 +362,7 @@
         "titleEn": "About Page",
         "titleAr": "صفحة من نحن",
         "descriptionEn": "Comprehensive introduction to our company, vision, values, and the talented team behind Khatwah Online.",
-        "descriptionAr": "تعريف شامل بشركتنا، رؤيتنا، قيمنا، والفريق الموهوب وراء خُطوة اونلاين.",
+        "descriptionAr": "تعريف شامل بشركتنا، رؤيتنا، قيمنا، والفريق الموهوب وراء خطوة اونلاين.",
         "screenshots": [
           {
             "labelEn": "About Hero",
@@ -429,11 +429,11 @@
       }
     ],
     "titleEn": "Khatwah Online Portfolio",
-    "titleAr": "موقع خُطوة اونلاين",
+    "titleAr": "موقع خطوة اونلاين",
     "descriptionEn": "Our company portfolio website — a bold, modern showcase of who we are, what we do, and the projects we've built.",
     "descriptionAr": "موقع محفظة أعمال شركتنا — عرض جريء وعصري لمن نحن، ماذا نفعل، والمشاريع التي بنيناها.",
     "detailedDescriptionEn": "This is our own portfolio website, built to showcase Khatwah Online's identity, mission, and work. It features a bold design system with dynamic animations, smooth transitions, and an engaging user experience. The site includes comprehensive sections for our landing page, about us, projects showcase, and contact information — all built with modern web technologies and optimized for performance.",
-    "detailedDescriptionAr": "هذا هو موقع محفظة أعمالنا الخاص، تم بناؤه لعرض هوية خُطوة اونلاين، رسالتنا، وأعمالنا. يتميز بنظام تصميم جريء مع رسوم متحركة ديناميكية، انتقالات سلسة، وتجربة مستخدم جذابة. يتضمن الموقع أقسامًا شاملة للصفحة الرئيسية، من نحن، عرض المشاريع، ومعلومات التواصل — كلها مبنية بتقنيات ويب حديثة ومحسّنة للأداء.",
+    "detailedDescriptionAr": "هذا هو موقع محفظة أعمالنا الخاص، تم بناؤه لعرض هوية خطوة اونلاين، رسالتنا، وأعمالنا. يتميز بنظام تصميم جريء مع رسوم متحركة ديناميكية، انتقالات سلسة، وتجربة مستخدم جذابة. يتضمن الموقع أقسامًا شاملة للصفحة الرئيسية، من نحن، عرض المشاريع، ومعلومات التواصل — كلها مبنية بتقنيات ويب حديثة ومحسّنة للأداء.",
     "order": 5,
     "url": "https://www.khatwah.online",
     "featured": false,

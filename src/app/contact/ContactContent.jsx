@@ -3,7 +3,6 @@
 import { useLocale } from "@/contexts/LocaleContext";
 import i18n from "../../../data/i18n.json";
 import contactData from "../../../data/contact.json";
-import ScrollIndicator from "@/components/ui/ScrollIndicator";
 import Eyebrow from "@/components/ui/Eyebrow";
 
 export default function ContactContent() {
@@ -38,7 +37,6 @@ export default function ContactContent() {
           </p>
         </div>
 
-        <ScrollIndicator color="var(--color-gold)" />
 
         <style jsx>{`
           @keyframes gradient {

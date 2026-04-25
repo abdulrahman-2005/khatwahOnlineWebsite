@@ -104,7 +104,7 @@ export default function ItemCard({ item, themeColor, disabled, onClick, variant 
           className={`font-black leading-tight tracking-tight text-gray-900 ${
             isFull ? "text-[20px] sm:text-[22px] mb-1.5" : "text-[15px] mb-1 line-clamp-2"
           }`}
-          style={{ fontFamily: "var(--font-display)" }}
+          style={{ fontFamily: "var(--font-body)" }}
         >
           {item.name}
         </h3>

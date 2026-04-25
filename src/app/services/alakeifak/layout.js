@@ -1,33 +1,29 @@
-﻿import { seoConfig } from '@/lib/seo';
+import { seoConfig } from '@/lib/seo';
 
 export const metadata = {
-  title: "على كيفك — قوائم مطاعم العريش الرقمية | خطوة اونلاين",
-  description: "منصة مجانية لإنشاء قوائم طعام رقمية تفاعلية لمطاعم العريش. اطلب من مطعمك المفضل واستلم طلبك عبر واتساب. بدون تسجيل حساب.",
+  title: "على كيفك — قوائم مطاعم العريش الرقمية | khatwah.online",
+  description: "اطلب من مطعمك المفضل في العريش عبر منصة على كيفك من خطوة اونلاين (khatwah.online). تصفح المنيو الرقمي واطلب عبر واتساب بسهولة ومجاناً.",
   keywords: [
-    "قوائم مطاعم العريش",
     "على كيفك",
-    "طلب طعام اونلاين العريش",
     "مطاعم العريش",
-    "قائمة طعام رقمية",
-    "توصيل طعام العريش",
+    "كيو ار منيو العريش",
+    "منيو ديجيتال",
+    "طلب طعام واتساب",
     "alakeifak",
     "arish restaurants",
-    "arish food delivery",
-    "digital menu arish",
+    "khatwah.online",
     "خطوة اونلاين",
-    "شمال سيناء مطاعم",
-    "واتساب طلب طعام",
   ].join(', '),
   openGraph: {
-    title: "على كيفك — قوائم مطاعم العريش الرقمية",
-    description: "اطلب من مطعمك المفضل في العريش عبر واتساب. قوائم طعام رقمية مجانية بدون تسجيل.",
+    title: "على كيفك — قوائم مطاعم العريش الرقمية | khatwah.online",
+    description: "اطلب من مطعمك المفضل في العريش عبر منصة على كيفك من خطوة اونلاين. تصفح المنيو الرقمي واطلب عبر واتساب.",
     url: `${seoConfig.baseUrl}/services/alakeifak`,
-    siteName: "خطوة اونلاين | Khatwah Online",
+    siteName: "خطوة اونلاين | khatwah.online",
     type: "website",
     locale: "ar_EG",
     images: [
       {
-        url: `${seoConfig.baseUrl}/services/alakeifak/assets/banner.png`,
+        url: `${seoConfig.baseUrl}/services/alakeifak/assets/banner.webp`,
         width: 1200,
         height: 630,
         alt: "على كيفك — قوائم مطاعم العريش الرقمية"
@@ -36,9 +32,9 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "على كيفك — قوائم مطاعم العريش الرقمية",
-    description: "اطلب من مطعمك المفضل في العريش عبر واتساب. قوائم طعام رقمية مجانية بدون تسجيل.",
-    images: [`${seoConfig.baseUrl}/services/alakeifak/assets/banner.png`]
+    title: "على كيفك — قوائم مطاعم العريش الرقمية | khatwah.online",
+    description: "اطلب من مطعمك المفضل في العريش عبر منصة على كيفك من خطوة اونلاين. تصفح المنيو الرقمي واطلب عبر واتساب.",
+    images: [`${seoConfig.baseUrl}/services/alakeifak/assets/banner.webp`]
   },
   alternates: {
     canonical: `${seoConfig.baseUrl}/services/alakeifak`,

@@ -1,9 +1,25 @@
 import { createServerSupabase } from "../lib/supabaseServer";
 import { notFound } from "next/navigation";
 import MenuContent from "./MenuContent";
+import { generateRestaurantMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const supabase = createServerSupabase({ useServiceRole: true });
+
+  const { data: restaurant } = await supabase
+    .from("restaurants")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (!restaurant) return {};
+
+  return generateRestaurantMetadata(restaurant);
+}
 
 export default async function RestaurantMenuPage({ params }) {
   const { slug } = await params;
@@ -82,12 +98,52 @@ export default async function RestaurantMenuPage({ params }) {
   });
 
   return (
-    <MenuContent
-      restaurant={restaurant}
-      categories={categories || []}
-      groupedData={groupedData}
-      extras={extras || []}
-      deliveryZones={deliveryZones || []}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Restaurant",
+            "name": restaurant.name,
+            "description": `${restaurant.name} - مطعم في العريش، متاح للطلب أونلاين عبر منصة على كيفك وموقع khatwah.online`,
+            "image": restaurant.banner_url || restaurant.logo_url,
+            "url": `https://www.khatwah.online/services/alakeifak/${restaurant.slug}`,
+            "servesCuisine": restaurant.cuisine_type || "Egyptian",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Arish",
+              "addressRegion": "North Sinai",
+              "addressCountry": "EG"
+            },
+            "openingHoursSpecification": [
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                  "Sunday"
+                ],
+                "opens": "00:00",
+                "closes": "23:59"
+              }
+            ],
+            "menu": `https://www.khatwah.online/services/alakeifak/${restaurant.slug}`,
+            "telephone": restaurant.whatsapp_number
+          })
+        }}
+      />
+      <MenuContent
+        restaurant={restaurant}
+        categories={categories || []}
+        groupedData={groupedData}
+        extras={extras || []}
+        deliveryZones={deliveryZones || []}
+      />
+    </>
   );
 }

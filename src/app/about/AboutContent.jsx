@@ -1,10 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { useLocale } from "@/contexts/LocaleContext";
 import i18n from "../../../data/i18n.json";
-import ScrollIndicator from "@/components/ui/ScrollIndicator";
 import Eyebrow from "@/components/ui/Eyebrow";
 
 export default function AboutContent() {
@@ -58,8 +56,6 @@ export default function AboutContent() {
           </h1>
         </div>
 
-        {/* Scroll Indicator */}
-        <ScrollIndicator color="var(--color-primary)" />
 
         <style jsx>{`
           @keyframes float-slow {
@@ -91,7 +87,7 @@ export default function AboutContent() {
         <div className="mx-auto max-w-6xl">
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {team.map((member, index) => {
-              const images = ["/abdelrahman-about-image.webp", "/ahmed-about-image.webp", "/mahmoud-about-image.webp"];
+              const images = ["/aboutus/abdelrahman-about-image.webp", "/aboutus/ahmed-about-image.webp", "/aboutus/mahmoud-about-image.webp"];
               const accents = [
                 { accent: "var(--color-primary)", accentSoft: "var(--color-primary-soft)", accentGlow: "var(--color-primary-glow)" },
                 { accent: "var(--color-gold)", accentSoft: "var(--color-gold-soft)", accentGlow: "var(--color-gold-glow)" },
@@ -233,34 +229,6 @@ export default function AboutContent() {
                 ))}
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Tech Stack */}
-      <section className="w-full px-6 py-20 sm:px-12 sm:py-24 lg:px-20" style={{ backgroundColor: "var(--color-background)" }}>
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-12">
-            <Eyebrow color="var(--color-accent)" size="lg">
-              {i18n[locale].about_page.tech_eyebrow}
-            </Eyebrow>
-          </div>
-          <div className="grid grid-cols-2 gap-px sm:grid-cols-4" style={{ backgroundColor: "var(--color-border)" }}>
-            {[
-              { name: "Next.js", color: "var(--color-primary)" },
-              { name: "React", color: "var(--color-accent)" },
-              { name: "Tailwind CSS", color: "var(--color-primary)" },
-              { name: "Supabase", color: "var(--color-accent)" },
-              { name: "SvelteKit", color: "var(--color-gold)" },
-              { name: "PostgreSQL", color: "var(--color-primary)" },
-              { name: "Vercel", color: "var(--color-accent)" },
-              { name: "Node.js", color: "var(--color-gold)" },
-            ].map((tech) => (
-              <div key={tech.name} className="group flex items-center justify-between px-6 py-5 transition-all duration-300" style={{ backgroundColor: "var(--color-surface)" }}>
-                <span className="text-sm font-bold" style={{ fontFamily: "var(--font-ui)", color: "var(--color-text)" }}>{tech.name}</span>
-                <div className="h-1 w-4 transition-all duration-300 group-hover:w-10" style={{ backgroundColor: tech.color }} />
-              </div>
-            ))}
           </div>
         </div>
       </section>

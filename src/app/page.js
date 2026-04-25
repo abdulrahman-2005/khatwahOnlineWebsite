@@ -19,7 +19,7 @@ export const metadata = generateHomeMetadata("ar");
 const servicesData = {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  name: "خدمات خُطوة اونلاين",
+  name: "خدمات خطوة اونلاين",
   description: "حلول تقنية للتجارة المحلية في العريش وشمال سيناء",
   numberOfItems: 3,
   itemListElement: [
@@ -31,7 +31,7 @@ const servicesData = {
       url: "https://www.khatwah.online/products/booking-system",
       brand: {
         "@type": "Brand",
-        name: "خُطوة اونلاين"
+        name: "خطوة اونلاين"
       },
       offers: {
         "@type": "Offer",
@@ -51,7 +51,7 @@ const servicesData = {
       },
       provider: {
         "@type": "Organization",
-        name: "خُطوة اونلاين",
+        name: "خطوة اونلاين",
         url: "https://www.khatwah.online"
       },
       areaServed: {
@@ -71,7 +71,7 @@ const servicesData = {
       url: "https://www.khatwah.online/products/inventory-pos",
       brand: {
         "@type": "Brand",
-        name: "خُطوة اونلاين"
+        name: "خطوة اونلاين"
       },
       offers: {
         "@type": "Offer",
@@ -91,7 +91,7 @@ const servicesData = {
       },
       provider: {
         "@type": "Organization",
-        name: "خُطوة اونلاين",
+        name: "خطوة اونلاين",
         url: "https://www.khatwah.online"
       },
       areaServed: {
@@ -111,7 +111,7 @@ const servicesData = {
       url: "https://www.khatwah.online/products/custom-development",
       brand: {
         "@type": "Brand",
-        name: "خُطوة اونلاين"
+        name: "خطوة اونلاين"
       },
       offers: {
         "@type": "Offer",
@@ -131,7 +131,7 @@ const servicesData = {
       },
       provider: {
         "@type": "Organization",
-        name: "خُطوة اونلاين",
+        name: "خطوة اونلاين",
         url: "https://www.khatwah.online"
       },
       areaServed: {

@@ -166,11 +166,13 @@ export default function RootLayout({ children }) {
 
         <ThemeProvider>
           <LocaleProvider>
-              <div className="khatwah-chrome">
+              <div className="khatwah-chrome no-print print:hidden">
                 <NavBar />
               </div>
               <main>{children}</main>
+              <div className="no-print print:hidden">
                 <Footer />
+              </div>
               <Analytics />
               <SpeedInsights />
           </LocaleProvider>

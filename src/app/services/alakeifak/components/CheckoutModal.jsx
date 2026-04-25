@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { useCartStore } from "../lib/cartStore";
 import { supabase } from "../lib/supabaseClient";
 import { generateWhatsAppUrl } from "../lib/whatsappUtils";
-import { X, Send, MapPin, User, Phone } from "lucide-react";
+import { X, Send, MapPin, User, Phone, ArrowRight } from "lucide-react";
 
-export default function CheckoutModal({ restaurant, deliveryZones, themeColor, isOpen, onClose }) {
+export default function CheckoutModal({ restaurant, deliveryZones, themeColor, isOpen, onBack, onClose }) {
   const { items, deliveryZone, getSubtotal, getDeliveryFee, getTotal, clearCart } = useCartStore();
 
   const [customerName, setCustomerName] = useState("");
@@ -19,8 +19,17 @@ export default function CheckoutModal({ restaurant, deliveryZones, themeColor, i
 
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden";
-      return () => { document.body.style.overflow = ""; };
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      return () => {
+        const scrollY = document.body.style.top;
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      };
     }
   }, [isOpen]);
 
@@ -81,17 +90,25 @@ export default function CheckoutModal({ restaurant, deliveryZones, themeColor, i
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center p-0 sm:p-6" dir="rtl" style={{ '--dynamic-color': activeColor }}>
+    <div className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center p-0 sm:p-6 overscroll-none touch-none" dir="rtl" style={{ '--dynamic-color': activeColor }}>
       <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-md transition-opacity duration-400" onClick={onClose} />
 
-      <div className="relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-[40px] border border-gray-100 bg-white shadow-[0_-20px_50px_rgba(0,0,0,0.15)] sm:max-w-md sm:rounded-[40px] animate-in slide-in-from-bottom-[100%] sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-400">
+      <div className="relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-[40px] border border-gray-100 bg-white shadow-[0_-20px_50px_rgba(0,0,0,0.15)] sm:max-w-md sm:rounded-[40px] animate-in slide-in-from-bottom-[100%] sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-400 touch-auto">
         
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-100 px-7 py-5 relative z-10 bg-white/90 backdrop-blur-md">
-          <h2 className="text-[22px] font-black tracking-tight text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
-            البيانات الشخصية
-          </h2>
-          <button onClick={onClose} className="flex h-11 w-11 items-center justify-center rounded-full bg-gray-50 text-gray-500 border border-gray-200 transition-transform active:scale-90 hover:bg-gray-100">
+        <div className="flex items-center justify-between border-b border-gray-100 px-6 sm:px-7 py-4 sm:py-5 relative z-10 bg-white/90 backdrop-blur-md">
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={onBack}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-50 text-gray-500 border border-gray-100 transition-transform active:scale-90"
+            >
+              <ArrowRight size={18} className="rotate-180" />
+            </button>
+            <h2 className="text-[20px] sm:text-[22px] font-black tracking-tight text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
+              البيانات الشخصية
+            </h2>
+          </div>
+          <button onClick={onClose} className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-gray-50 text-gray-500 border border-gray-200 transition-transform active:scale-90 hover:bg-gray-100">
             <X size={20} strokeWidth={2.5} />
           </button>
         </div>

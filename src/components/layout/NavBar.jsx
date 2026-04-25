@@ -137,7 +137,7 @@ export default function NavBar() {
                 fontFamily: "terrabica",
               }}
             >
-              خُطوة
+              خطوة
             </span>
             <span
               className="text-1xl font-bold tracking-[3px] uppercase"

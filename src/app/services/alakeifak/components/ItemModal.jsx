@@ -23,15 +23,25 @@ export default function ItemModal({ item, extras, themeColor, isOpen, preSelecte
       } else {
         setSelectedSize(sizes[0]);
       }
+      setQuantity(1);
+      setSelectedExtras([]);
     }
-    // reset animation state if reopened
     if (isOpen) setIsClosing(false);
   }, [item, sizes, preSelectedSizeId, isOpen]);
 
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden";
-      return () => { document.body.style.overflow = ""; };
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      return () => {
+        const scrollY = document.body.style.top;
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      };
     }
   }, [isOpen]);
 
@@ -74,7 +84,7 @@ export default function ItemModal({ item, extras, themeColor, isOpen, preSelecte
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-end justify-center sm:items-center p-0 sm:p-6"
+      className="fixed inset-0 z-50 flex items-end justify-center sm:items-center p-0 sm:p-6 overscroll-none touch-none"
       dir="rtl"
       style={{ '--dynamic-color': activeColor }}
     >
@@ -87,7 +97,7 @@ export default function ItemModal({ item, extras, themeColor, isOpen, preSelecte
       {/* Modal / Bottom Sheet (Light Mode Bento) */}
       <div
         className={`relative flex max-h-[92vh] w-full flex-col overflow-hidden bg-white shadow-[0_-20px_50px_rgba(0,0,0,0.15)] transition-all duration-400
-          rounded-t-[40px] sm:rounded-[40px] sm:max-w-lg
+          rounded-t-[40px] sm:rounded-[40px] sm:max-w-lg touch-auto
           ${isClosing ? 'translate-y-full sm:translate-y-12 sm:opacity-0 sm:scale-95' : 'translate-y-0 sm:scale-100 ease-out animate-in slide-in-from-bottom-[100%] sm:slide-in-from-bottom-0 sm:zoom-in-95'}
         `}
       >
@@ -95,7 +105,7 @@ export default function ItemModal({ item, extras, themeColor, isOpen, preSelecte
         <div className="absolute left-4 top-4 z-20">
           <button
             onClick={handleClose}
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-white/80 text-gray-900 backdrop-blur-md shadow-sm border border-gray-100 transition-transform active:scale-90 hover:bg-white"
+            className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-white/80 text-gray-900 backdrop-blur-md shadow-sm border border-gray-100 transition-transform active:scale-90 hover:bg-white"
           >
             <X size={22} strokeWidth={2.5} />
           </button>

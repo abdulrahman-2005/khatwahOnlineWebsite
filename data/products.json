@@ -2,300 +2,298 @@
   "ar": [
     {
       "num": "01",
-      "slug": "booking-system",
-      "title": "نظام الحجوزات",
-      "subtitle": "خلّي عملائك يحجزوا معاك وأنت نايم",
-      "description": "نظام حجوزات أونلاين سهل وبسيط للحلاقين، العيادات، الصالونات والخدمات.",
-      "longDescription": "نظام حجوزات أونلاين سهل وبسيط للحلاقين، العيادات، الصالونات والخدمات في العريش وشمال سيناء. يخليك تدير مواعيدك بكل سهولة والعميل يحجز من موبايله في أي وقت.",
+      "slug": "company-websites",
+      "title": "تصميم وتطوير المواقع التعريفية",
+      "subtitle": "واجهتك الاحترافية أمام العالم",
+      "description": "في 2026، موقعك هو مقرك الرئيسي على الإنترنت. بنصمم لك موقع سريع، عصري، ومتوافق مع الموبايل يعكس قوة براندك ويخلي العملاء يثقوا فيك من أول نظرة.",
+      "longDescription": "تصميم وتطوير المواقع التعريفية (Company Websites) - واجهتك الاحترافية أمام العالم. في 2026، موقعك هو مقرك الرئيسي على الإنترنت. بنصمم لك موقع سريع، عصري، ومتوافق مع الموبايل يعكس قوة براندك ويخلي العملاء يثقوا فيك من أول نظرة.",
       "features": [
-        "حجز فوري من الموبايل",
-        "تذكيرات أوتوماتيكية على الواتساب",
-        "تقويم ذكي يمنع الازدحام",
-        "نقاط ولاء عشان العملاء يرجعوا",
-        "تقارير يومية"
+        "تصميم واجهات تجربة مستخدم (UI/UX) عالمية",
+        "سرعة فائقة وأداء مستقر",
+        "تهيئة كاملة لمحركات البحث (SEO)",
+        "تصميم متجاوب مع جميع الأجهزة",
+        "لوحة تحكم لإدارة المحتوى"
       ],
       "benefits": [
         {
-          "title": "وفر وقتك",
-          "description": "العملاء يحجزوا 24/7 بدون ما تتدخل. النظام يشتغل لوحده حتى لو أنت مش موجود."
+          "title": "ثقة فورية",
+          "description": "تصميم احترافي يخلي العميل يثق في براندك بمجرد دخوله الموقع."
         },
         {
-          "title": "قلل الازدحام",
-          "description": "التقويم الذكي ينظم المواعيد تلقائياً ويمنع التعارض. كل عميل يعرف موعده بالظبط."
+          "title": "ظهور أفضل",
+          "description": "موقع مهيأ لمحركات البحث (SEO) عشان العملاء يلاقوك بسهولة على جوجل."
         },
         {
-          "title": "زود رجوع العملاء",
-          "description": "نظام الولاء يخلي العميل يرجعلك. كل حجز يكسب نقاط يقدر يستبدلها بخصومات."
+          "title": "واجهة عصرية",
+          "description": "تصميم متجاوب بيشتغل بشكل مثالي على الموبايل واللابتوب."
         },
         {
-          "title": "نام مرتاح",
-          "description": "التذكيرات الأوتوماتيكية تمنع النسيان. العميل يوصله تذكير قبل الموعد بـ 24 ساعة."
+          "title": "دعم مستمر",
+          "description": "إحنا جنبك بعد التسليم لأي تحديث أو تعديل تحتاجه."
         }
       ],
       "useCases": [
-        "صالونات الحلاقة والتجميل",
-        "العيادات الطبية والأسنان",
-        "مراكز الصيانة والخدمات",
-        "الصالات الرياضية والنوادي",
-        "مراكز التدريب والدروس الخصوصية"
+        "الشركات والمؤسسات",
+        "العيادات والمراكز الطبية",
+        "المكاتب الهندسية",
+        "المطاعم والكافيهات",
+        "مقدمي الخدمات"
       ],
       "pricing": {
         "starting": "تواصل معنا للحصول على استشارة وعرض سعر مجاني",
         "note": "نقدم حلول مخصصة تناسب احتياجاتك وميزانيتك"
       },
-      "cta": "عايز نظام حجوزات لمحلي",
+      "cta": "عايز موقع لشركتي",
       "whatsapp_message": {
-        "ar": "مرحباً، عايز نظام حجوزات لمحلي 📅",
-        "en": "Hello, I want a booking system for my business 📅"
+        "ar": "مرحباً، عايز أصمم موقع تعريفي لشركتي 🌐",
+        "en": "Hello, I want to design a company website 🌐"
       }
     },
     {
       "num": "02",
-      "slug": "inventory-pos",
-      "title": "إدارة المخزون والـ POS",
-      "subtitle": "تخلص من ضياع المخزون والأخطاء في الحساب",
-      "description": "إدارة مخزون ذكية + نقطة بيع + ربط بالمتجر الأونلاين.",
-      "longDescription": "إدارة مخزون ذكية + نقطة بيع احترافية + ربط بالمتجر الأونلاين. كل حاجة في نظام واحد مصمم خصيصاً للتجار في العريش وشمال سيناء.",
+      "slug": "management-systems",
+      "title": "أنظمة الإدارة المخصصة",
+      "subtitle": "ودع الورقة والقلم.. وأدر عملك بذكاء",
+      "description": "محتاج نظام يدير حجوزات عيادتك؟ أو سيستم يتابع مبيعات محلك؟ بنصمم لك نظام إدارة \"على مقاسك\" بالظبط، يحل مشاكلك الإدارية ويوفر وقتك.",
+      "longDescription": "أنظمة الإدارة المخصصة (Management Systems) - ودع الورقة والقلم.. وأدر عملك بذكاء. محتاج نظام يدير حجوزات عيادتك؟ أو سيستم يتابع مبيعات محلك؟ بنصمم لك نظام إدارة \"على مقاسك\" بالظبط، يحل مشاكلك الإدارية ويوفر وقتك ومجهودك.",
       "features": [
-        "تابع مخزونك لحظيًا",
-        "محاسبة أوتوماتيكية بدون أخطاء",
-        "بيع من المحل والأونلاين في نظام واحد",
-        "تقارير مبيعات واضحة",
-        "٣ باقات تناسب حجم تجارتك"
+        "لوحة تحكم سهلة الاستخدام بالعربي",
+        "ربط مباشر مع الواتساب للإشعارات",
+        "تقارير وتحليلات دقيقة لأداء عملك",
+        "إدارة المخزون والمبيعات",
+        "إدارة شؤون الموظفين والعملاء"
       ],
       "benefits": [
         {
-          "title": "لا مزيد من الضياع",
-          "description": "تابع كل منتج لحظياً. اعرف بالظبط إيه اللي عندك في المخزن وإيه اللي محتاج تطلبه."
+          "title": "وفر وقتك",
+          "description": "الأنظمة الآلية بتوفر عليك ساعات من العمل اليدوي المرهق."
         },
         {
-          "title": "لا مزيد من الأخطاء",
-          "description": "المحاسبة الأوتوماتيكية دقيقة 100%. النظام يحسب كل حاجة تلقائياً بدون أخطاء بشرية."
+          "title": "قرارات أذكى",
+          "description": "تقارير دقيقة بتوضحلك أداء عملك وتساعدك تاخد قرارات صح."
         },
         {
-          "title": "بيع من أي مكان",
-          "description": "المحل والأونلاين في نظام واحد. المخزون يتحدث تلقائياً سواء بعت من المحل أو الموقع."
+          "title": "أخطاء أقل",
+          "description": "النظام الآلي بيقلل الأخطاء البشرية في الحسابات والمواعيد لنسبة 0%."
         },
         {
-          "title": "اتخذ قرارات أفضل",
-          "description": "تقارير واضحة تساعدك تفهم تجارتك. اعرف المنتجات الأكثر مبيعاً، أوقات الذروة، والأرباح الحقيقية."
+          "title": "نمو مستدام",
+          "description": "نظام بيكبر معاك وقابل للتوسع مع زيادة حجم شغلك."
         }
       ],
       "useCases": [
-        "محلات البقالة والسوبر ماركت",
-        "محلات الملابس والأحذية",
-        "الصيدليات ومحلات الأدوية",
-        "محلات قطع الغيار والإلكترونيات",
-        "المطاعم والكافيهات"
+        "العيادات الطبية",
+        "المحلات التجارية",
+        "مراكز الصيانة",
+        "المدارس والمراكز التعليمية",
+        "الشركات الخدمية"
       ],
       "pricing": {
         "starting": "تواصل معنا للحصول على استشارة وعرض سعر مجاني",
         "note": "نقدم حلول مخصصة تناسب احتياجاتك وميزانيتك"
       },
-      "cta": "عايز أتحكم في مخزوني",
+      "cta": "عايز نظام إدارة لعملي",
       "whatsapp_message": {
-        "ar": "مرحباً، عايز نظام إدارة مخزون و POS لمحلي 📦",
-        "en": "Hello, I want an inventory & POS system for my business 📦"
+        "ar": "مرحباً، محتاج نظام إدارة لعملي 💻",
+        "en": "Hello, I need a management system for my business 💻"
       }
     },
     {
       "num": "03",
-      "slug": "custom-development",
-      "title": "برمجة خاصة",
-      "subtitle": "أي فكرة أو نظام تحتاجه… بننفذه لك",
-      "description": "حلول مخصصة 100% حسب احتياجك (مواقع، تطبيقات، أنظمة إدارة…).",
-      "longDescription": "حلول برمجية مخصصة 100% حسب احتياجك. مواقع، تطبيقات، أنظمة إدارة، أو أي فكرة عندك. فريقنا من العريش يقدر يحول أي فكرة لواقع.",
+      "slug": "digital-marketing",
+      "title": "التسويق الرقمي وإدارة الهوية",
+      "subtitle": "مش بس بنبني النظام، بنوصلك لجمهورك",
+      "description": "بنساعدك تظهر لعملائك في العريش وشمال سيناء من خلال استراتيجيات تسويق ذكية على منصات التواصل الاجتماعي وGoogle، عشان نضمن إن استثمارك الرقمي جاب نتيجته.",
+      "longDescription": "التسويق الرقمي وإدارة الهوية (Digital Marketing) - مش بس بنبني النظام، بنوصلك لجمهورك. بنساعدك تظهر لعملائك في العريش وشمال سيناء من خلال استراتيجيات تسويق ذكية على منصات التواصل الاجتماعي وGoogle، عشان نضمن إن استثمارك الرقمي جاب نتيجته الحقيقية.",
       "features": [
-        "برمجة حسب طلبك بالظبط",
-        "مواقع وتطبيقات احترافية",
-        "أنظمة إدارة متكاملة",
-        "ربط مع الواتساب والأنظمة الأخرى",
-        "دعم فني محلي مستمر"
+        "إدارة حملات إعلانية ممولة",
+        "صناعة محتوى يبيع ويجذب العملاء",
+        "تحليل المنافسين وتطوير خطة نمو",
+        "إدارة صفحات التواصل الاجتماعي",
+        "تحسين محركات البحث (SEO)"
       ],
       "benefits": [
         {
-          "title": "حل فريد",
-          "description": "نظام مصمم خصيصاً لاحتياجاتك. مش حل جاهز، ده حل مبني عشانك أنت."
+          "title": "وصول أكبر",
+          "description": "إعلاناتك بتوصل للعميل المهتم فعلاً بخدماتك في الوقت الصح."
         },
         {
-          "title": "مرونة كاملة",
-          "description": "عدّل وطور حسب ما تجارتك تكبر. النظام ينمو معاك ويتطور حسب احتياجاتك."
+          "title": "هوية قوية",
+          "description": "بنصنع لك محتوى وهوية بصرية بتخليك متميز عن منافسينك."
         },
         {
-          "title": "دعم محلي",
-          "description": "فريق من العريش يفهم السوق المحلي. متاحين على طول لأي استفسار أو مشكلة."
+          "title": "عائد استثمار",
+          "description": "كل جنيه بتصرفه في الإعلانات محسوب وبنركز إنه يجيب لك مبيعات."
         },
         {
-          "title": "تكامل سهل",
-          "description": "اربط مع أي نظام تستخدمه حالياً. نقدر نربط مع واتساب، فيسبوك، أنظمة الدفع، وأي خدمة تانية."
+          "title": "استراتيجية نمو",
+          "description": "مش مجرد إعلانات، إحنا بنحط خطة تسويق متكاملة لنمو البيزنس بتاعك."
         }
       ],
       "useCases": [
-        "منصات حجز وخدمات",
-        "متاجر إلكترونية مخصصة",
-        "أنظمة إدارة المدارس والمراكز",
-        "تطبيقات توصيل وخدمات",
-        "أنظمة CRM وإدارة العملاء",
-        "بوابات دفع ومحافظ إلكترونية"
+        "المتاجر الإلكترونية",
+        "العيادات الطبية",
+        "المطاعم والكافيهات",
+        "الشركات العقارية",
+        "الخدمات المحلية"
       ],
       "pricing": {
         "starting": "تواصل معنا للحصول على استشارة وعرض سعر مجاني",
         "note": "نقدم حلول مخصصة تناسب احتياجاتك وميزانيتك"
       },
-      "cta": "عندي فكرة خاصة",
+      "cta": "عايز خطة تسويق لعملي",
       "whatsapp_message": {
-        "ar": "مرحباً، عندي فكرة مشروع خاص وعايز أناقشها معاكم 💡",
-        "en": "Hello, I have a custom project idea and would like to discuss it 💡"
+        "ar": "مرحباً، عايز خطة تسويق وإدارة هوية لعملي 📈",
+        "en": "Hello, I want a marketing and branding plan for my business 📈"
       }
     }
   ],
   "en": [
     {
       "num": "01",
-      "slug": "booking-system",
-      "title": "Booking System",
-      "subtitle": "Let customers book while you sleep",
-      "description": "Simple online booking for barbers, clinics, salons, and service businesses.",
-      "longDescription": "A simple online booking system for barbers, clinics, salons, and service businesses in Arish and North Sinai. Manage appointments effortlessly while customers book from their phones anytime.",
+      "slug": "company-websites",
+      "title": "Company Websites",
+      "subtitle": "Your Professional Face to the World",
+      "description": "In 2026, your website is your digital headquarters. We design fast, modern, and mobile-friendly websites that reflect your brand's power and build instant trust with your customers.",
+      "longDescription": "Company Websites Design & Development. In 2026, your website is your digital headquarters. We design fast, modern, and mobile-friendly websites that reflect your brand's power and build instant trust with your customers from the first glance.",
       "features": [
-        "Instant mobile booking",
-        "Automatic WhatsApp reminders",
-        "Smart calendar prevents double-booking",
-        "Loyalty points keep customers coming back",
-        "Daily performance reports"
+        "World-class UI/UX design",
+        "Blazing fast performance",
+        "Full Search Engine Optimization (SEO)",
+        "Fully responsive design across all devices",
+        "Easy-to-use Content Management System"
       ],
       "benefits": [
         {
-          "title": "Save Time",
-          "description": "Customers book 24/7 without your involvement. The system runs itself even when you're away."
+          "title": "Instant Trust",
+          "description": "Professional design makes customers trust your brand the moment they land on your site."
         },
         {
-          "title": "Reduce No-Shows",
-          "description": "Smart calendar organizes appointments automatically and prevents conflicts. Every customer knows their exact time."
+          "title": "Better Visibility",
+          "description": "SEO optimized site ensures customers can easily find you on Google."
         },
         {
-          "title": "Boost Retention",
-          "description": "Loyalty system brings customers back. Every booking earns points they can redeem for discounts."
+          "title": "Modern Interface",
+          "description": "Responsive design works flawlessly on mobile phones and laptops."
         },
         {
-          "title": "Sleep Easy",
-          "description": "Automatic reminders prevent missed appointments. Customers get a reminder 24 hours before their booking."
+          "title": "Ongoing Support",
+          "description": "We stand by you after delivery for any updates or modifications you need."
         }
       ],
       "useCases": [
-        "Barbershops and beauty salons",
-        "Medical and dental clinics",
-        "Maintenance and service centers",
-        "Gyms and fitness clubs",
-        "Training centers and tutoring"
+        "Corporations and Institutions",
+        "Clinics and Medical Centers",
+        "Engineering Firms",
+        "Restaurants and Cafes",
+        "Service Providers"
       ],
       "pricing": {
         "starting": "Reach out for a free consultation and quote",
         "note": "We offer custom solutions tailored to your needs and budget"
       },
-      "cta": "Get a booking system",
+      "cta": "I want a website for my company",
       "whatsapp_message": {
-        "ar": "مرحباً، عايز نظام حجوزات لمحلي 📅",
-        "en": "Hello, I want a booking system for my business 📅"
+        "ar": "مرحباً، عايز أصمم موقع تعريفي لشركتي 🌐",
+        "en": "Hello, I want to design a company website 🌐"
       }
     },
     {
       "num": "02",
-      "slug": "inventory-pos",
-      "title": "Inventory & POS",
-      "subtitle": "Stop losing inventory and making accounting mistakes",
-      "description": "Smart inventory management + point of sale + online store integration.",
-      "longDescription": "Smart inventory management + professional point of sale + online store integration. Everything in one system designed specifically for merchants in Arish and North Sinai.",
+      "slug": "management-systems",
+      "title": "Management Systems",
+      "subtitle": "Ditch the Pen and Paper.. Manage Smart",
+      "description": "Need a system for clinic bookings? Or a POS for your store? We build custom management systems tailored to your exact needs, saving your time and solving operational headaches.",
+      "longDescription": "Custom Management Systems. Need a system for clinic bookings? Or a POS for your store? We build custom management systems tailored to your exact needs, saving your time and solving operational headaches effectively.",
       "features": [
-        "Real-time inventory tracking",
-        "Error-free automatic accounting",
-        "Sell in-store and online from one system",
-        "Clear sales reports",
-        "3 packages to fit your business size"
+        "User-friendly Arabic dashboard",
+        "Direct WhatsApp integration for alerts",
+        "Accurate reports and analytics",
+        "Inventory and sales management",
+        "Employee and customer management"
       ],
       "benefits": [
         {
-          "title": "No More Losses",
-          "description": "Track every product in real-time. Know exactly what's in stock and what needs reordering."
+          "title": "Save Time",
+          "description": "Automated systems save you hours of exhausting manual work."
         },
         {
-          "title": "No More Errors",
-          "description": "Automatic accounting is 100% accurate. The system calculates everything automatically without human error."
+          "title": "Smarter Decisions",
+          "description": "Accurate reports show your business performance and help you make right decisions."
         },
         {
-          "title": "Sell Anywhere",
-          "description": "In-store and online in one unified system. Inventory updates automatically whether you sell in-store or online."
+          "title": "Fewer Errors",
+          "description": "Automated system reduces human errors in calculations and appointments to 0%."
         },
         {
-          "title": "Make Smarter Decisions",
-          "description": "Clear reports help you understand your business. Know your best-sellers, peak times, and real profits."
+          "title": "Sustainable Growth",
+          "description": "A scalable system that grows with your business volume."
         }
       ],
       "useCases": [
-        "Grocery stores and supermarkets",
-        "Clothing and shoe stores",
-        "Pharmacies and drugstores",
-        "Auto parts and electronics shops",
-        "Restaurants and cafes"
+        "Medical Clinics",
+        "Retail Stores",
+        "Maintenance Centers",
+        "Schools and Educational Centers",
+        "Service Companies"
       ],
       "pricing": {
         "starting": "Reach out for a free consultation and quote",
         "note": "We offer custom solutions tailored to your needs and budget"
       },
-      "cta": "Take control of inventory",
+      "cta": "I need a management system",
       "whatsapp_message": {
-        "ar": "مرحباً، عايز نظام إدارة مخزون و POS لمحلي 📦",
-        "en": "Hello, I want an inventory & POS system for my business 📦"
+        "ar": "مرحباً، محتاج نظام إدارة لعملي 💻",
+        "en": "Hello, I need a management system for my business 💻"
       }
     },
     {
       "num": "03",
-      "slug": "custom-development",
-      "title": "Custom Development",
-      "subtitle": "Any idea or system you need… we build it",
-      "description": "100% custom solutions tailored to your needs (websites, apps, management systems…).",
-      "longDescription": "100% custom software solutions tailored to your needs. Websites, apps, management systems, or any idea you have. Our team from Arish can turn any idea into reality.",
+      "slug": "digital-marketing",
+      "title": "Digital Marketing",
+      "subtitle": "We Don't Just Build, We Connect You",
+      "description": "We help you reach your audience in Arish and North Sinai through smart marketing strategies on Social Media and Google, ensuring your digital investment delivers real results.",
+      "longDescription": "Digital Marketing and Brand Identity. We help you reach your audience in Arish and North Sinai through smart marketing strategies on Social Media and Google, ensuring your digital investment delivers real and measurable results.",
       "features": [
-        "Built exactly to your specifications",
-        "Professional websites and mobile apps",
-        "Integrated management systems",
-        "WhatsApp and third-party integrations",
-        "Ongoing local technical support"
+        "Paid ad campaign management",
+        "Content creation that attracts and converts",
+        "Competitor analysis and growth strategies",
+        "Social media page management",
+        "Search Engine Optimization (SEO)"
       ],
       "benefits": [
         {
-          "title": "Unique Solution",
-          "description": "System designed specifically for your needs. Not an off-the-shelf solution, but one built just for you."
+          "title": "Greater Reach",
+          "description": "Your ads reach the customers truly interested in your services at the right time."
         },
         {
-          "title": "Complete Flexibility",
-          "description": "Modify and scale as your business grows. The system grows with you and evolves based on your needs."
+          "title": "Strong Identity",
+          "description": "We create visual identity and content that makes you stand out from competitors."
         },
         {
-          "title": "Local Support",
-          "description": "Team from Arish who understands the local market. Always available for any questions or issues."
+          "title": "Return on Investment",
+          "description": "Every pound spent on ads is calculated and focused on bringing you sales."
         },
         {
-          "title": "Easy Integration",
-          "description": "Connect with any system you currently use. We can integrate with WhatsApp, Facebook, payment systems, and any other service."
+          "title": "Growth Strategy",
+          "description": "Not just ads, we set a complete marketing plan for your business growth."
         }
       ],
       "useCases": [
-        "Booking and service platforms",
-        "Custom e-commerce stores",
-        "School and center management systems",
-        "Delivery and service apps",
-        "CRM and customer management systems",
-        "Payment gateways and digital wallets"
+        "E-commerce Stores",
+        "Medical Clinics",
+        "Restaurants and Cafes",
+        "Real Estate Companies",
+        "Local Services"
       ],
       "pricing": {
         "starting": "Reach out for a free consultation and quote",
         "note": "We offer custom solutions tailored to your needs and budget"
       },
-      "cta": "I have a custom idea",
+      "cta": "I want a marketing plan",
       "whatsapp_message": {
-        "ar": "مرحباً، عندي فكرة مشروع خاص وعايز أناقشها معاكم 💡",
-        "en": "Hello, I have a custom project idea and would like to discuss it 💡"
+        "ar": "مرحباً، عايز خطة تسويق وإدارة هوية لعملي 📈",
+        "en": "Hello, I want a marketing and branding plan for my business 📈"
       }
     }
   ]

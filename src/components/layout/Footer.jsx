@@ -9,7 +9,7 @@ export default function Footer() {
   const { locale } = useLocale();
 
   const navLinks = [
-    { label: i18n[locale].nav.products, href: "/#products" }, 
+    { label: i18n[locale].nav.products, href: "/#products" },
     { label: locale === 'ar' ? 'خدماتنا' : 'Services', href: "/services" },
     { label: i18n[locale].nav.projects, href: "/projects" },
     { label: i18n[locale].nav.about, href: "/about" },
@@ -77,31 +77,31 @@ export default function Footer() {
           {/* Brand & Description */}
           <div className="space-y-6 lg:col-span-5">
             <Link href="/" className="navbar-logo group" aria-label="Khatwah Online — Home">
-            <span
-              className="text-4xl font-bold tracking-tight"
-              style={{
-                color: "var(--color-text)",
-                transition: "color 0.3s",
-                fontFamily: "terrabica",
-              }}
-            >
-              خُطوة
-            </span>
-            <span
-              className="text-1xl font-bold tracking-[3px] uppercase"
-              style={{
-                fontFamily: "terrabica",
-                color: "var(--color-gold)",
-                transition: "color 0.3s",
-              }}
-            >
-              اونلاين
-            </span>
-          </Link>
+              <span
+                className="text-4xl font-bold tracking-tight"
+                style={{
+                  color: "var(--color-text)",
+                  transition: "color 0.3s",
+                  fontFamily: "terrabica",
+                }}
+              >
+                خطوة
+              </span>
+              <span
+                className="text-1xl font-bold tracking-[3px] uppercase"
+                style={{
+                  fontFamily: "terrabica",
+                  color: "var(--color-gold)",
+                  transition: "color 0.3s",
+                }}
+              >
+                اونلاين
+              </span>
+            </Link>
             <p className="max-w-md text-sm sm:text-base leading-7" style={{ fontFamily: "var(--font-body)", color: "var(--color-text-on-dark-muted)" }}>
               {contactData.company.tagline[locale]}
             </p>
-            
+
             {/* Social Media Links */}
             <div className="space-y-3">
               <h4 className="text-sm sm:text-base font-bold tracking-wider uppercase" style={{ fontFamily: "var(--font-ui)", color: "var(--color-gold)" }}>
@@ -115,8 +115,8 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group flex h-10 w-10 items-center justify-center border transition-all duration-300 hover:scale-110 hover:-translate-y-1"
-                    style={{ 
-                      borderColor: "var(--color-border-dark)", 
+                    style={{
+                      borderColor: "var(--color-border-dark)",
                       color: "var(--color-text-on-dark-muted)",
                       backgroundColor: "rgba(255, 255, 255, 0.05)"
                     }}
@@ -138,15 +138,15 @@ export default function Footer() {
             </h3>
             <div className="flex flex-col gap-3">
               {navLinks.map((link) => (
-                <Link 
-                  key={link.href} 
-                  href={link.href} 
+                <Link
+                  key={link.href}
+                  href={link.href}
                   className="group w-fit text-sm sm:text-base transition-all duration-200"
                   style={{ color: "var(--color-text-on-dark-muted)" }}
                 >
                   <span className="relative">
                     {link.label}
-                    <span 
+                    <span
                       className="absolute bottom-0 left-0 h-px w-0 transition-all duration-300 group-hover:w-full"
                       style={{ backgroundColor: "var(--color-gold)" }}
                     />
@@ -163,7 +163,7 @@ export default function Footer() {
             </h3>
             <div className="space-y-4">
               {/* Email */}
-              <a 
+              <a
                 href={`mailto:${contactData.email}`}
                 className="group flex items-start gap-3 text-sm sm:text-base transition-colors duration-200"
                 style={{ color: "var(--color-text-on-dark-muted)" }}
@@ -177,7 +177,7 @@ export default function Footer() {
               </a>
 
               {/* Primary Phone */}
-              <a 
+              <a
                 href={`tel:${contactData.phones[0].number.replace(/\s/g, "")}`}
                 className="group flex items-start gap-3 text-sm sm:text-base transition-colors duration-200"
                 style={{ color: "var(--color-text-on-dark-muted)" }}
@@ -220,13 +220,13 @@ export default function Footer() {
           </p>
           <p className="flex items-center gap-2" style={{ color: "var(--color-text-on-dark-muted)" }}>
             <span className="relative flex h-1.5 w-1.5">
-              <span 
-                className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" 
-                style={{ backgroundColor: "var(--color-primary-light)" }} 
+              <span
+                className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
+                style={{ backgroundColor: "var(--color-primary-light)" }}
               />
-              <span 
-                className="relative inline-flex h-1.5 w-1.5 rounded-full" 
-                style={{ backgroundColor: "var(--color-primary-light)" }} 
+              <span
+                className="relative inline-flex h-1.5 w-1.5 rounded-full"
+                style={{ backgroundColor: "var(--color-primary-light)" }}
               />
             </span>
             {i18n[locale].footer.tagline}

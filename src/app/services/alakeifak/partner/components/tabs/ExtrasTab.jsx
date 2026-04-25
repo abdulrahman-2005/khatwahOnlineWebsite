@@ -31,6 +31,13 @@ export default function ExtrasTab({ restaurantId }) {
     setShowForm(false);
   };
 
+  useEffect(() => {
+    if (showForm) {
+      document.body.classList.add('modal-open');
+      return () => document.body.classList.remove('modal-open');
+    }
+  }, [showForm]);
+
   const fetchData = useCallback(async () => {
     // Fetch extras
     const { data: exData } = await supabase.from("extras").select("*").eq("restaurant_id", restaurantId).order("created_at", { ascending: false });

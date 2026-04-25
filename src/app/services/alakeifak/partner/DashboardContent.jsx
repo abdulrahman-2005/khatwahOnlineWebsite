@@ -1,6 +1,6 @@
-﻿"use client";
+"use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Copy, ExternalLink, LayoutGrid, UtensilsCrossed, Truck, Settings, ClipboardList, Eye } from "lucide-react";
 import OrdersTab from "./components/tabs/OrdersTab";
 import MenuEditorTab from "./components/tabs/MenuEditorTab";
@@ -60,8 +60,8 @@ export default function DashboardContent({ restaurant, onRestaurantUpdate }) {
         </div>
 
         {/* Floating Dynamic Island Tabs (Light Bento) */}
-        <div className="mb-10 w-full overflow-x-auto scrollbar-hide pb-4 pt-2 print:hidden">
-          <div className="flex inline-flex p-1.5 rounded-[24px] bg-white shadow-sm border border-gray-100 min-w-max mx-auto md:mx-0">
+        <div className="mb-10 w-full overflow-x-auto scrollbar-hide pb-4 pt-2 print:hidden sticky top-0 sm:top-4 z-30">
+          <div className="flex inline-flex p-1.5 rounded-[24px] bg-white/80 backdrop-blur-md shadow-sm border border-gray-100 min-w-max mx-auto md:mx-0">
             {TABS.map((tab) => {
               const isActive = activeTab === tab.id;
               const Icon = tab.icon;

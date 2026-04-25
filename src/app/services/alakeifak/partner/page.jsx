@@ -24,6 +24,9 @@ export default function PartnerPage() {
   const [restaurant, setRestaurant] = useState(null);
   const [loading, setLoading] = useState(true);
   const [authChecked, setAuthChecked] = useState(false);
+  const [headerVisible, setHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (!supabase) { setLoading(false); setAuthChecked(true); return; }
@@ -44,6 +47,30 @@ export default function PartnerPage() {
     });
 
     return () => subscription.unsubscribe();
+  }, []);
+
+  // Hide header on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY && currentScrollY > 80) {
+        setHeaderVisible(false);
+      } else {
+        setHeaderVisible(true);
+      }
+      setLastScrollY(currentScrollY);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
+  // Detect modal open
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsModalOpen(document.body.classList.contains('modal-open'));
+    });
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
   }, []);
 
   async function checkAuth() {
@@ -146,7 +173,11 @@ export default function PartnerPage() {
     <main className="min-h-screen bg-gray-50 text-gray-900" dir="rtl">
 
       {/* DASHBOARD NAVBAR (Premium Glass) */}
-      <div className="fixed top-0 left-0 right-0 z-50 px-4 py-3">
+      <div 
+        className={`no-print print:hidden fixed top-0 left-0 right-0 z-50 px-4 py-3 transition-all duration-500 ease-in-out ${
+          headerVisible && !isModalOpen ? "translate-y-0 opacity-100" : "-translate-y-24 opacity-0 pointer-events-none"
+        }`}
+      >
         <div className="mx-auto max-w-6xl rounded-[28px] bg-white/80 backdrop-blur-xl border border-gray-200 shadow-sm flex items-center justify-between px-6 py-3">
           <div className="flex items-center gap-4">
             <Link

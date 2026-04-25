@@ -1,4 +1,4 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
 
 /* Hide main site navbar/footer inside alakeifak service */
 .alakeifak-active ~ .khatwah-chrome,
@@ -6,9 +6,33 @@ body:has(.alakeifak-active) .khatwah-chrome {
   display: none !important;
 }
 
+/* Print Utilities */
+@media print {
+  /* Aggressively hide global layout elements when printing inside Alakeifak */
+  body:has(.alakeifak-active) nav,
+  body:has(.alakeifak-active) footer,
+  body:has(.alakeifak-active) header,
+  body:has(.alakeifak-active) .khatwah-chrome,
+  body:has(.alakeifak-active) .no-print {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    overflow: hidden !important;
+  }
+
+  /* Reset main content for print */
+  body:has(.alakeifak-active) main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
 @font-face {
   font-family: "terrabica";
-  src: url('/fonts/terrabica.otf') format("opentype");
+  src: url('/fonts/khatwah.otf')  ;
   font-weight: normal;
   font-style: normal;
   font-display: swap; /* Critical for performance! */
@@ -455,4 +479,12 @@ section {
 
 .marquee-row:hover {
   animation-play-state: paused;
+}
+
+/* ─── Print: colors + clean page ─── */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 }

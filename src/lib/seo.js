@@ -11,7 +11,7 @@ export const seoConfig = {
   baseUrl: "https://www.khatwah.online",
   defaultLocale: "ar",
   supportedLocales: ["ar", "en"],
-  
+
   // Core keywords for the business
   coreKeywords: {
     ar: [
@@ -67,7 +67,7 @@ export function generatePageMetadata({
   const baseKeywords = seoConfig.coreKeywords[locale] || seoConfig.coreKeywords.ar;
   const allKeywords = [...baseKeywords, ...keywords];
   const canonicalUrl = `${seoConfig.baseUrl}${path}`;
-  
+
   // Default image
   const defaultImage = {
     url: `${seoConfig.baseUrl}/og-image.png`,
@@ -75,16 +75,16 @@ export function generatePageMetadata({
     height: 630,
     alt: locale === 'ar' ? 'خطوة اونلاين — Khatwah Online' : 'Khatwah Online'
   };
-  
+
   const ogImages = images.length > 0 ? images : [defaultImage];
 
   return {
     title,
     description,
     keywords: allKeywords,
-    authors: [{ 
-      name: locale === 'ar' ? 'خطوة اونلاين' : 'Khatwah Online', 
-      url: seoConfig.baseUrl 
+    authors: [{
+      name: locale === 'ar' ? 'خطوة اونلاين' : 'Khatwah Online',
+      url: seoConfig.baseUrl
     }],
     creator: locale === 'ar' ? 'خطوة اونلاين' : 'Khatwah Online',
     publisher: locale === 'ar' ? 'خطوة اونلاين' : 'Khatwah Online',
@@ -138,25 +138,25 @@ export function generatePageMetadata({
  */
 export function generateHomeMetadata(locale = "ar") {
   const content = i18n[locale];
-  
+
   return generatePageMetadata({
-    title: locale === 'ar' 
-      ? "خُطوة اونلاين — شركة برمجة مصرية | أفضل شركة تصميم مواقع في مصر"
+    title: locale === 'ar'
+      ? "خطوة اونلاين — شركة برمجة مصرية | أفضل شركة تصميم مواقع في مصر"
       : "Khatwah Online — Egyptian Software Company | Best Web Development in Egypt",
     description: content.seo_content.hero_description,
     path: "/",
     locale,
     keywords: [
       ...(locale === 'ar' ? [
-        "متاجر اونلاين العريش",
-        "تصميم مواقع العريش",
-        "نظام حجوزات اونلاين",
-        "نظام المخزون والـ POS"
+        "تصميم مواقع تعريفية",
+        "أنظمة إدارة مخصصة",
+        "التسويق الرقمي",
+        "حلول تقنية للشركات"
       ] : [
-        "online stores arish",
-        "web design arish",
-        "online booking system",
-        "inventory pos system"
+        "company websites",
+        "custom management systems",
+        "digital marketing",
+        "corporate tech solutions"
       ])
     ]
   });
@@ -168,19 +168,19 @@ export function generateHomeMetadata(locale = "ar") {
 export function generateProjectMetadata(project, locale = "ar") {
   const title = locale === 'ar' ? project.titleAr : project.titleEn;
   const description = locale === 'ar' ? project.descriptionAr : project.descriptionEn;
-  
+
   // Get first project image for OG
-  const firstImage = project.headerImages?.[0] 
+  const firstImage = project.headerImages?.[0]
     ? {
-        url: `${seoConfig.baseUrl}${project.basePath}/${project.headerImages[0]}`,
-        width: 1200,
-        height: 630,
-        alt: title
-      }
+      url: `${seoConfig.baseUrl}${project.basePath}/${project.headerImages[0]}`,
+      width: 1200,
+      height: 630,
+      alt: title
+    }
     : null;
 
   return generatePageMetadata({
-    title: `${title} — ${locale === 'ar' ? 'خُطوة اونلاين' : 'Khatwah Online'}`,
+    title: `${title} — ${locale === 'ar' ? 'خطوة اونلاين' : 'Khatwah Online'}`,
     description,
     path: `/projects/${project.slug}`,
     locale,
@@ -194,7 +194,7 @@ export function generateProjectMetadata(project, locale = "ar") {
         "تطوير مخصص"
       ] : [
         "tech project",
-        "digital solutions", 
+        "digital solutions",
         "custom development"
       ])
     ]
@@ -206,13 +206,13 @@ export function generateProjectMetadata(project, locale = "ar") {
  */
 export function generateProjectsMetadata(locale = "ar") {
   const content = i18n[locale];
-  
+
   return generatePageMetadata({
     title: locale === 'ar'
-      ? "مشاريعنا — أعمال خُطوة اونلاين | شركة برمجة مصرية"
+      ? "مشاريعنا — أعمال خطوة اونلاين | شركة برمجة مصرية"
       : "Our Projects — Khatwah Online Work | Egyptian Software Company",
     description: locale === 'ar'
-      ? "استعرض كل مشاريع خُطوة اونلاين — أنظمة حجوزات، إدارة مخزون، متاجر إلكترونية، والمزيد. كل مشروع من الفكرة للتنفيذ بأفضل التقنيات."
+      ? "استعرض كل مشاريع خطوة اونلاين — أنظمة حجوزات، إدارة مخزون، متاجر إلكترونية، والمزيد. كل مشروع من الفكرة للتنفيذ بأفضل التقنيات."
       : "Explore all Khatwah Online projects — booking systems, inventory management, e-commerce stores, and more. Every project from idea to execution with the best technologies.",
     path: "/projects",
     locale,
@@ -235,13 +235,13 @@ export function generateProjectsMetadata(locale = "ar") {
  */
 export function generateAboutMetadata(locale = "ar") {
   const content = i18n[locale];
-  
+
   return generatePageMetadata({
     title: locale === 'ar'
-      ? "من نحن — فريق خُطوة اونلاين | شركة برمجة مصرية من العريش"
+      ? "من نحن — فريق خطوة اونلاين | شركة برمجة مصرية من العريش"
       : "About Us — Khatwah Online Team | Egyptian Software Company from Arish",
     description: locale === 'ar'
-      ? "تعرف على فريق خُطوة اونلاين - ثلاثة مطورين من العريش، شمال سيناء. نبني حلول تقنية للتجارة المحلية في مصر بخبرة 7+ سنوات في البرمجة."
+      ? "تعرف على فريق خطوة اونلاين - ثلاثة مطورين من العريش، شمال سيناء. نبني حلول تقنية للتجارة المحلية في مصر بخبرة 7+ سنوات في البرمجة."
       : "Meet the Khatwah Online team - three developers from Arish, North Sinai. We build tech solutions for local businesses in Egypt with 7+ years of programming experience.",
     path: "/about",
     locale,
@@ -265,10 +265,10 @@ export function generateAboutMetadata(locale = "ar") {
 export function generateContactMetadata(locale = "ar") {
   return generatePageMetadata({
     title: locale === 'ar'
-      ? "تواصل معنا — خُطوة اونلاين | شركة برمجة مصرية"
+      ? "تواصل معنا — خطوة اونلاين | شركة برمجة مصرية"
       : "Contact Us — Khatwah Online | Egyptian Software Company",
     description: locale === 'ar'
-      ? "تواصل مع خُطوة اونلاين لمشروعك التقني. متاحين على واتساب، مكالمات، بريد إلكتروني. خدمة عملاء من السبت للخميس 9ص-6م."
+      ? "تواصل مع خطوة اونلاين لمشروعك التقني. متاحين على واتساب، مكالمات، بريد إلكتروني. خدمة عملاء من السبت للخميس 9ص-6م."
       : "Contact Khatwah Online for your tech project. Available on WhatsApp, calls, email. Customer service Saturday to Thursday 9AM-6PM.",
     path: "/contact",
     locale,
@@ -293,24 +293,24 @@ export function generateContactMetadata(locale = "ar") {
 export function generateProductsMetadata(locale = "ar") {
   return generatePageMetadata({
     title: locale === 'ar'
-      ? "منتجاتنا — حلول خُطوة اونلاين | نظام حجوزات، مخزون، برمجة خاصة"
+      ? "منتجاتنا — حلول خطوة اونلاين | نظام حجوزات، مخزون، برمجة خاصة"
       : "Our Products — Khatwah Online Solutions | Booking, Inventory, Custom Development",
     description: locale === 'ar'
-      ? "اكتشف حلول خُطوة اونلاين: نظام حجوزات أونلاين، إدارة مخزون وPOS، وبرمجة خاصة. حلول مصممة لسوق العريش وشمال سيناء لزيادة أرباحك."
+      ? "اكتشف حلول خطوة اونلاين: نظام حجوزات أونلاين، إدارة مخزون وPOS، وبرمجة خاصة. حلول مصممة لسوق العريش وشمال سيناء لزيادة أرباحك."
       : "Discover Khatwah Online solutions: online booking system, inventory & POS management, and custom development. Solutions designed for Arish and North Sinai market to increase your profits.",
     path: "/products",
     locale,
     keywords: [
       ...(locale === 'ar' ? [
-        "منتجات خطوة اونلاين",
-        "نظام حجوزات العريش",
-        "إدارة مخزون شمال سيناء",
-        "برمجة خاصة مصر"
+        "مواقع تعريفية للشركات",
+        "أنظمة إدارة مخصصة",
+        "التسويق الرقمي وإدارة الهوية",
+        "حلول رقمية متكاملة"
       ] : [
-        "khatwah online products",
-        "booking system arish",
-        "inventory management north sinai",
-        "custom development egypt"
+        "company websites design",
+        "custom management systems",
+        "digital marketing arish",
+        "integrated digital solutions"
       ])
     ]
   });
@@ -322,7 +322,7 @@ export function generateProductsMetadata(locale = "ar") {
 export function generateProductDetailMetadata(product, locale = "ar") {
   return generatePageMetadata({
     title: locale === 'ar'
-      ? `${product.title} — خُطوة اونلاين | ${product.subtitle}`
+      ? `${product.title} — خطوة اونلاين | ${product.subtitle}`
       : `${product.title} — Khatwah Online | ${product.subtitle}`,
     description: product.description,
     path: `/products/${product.slug}`,
@@ -337,6 +337,73 @@ export function generateProductDetailMetadata(product, locale = "ar") {
         "tech solutions arish",
         "digital services north sinai"
       ])
+    ]
+  });
+}
+
+/**
+ * Generate Alakeifak main page metadata
+ */
+export function generateAlakeifakMetadata(locale = "ar") {
+  return generatePageMetadata({
+    title: "على كيفك — قوائم مطاعم العريش الرقمية | khatwah.online",
+    description: "اطلب من مطعمك المفضل في العريش عبر منصة على كيفك من خطوة اونلاين (khatwah.online). تصفح المنيو الرقمي واطلب عبر واتساب بسهولة ومجاناً.",
+    path: "/services/alakeifak",
+    locale,
+    images: [
+      {
+        url: `${seoConfig.baseUrl}/services/alakeifak/assets/banner.webp`,
+        width: 1200,
+        height: 630,
+        alt: "على كيفك — قوائم مطاعم العريش الرقمية من خطوة اونلاين"
+      }
+    ],
+    keywords: [
+      "على كيفك",
+      "كيو ار منيو العريش",
+      "مطاعم العريش",
+      "منيو ديجيتال",
+      "أكل العريش",
+      "طلب طعام واتساب",
+      "khatwah.online",
+      "alakeifak",
+      "arish restaurants"
+    ]
+  });
+}
+
+/**
+ * Generate Restaurant specific metadata for Alakeifak
+ */
+export function generateRestaurantMetadata(restaurant, locale = "ar") {
+  const title = `${restaurant.name} — منيو دليفري العريش | على كيفك عبر khatwah.online`;
+  const description = `تصفح منيو ${restaurant.name} أونلاين على منصة على كيفك من خطوة اونلاين (khatwah.online). اطلب الآن مباشرة عبر واتساب واستمتع بأفضل تجربة طلب طعام في العريش.`;
+
+  // Use restaurant banner, then logo, then default alakeifak banner
+  const restaurantImage = restaurant.banner_url || restaurant.logo_url || `${seoConfig.baseUrl}/services/alakeifak/assets/banner.webp`;
+
+  return generatePageMetadata({
+    title,
+    description,
+    path: `/services/alakeifak/${restaurant.slug}`,
+    locale,
+    images: [
+      {
+        url: restaurantImage,
+        width: 1200,
+        height: 630,
+        alt: `${restaurant.name} - على كيفك`
+      }
+    ],
+    keywords: [
+      restaurant.name,
+      "منيو",
+      "دليفري",
+      "العريش",
+      "على كيفك",
+      "خطوة اونلاين",
+      "khatwah.online",
+      ...(restaurant.cuisine_type ? [restaurant.cuisine_type] : [])
     ]
   });
 }

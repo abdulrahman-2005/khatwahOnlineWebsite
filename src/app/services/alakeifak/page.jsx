@@ -83,7 +83,7 @@ export default function AlakeifakPage() {
               </p>
 
               {/* ─── NEW: PROMINENT SEARCH BAR IN HERO ─── */}
-              <div className="w-full max-w-2xl mb-8 group relative">
+              <div className="no-print w-full max-w-2xl mb-8 group relative">
                  <div className="absolute -inset-1 rounded-[32px] bg-orange-500 opacity-20 blur-md transition duration-500 group-focus-within:opacity-40" />
                  <div className="relative flex items-center bg-white rounded-[28px] border-2 border-gray-100 shadow-xl p-2.5 transition-all group-focus-within:border-orange-300">
                     <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-orange-500 text-white shadow-lg mx-1">
@@ -100,7 +100,7 @@ export default function AlakeifakPage() {
               </div>
 
               {/* ─── ACTION BUTTONS (Partner added here) ─── */}
-              <div className="flex flex-wrap justify-center items-center gap-4">
+              <div className="no-print flex flex-wrap justify-center items-center gap-4">
                 <a href="#restaurants-grid" className="flex h-14 items-center justify-center rounded-[20px] bg-gray-900 px-8 text-[16px] font-black text-white hover:bg-black transition-all hover:-translate-y-1 shadow-xl shadow-gray-900/20">
                   تصفح كل المطاعم
                 </a>
@@ -136,7 +136,7 @@ export default function AlakeifakPage() {
                 </div>
               )}
               <h2 className="text-[36px] sm:text-[44px] font-black text-gray-900 leading-none">
-                المطاعم والكافيهات 🔥
+                المطاعم والكافيهات
               </h2>
             </div>
           </Reveal>

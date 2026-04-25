@@ -19,8 +19,14 @@ export default function MenuContent({ restaurant, categories, groupedData, extra
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
-  const { items: cartItems, getSubtotal } = useCartStore();
+  const { items: cartItems, getSubtotal, initCart } = useCartStore();
   const itemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  useEffect(() => {
+    if (restaurant?.slug) {
+      initCart(restaurant.slug);
+    }
+  }, [restaurant?.slug, initCart]);
 
   const themeColor = restaurant.theme_color || "#ee930c";
   const isClosed = !restaurant.is_open;
@@ -157,7 +163,7 @@ export default function MenuContent({ restaurant, categories, groupedData, extra
           )}
 
           {/* Top nav buttons */}
-          <div className={`absolute top-6 left-6 right-6 z-40 flex items-center justify-between ${isPreview ? 'translate-y-10' : ''}`}>
+          <div className={`no-print absolute top-6 left-6 right-6 z-40 flex items-center justify-between ${isPreview ? 'translate-y-10' : ''}`}>
             <Link
               href={isPreview ? "/services/alakeifak/partner" : "/services/alakeifak"}
               className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 backdrop-blur-xl border border-white/20 transition-all hover:bg-white/30 active:scale-95 shadow-2xl"
@@ -215,7 +221,7 @@ export default function MenuContent({ restaurant, categories, groupedData, extra
       ) : (
         <>
           {/* ═══ MOBILE: Sticky horizontal Category Nav ═══ */}
-          <div className={`lg:hidden sticky ${isPreview ? 'top-[44px]' : 'top-0'} z-40 w-full`}>
+          <div className={`no-print lg:hidden sticky ${isPreview ? 'top-[44px]' : 'top-0'} z-40 w-full`}>
             <div className="absolute inset-0 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 shadow-[0_4px_12px_rgba(0,0,0,0.03)]" />
             <div className="relative py-1.5">
               <CategoryNav
@@ -232,7 +238,7 @@ export default function MenuContent({ restaurant, categories, groupedData, extra
             <div className="flex gap-8">
               
               {/* ── DESKTOP SIDEBAR ── */}
-              <aside className={`hidden lg:block w-[220px] shrink-0 sticky ${isPreview ? 'top-[60px]' : 'top-[16px]'} self-start`}>
+              <aside className={`no-print hidden lg:block w-[220px] shrink-0 sticky ${isPreview ? 'top-[60px]' : 'top-[16px]'} self-start`}>
                 <nav className="rounded-[28px] bg-white border border-gray-100 shadow-sm p-4 space-y-1">
                   {categories.map((cat) => {
                     const isActive = activeCategory === cat.id;
@@ -333,7 +339,7 @@ export default function MenuContent({ restaurant, categories, groupedData, extra
 
       {/* ═══ FLOATING CART FAB ═══ */}
       {!isClosed && itemCount > 0 && (
-        <div className="fixed bottom-6 left-0 right-0 z-40 flex justify-center px-4 animate-in slide-in-from-bottom-10 fade-in duration-500">
+        <div className="no-print fixed bottom-6 left-0 right-0 z-40 flex justify-center px-4 animate-in slide-in-from-bottom-10 fade-in duration-500">
           <button
             onClick={() => setIsCartOpen(true)}
             className="flex w-full max-w-[420px] items-center justify-between overflow-hidden rounded-[24px] p-2 pr-5 shadow-[0_16px_40px_-6px_var(--dynamic-color)] transition-transform active:scale-[0.98]"
@@ -388,6 +394,7 @@ export default function MenuContent({ restaurant, categories, groupedData, extra
         themeColor={themeColor}
         isOpen={isCheckoutOpen}
         onClose={() => setIsCheckoutOpen(false)}
+        onBack={() => { setIsCheckoutOpen(false); setTimeout(() => setIsCartOpen(true), 400); }}
       />
     </main>
   );

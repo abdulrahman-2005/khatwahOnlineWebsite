@@ -27,7 +27,7 @@ export const metadata = {
     locale: "en_US",
     images: [
       {
-        url: `${seoConfig.baseUrl}/services/phone-story/assets/banner.png`,
+        url: `${seoConfig.baseUrl}/services/phone-story/assets/banner.webp`,
         width: 1200,
         height: 630,
         alt: "PhoneStory - Create professional phone story cards"
@@ -38,7 +38,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "PhoneStory - Story Card Generator",
     description: "Create professional story cards for used phones in 30 seconds. Perfect for phone sellers on WhatsApp and Instagram.",
-    images: [`${seoConfig.baseUrl}/services/phone-story/assets/banner.png`]
+    images: [`${seoConfig.baseUrl}/services/phone-story/assets/banner.webp`]
   },
   alternates: {
     canonical: `${seoConfig.baseUrl}/services/phone-story`,
@@ -58,7 +58,7 @@ export const metadata = {
 
 export default function PhoneStoryLayout({ children }) {
   const service = servicesData.en.find(s => s.slug === 'phone-story');
-  
+
   return (
     <>
       {/* Service-specific structured data */}
@@ -80,7 +80,7 @@ export default function PhoneStoryLayout({ children }) {
             },
             "featureList": service?.features || [
               "Add up to 4 phones in one card",
-              "Ready templates for quick start", 
+              "Ready templates for quick start",
               "High-quality export (1080×1920)",
               "Live preview while editing",
               "English interface"
@@ -109,7 +109,7 @@ export default function PhoneStoryLayout({ children }) {
           })
         }}
       />
-      
+
       {/* FAQ Structured Data */}
       <script
         type="application/ld+json"
@@ -127,7 +127,7 @@ export default function PhoneStoryLayout({ children }) {
                 }
               },
               {
-                "@type": "Question", 
+                "@type": "Question",
                 "name": "How many phones can I add to one card?",
                 "acceptedAnswer": {
                   "@type": "Answer",
@@ -154,7 +154,7 @@ export default function PhoneStoryLayout({ children }) {
           })
         }}
       />
-      
+
       {/* Breadcrumb Structured Data */}
       <script
         type="application/ld+json"
@@ -185,7 +185,7 @@ export default function PhoneStoryLayout({ children }) {
           })
         }}
       />
-      
+
       {children}
     </>
   );
