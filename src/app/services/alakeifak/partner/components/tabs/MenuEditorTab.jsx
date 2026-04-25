@@ -244,7 +244,6 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
       </div>
 
 
-  // QR Code Modal 
   {showQR && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={() => setShowQR(false)}>
           <div className="w-full max-w-sm rounded-[32px] bg-white p-8 text-center shadow-2xl relative" onClick={e => e.stopPropagation()}>
@@ -416,9 +415,9 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
               </div>
 
               {/* ── Add Subcategory Footer (Tier flush) ── */}
-              <div className="flex items-center gap-2 px-5 py-3 bg-gray-50 border-t border-gray-100">
-                <input type="text" placeholder={`+ تصنيف فرعي جديد...`} value={newSubNames[cat.id] || ""} onChange={(e) => setNewSubNames({ ...newSubNames, [cat.id]: e.target.value })} onKeyDown={(e) => e.key === "Enter" && addSubcategory(cat.id)} className="flex-1 rounded-[14px] bg-white border border-gray-200 px-4 py-2.5 text-[13px] font-bold text-gray-700 outline-none placeholder:text-gray-400 focus:border-[var(--dynamic-color)] transition-colors" />
-                <button onClick={() => addSubcategory(cat.id)} className="flex h-9 w-9 items-center justify-center rounded-[12px] text-white transition-all active:scale-90" style={{ backgroundColor: themeColor }}>
+              <div className="flex items-center gap-2 px-3 sm:px-5 py-3 bg-gray-50 border-t border-gray-100">
+                <input type="text" placeholder={`+ تصنيف فرعي جديد...`} value={newSubNames[cat.id] || ""} onChange={(e) => setNewSubNames({ ...newSubNames, [cat.id]: e.target.value })} onKeyDown={(e) => e.key === "Enter" && addSubcategory(cat.id)} className="flex-1 min-w-0 rounded-[14px] bg-white border border-gray-200 px-3 sm:px-4 py-2.5 text-[13px] font-bold text-gray-700 outline-none placeholder:text-gray-400 focus:border-[var(--dynamic-color)] transition-colors" />
+                <button onClick={() => addSubcategory(cat.id)} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[12px] text-white transition-all active:scale-90 shadow-sm" style={{ backgroundColor: themeColor }}>
                   <Plus size={18} strokeWidth={3} />
                 </button>
               </div>

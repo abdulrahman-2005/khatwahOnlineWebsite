@@ -104,17 +104,6 @@ export default function ProductsSection() {
                     <div className="absolute inset-0 flex items-center justify-center p-4 lg:p-8 transition-transform duration-700 group-hover:scale-105">
                       {renderIllustration(product.slug, accent)}
                     </div>
-                    {/* Number Badge */}
-                    <div 
-                      className="absolute right-6 top-6 flex h-12 w-12 items-center justify-center rounded-2xl text-xl font-black backdrop-blur-md transition-transform duration-500 group-hover:scale-110"
-                      style={{ 
-                        backgroundColor: `${accent}20`,
-                        color: accent,
-                        border: `1px solid ${accent}40`
-                      }}
-                    >
-                      {product.num}
-                    </div>
                   </div>
 
                   {/* Content Area */}

@@ -46,19 +46,6 @@ export default function ProductDetailClient({ productAr, productEn, slug }) {
     }
   };
 
-  const renderMobileIcon = () => {
-    switch (slug) {
-      case 'company-websites':
-        return <MonitorSmartphone size={100} color={accent.color} strokeWidth={1.5} />;
-      case 'management-systems':
-        return <LayoutDashboard size={100} color={accent.color} strokeWidth={1.5} />;
-      case 'digital-marketing':
-        return <Megaphone size={100} color={accent.color} strokeWidth={1.5} />;
-      default:
-        return <LayoutDashboard size={100} color={accent.color} strokeWidth={1.5} />;
-    }
-  };
-
   return (
     <main className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: "var(--color-background)" }}>
       {/* Global Ambient Glow (Absolute Overlay so it scrolls with the page) */}
@@ -100,20 +87,6 @@ export default function ProductDetailClient({ productAr, productEn, slug }) {
 
             <Reveal direction="up" distance={30} delay={100}>
               <div className="mb-6 flex items-center gap-4">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl text-xl font-black" style={{ backgroundColor: accent.soft, color: accent.color }}>
-                  {product.num}
-                </span>
-                
-                {/* Mobile Icon Box */}
-                <div 
-                  className="md:hidden flex h-12 w-12 items-center justify-center rounded-xl"
-                  style={{ backgroundColor: `${accent.color}15`, border: `1px solid ${accent.color}30` }}
-                >
-                  {(() => {
-                    const IconComponent = renderMobileIcon().type;
-                    return <IconComponent size={24} color={accent.color} strokeWidth={2} />;
-                  })()}
-                </div>
 
                 <h2 className="text-xl font-bold uppercase tracking-widest" style={{ color: accent.color }}>
                   {product.subtitle}
