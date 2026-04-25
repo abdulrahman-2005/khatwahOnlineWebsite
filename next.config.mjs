@@ -33,6 +33,14 @@ const nextConfig = {
         hostname: '*.r2.cloudflarestorage.com',
       },
       {
+        protocol:'https',
+        hostname:'*'
+      },
+      {
+        protocol:'https',
+        hostname:'www.shutterstock.com'
+      },
+      {
         protocol: 'https',
         hostname: '*.r2.dev',
       },
