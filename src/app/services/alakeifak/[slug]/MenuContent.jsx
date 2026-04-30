@@ -20,6 +20,7 @@ export default function MenuContent({ restaurant, categories, groupedData, extra
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [activeTicket, setActiveTicket] = useState(null);
+  const [isTicketOpen, setIsTicketOpen] = useState(false);
 
   const { items: cartItems, getSubtotal, initCart } = useCartStore();
   const itemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
@@ -32,21 +33,35 @@ export default function MenuContent({ restaurant, categories, groupedData, extra
 
   // Check for active digital ticket (in-house orders)
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("khatwah_active_ticket");
-      if (saved) {
-        const ticket = JSON.parse(saved);
-        // Only show if it's for this restaurant and less than 2 hours old
-        if (ticket.restaurantSlug === restaurant?.slug) {
-          const age = Date.now() - new Date(ticket.createdAt).getTime();
-          if (age < 2 * 60 * 60 * 1000) {
-            setActiveTicket(ticket);
-          } else {
-            localStorage.removeItem("khatwah_active_ticket");
+    const checkTicket = () => {
+      try {
+        const saved = localStorage.getItem("khatwah_active_ticket");
+        if (saved) {
+          const ticket = JSON.parse(saved);
+          // Only show if it's for this restaurant and less than 2 hours old
+          if (ticket.restaurantSlug === restaurant?.slug) {
+            const age = Date.now() - new Date(ticket.createdAt).getTime();
+            if (age < 2 * 60 * 60 * 1000) {
+              setActiveTicket(ticket);
+              setIsTicketOpen(true);
+            } else {
+              localStorage.removeItem("khatwah_active_ticket");
+              setActiveTicket(null);
+            }
           }
         }
-      }
-    } catch { /* ignore */ }
+      } catch { /* ignore */ }
+    };
+
+    checkTicket();
+    
+    // Listen for new tickets created without reloading
+    const handleNewTicket = () => {
+      checkTicket();
+      setIsTicketOpen(true);
+    };
+    window.addEventListener("khatwah_ticket_created", handleNewTicket);
+    return () => window.removeEventListener("khatwah_ticket_created", handleNewTicket);
   }, [restaurant?.slug]);
 
   const themeColor = restaurant.theme_color || "#ee930c";
@@ -418,11 +433,43 @@ export default function MenuContent({ restaurant, categories, groupedData, extra
         onBack={() => { setIsCheckoutOpen(false); setTimeout(() => setIsCartOpen(true), 400); }}
       />
 
+      {/* ═══ FLOATING TICKET BUTTON (when ticket exists but is hidden) ═══ */}
+      {activeTicket && !isTicketOpen && (
+        <div className={`no-print fixed ${!isClosed && itemCount > 0 ? "bottom-24" : "bottom-6"} left-0 right-0 z-40 flex justify-center px-4 animate-in slide-in-from-bottom-10 fade-in duration-500`}>
+          <button
+            onClick={() => setIsTicketOpen(true)}
+            className="flex w-full max-w-[420px] items-center justify-between overflow-hidden rounded-[24px] bg-white border border-gray-200 p-2 pr-5 shadow-2xl transition-transform active:scale-[0.98]"
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-50">
+                <Clock size={20} className="text-blue-500" strokeWidth={2.5} />
+              </div>
+              <div className="flex flex-col text-right">
+                <span className="text-[13px] font-bold text-gray-500">طلبك قيد التجهيز</span>
+                <span className="text-[16px] font-black text-gray-900 leading-none mt-0.5" style={{ fontFamily: "var(--font-display)" }}>
+                  عرض حالة الطلب
+                </span>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2.5 rounded-full pl-1 pr-3.5 py-1">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100">
+                <ChevronLeft size={18} className="text-gray-500" strokeWidth={3} />
+              </div>
+            </div>
+          </button>
+        </div>
+      )}
+
       {/* ═══ DIGITAL TICKET (in-house) ═══ */}
-      {activeTicket && (
+      {activeTicket && isTicketOpen && (
         <DigitalTicket
           ticket={activeTicket}
-          onDismiss={() => setActiveTicket(null)}
+          onHide={() => setIsTicketOpen(false)}
+          onDismiss={() => {
+            setActiveTicket(null);
+            setIsTicketOpen(false);
+          }}
         />
       )}
     </main>

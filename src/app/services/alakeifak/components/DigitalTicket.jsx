@@ -16,9 +16,24 @@ const STATUS_STEPS = [
  * Subscribes to Supabase Realtime to mirror status changes from the Partner OMS.
  * Stored in localStorage as `khatwah_active_ticket`.
  */
-export default function DigitalTicket({ ticket, onDismiss }) {
+export default function DigitalTicket({ ticket, onHide, onDismiss }) {
   const [status, setStatus] = useState("pending");
   const [elapsedMin, setElapsedMin] = useState(0);
+
+  // Prevent background scroll
+  useEffect(() => {
+    const scrollY = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = '100%';
+    return () => {
+      const currentScrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, parseInt(currentScrollY || '0') * -1);
+    };
+  }, []);
 
   // Subscribe to realtime status updates
   useEffect(() => {
@@ -71,9 +86,13 @@ export default function DigitalTicket({ ticket, onDismiss }) {
     }
   }, [status, onDismiss]);
 
-  const handleDismiss = () => {
-    localStorage.removeItem("khatwah_active_ticket");
-    onDismiss();
+  const handleHide = () => {
+    if (status === "completed" || status === "delivered" || status === "cancelled") {
+      localStorage.removeItem("khatwah_active_ticket");
+      onDismiss();
+    } else {
+      onHide();
+    }
   };
 
   const themeColor = ticket.themeColor || "#ee930c";
@@ -86,13 +105,13 @@ export default function DigitalTicket({ ticket, onDismiss }) {
       <div className="relative w-full max-w-sm">
 
         {/* Dismiss button */}
-        <button onClick={handleDismiss}
+        <button onClick={handleHide}
           className="absolute -top-2 -left-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/60 hover:text-white hover:bg-white/20 transition-all border border-white/10">
           <X size={18} />
         </button>
 
         {/* Ticket Card */}
-        <div className="rounded-[32px] bg-white overflow-hidden shadow-2xl">
+        <div className="rounded-[32px] bg-white overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
           
           {/* Header */}
           <div className="p-6 pb-4 text-center" style={{ background: `linear-gradient(135deg, ${themeColor}15, ${themeColor}05)` }}>
@@ -125,8 +144,9 @@ export default function DigitalTicket({ ticket, onDismiss }) {
             </div>
           </div>
 
-          {/* Status Progress */}
-          {!isCancelled ? (
+          <div className="overflow-y-auto scrollbar-hide flex-1">
+            {/* Status Progress */}
+            {!isCancelled ? (
             <div className="p-6 space-y-0">
               {STATUS_STEPS.map((step, idx) => {
                 const StepIcon = step.icon;
@@ -173,17 +193,44 @@ export default function DigitalTicket({ ticket, onDismiss }) {
             </div>
           )}
 
-          {/* Total */}
-          <div className="px-6 pb-6">
-            <div className="rounded-2xl bg-gray-50 border border-gray-100 p-4 flex justify-between items-center">
-              <span className="text-[14px] font-black text-gray-500">الإجمالي</span>
-              <span className="text-[20px] font-black" style={{ color: themeColor }}>{Number(ticket.total).toFixed(0)} ج.م</span>
+          {/* Items Summary (For Waiter) */}
+          {ticket.items && ticket.items.length > 0 && (
+            <div className="px-6 pb-2">
+              <div className="rounded-2xl bg-gray-50/50 border border-gray-100 p-4 space-y-3">
+                <h4 className="text-[12px] font-black text-gray-400">ملخص الطلب (للعرض على الويتر)</h4>
+                <div className="space-y-2 max-h-[120px] overflow-y-auto scrollbar-hide">
+                  {ticket.items.map((item, idx) => (
+                    <div key={idx} className="flex justify-between items-start gap-2 text-[13px]">
+                      <div className="flex-1 min-w-0">
+                        <span className="font-black text-gray-900 leading-tight">
+                          <span className="text-[var(--dc)] ml-1" style={{ '--dc': themeColor }}>×{item.quantity}</span> 
+                          {item.itemName}
+                        </span>
+                        {item.extras && item.extras.length > 0 && (
+                          <div className="text-[11px] font-bold text-gray-500 mt-0.5 leading-tight">
+                            + {item.extras.map(e => e.name).join("، ")}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+            {/* Total */}
+            <div className="px-6 pb-6 pt-4">
+              <div className="rounded-2xl bg-gray-50 border border-gray-100 p-4 flex justify-between items-center">
+                <span className="text-[14px] font-black text-gray-500">الإجمالي</span>
+                <span className="text-[20px] font-black" style={{ color: themeColor }}>{Number(ticket.total).toFixed(0)} ج.م</span>
+              </div>
             </div>
           </div>
 
-          {/* Footer */}
-          <div className="px-6 pb-6">
-            <button onClick={handleDismiss}
+          {/* Footer (Sticky) */}
+          <div className="px-6 pb-6 pt-4 bg-white border-t border-gray-100">
+            <button onClick={handleHide}
               className="w-full rounded-2xl border border-gray-200 bg-white py-3.5 text-[14px] font-black text-gray-500 hover:bg-gray-50 transition-all">
               {isComplete || isCancelled ? "إغلاق" : "إخفاء (الطلب لن يُلغى)"}
             </button>

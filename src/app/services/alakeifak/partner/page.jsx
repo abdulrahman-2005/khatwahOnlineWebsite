@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "../lib/supabaseClient";
 import AuthButton from "../components/AuthButton";
 import SetupWizard from "./SetupWizard";
@@ -28,7 +28,7 @@ export default function PartnerPage() {
   const [loading, setLoading] = useState(true);
   const [authChecked, setAuthChecked] = useState(false);
   const [headerVisible, setHeaderVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollYRef = useRef(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [isCreatingNew, setIsCreatingNew] = useState(false);
@@ -66,16 +66,16 @@ export default function PartnerPage() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 80) {
+      if (currentScrollY > lastScrollYRef.current && currentScrollY > 80) {
         setHeaderVisible(false);
       } else {
         setHeaderVisible(true);
       }
-      setLastScrollY(currentScrollY);
+      lastScrollYRef.current = currentScrollY;
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, []);
 
   // Detect modal open
   useEffect(() => {

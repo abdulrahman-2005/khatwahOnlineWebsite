@@ -6,6 +6,7 @@ import RestaurantsTable from "./components/RestaurantsTable";
 import PaymentModal from "./components/PaymentModal";
 import MembersModal from "./components/MembersModal";
 import FinancialsDashboard from "./components/FinancialsDashboard";
+import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import SuperAdminSettingsModal from "./components/SuperAdminSettingsModal";
 import {
   Store,
@@ -144,8 +145,19 @@ export default function AdminPage() {
                 : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50"
             }`}
           >
-            <PieChart size={16} className={activeTab === "financials" ? "text-emerald-400" : ""} />
+            <DollarSign size={16} className={activeTab === "financials" ? "text-emerald-400" : ""} />
             Financials
+          </button>
+          <button
+            onClick={() => setActiveTab("analytics")}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold transition-all ${
+              activeTab === "analytics" 
+                ? "bg-zinc-800 text-white shadow-sm" 
+                : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50"
+            }`}
+          >
+            <PieChart size={16} className={activeTab === "analytics" ? "text-purple-400" : ""} />
+            Analytics
           </button>
         </div>
         
@@ -247,8 +259,10 @@ export default function AdminPage() {
             )}
           </div>
         </>
-      ) : (
+      ) : activeTab === "financials" ? (
         <FinancialsDashboard />
+      ) : (
+        <AnalyticsDashboard />
       )}
 
       {/* ── MODALS ── */}

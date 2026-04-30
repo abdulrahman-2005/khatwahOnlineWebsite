@@ -179,6 +179,9 @@ export default function RestaurantsTable({
                           {r.is_verified && (
                             <ShieldCheck size={12} className="text-blue-400 shrink-0" />
                           )}
+                          <span className={`px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-widest ${r.is_open ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-zinc-800 text-zinc-500 border border-zinc-700'}`}>
+                            {r.is_open ? 'Open' : 'Closed'}
+                          </span>
                         </div>
                         <div className="flex items-center gap-1.5">
                           <span className="text-[11px] font-mono text-zinc-600 truncate">

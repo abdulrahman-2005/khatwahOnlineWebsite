@@ -42,7 +42,7 @@ export default function OrdersTab({ restaurantId, themeColor }) {
   const [dateRange, setDateRange] = useState("today");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState("active"); // "active" | "history"
-  const [expandedOrder, setExpandedOrder] = useState(null);
+  const [expandedOrders, setExpandedOrders] = useState(new Set());
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [notifEnabled, setNotifEnabled] = useState(false);
   const [receiptOrder, setReceiptOrder] = useState(null);
@@ -169,101 +169,186 @@ export default function OrdersTab({ restaurantId, themeColor }) {
 
   if (loading) return <LoadingSpinner />;
 
-  return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8 pb-20">
+  const toggleOrder = (id) => {
+    setExpandedOrders(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
-      {/* ── Realtime Status Bar ── */}
-      <div className="flex items-center justify-between rounded-2xl bg-white border border-gray-100 px-5 py-3 shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className={`h-2.5 w-2.5 rounded-full ${realtimeConnected ? "bg-emerald-500 animate-pulse" : "bg-red-400"}`} />
-          <span className="text-[13px] font-black text-gray-600">
-            {realtimeConnected ? "متصل — الطلبات تصل لحظياً" : "غير متصل — جاري الاتصال..."}
-          </span>
+  return (
+    <div className="flex flex-col min-h-[calc(100vh-160px)] animate-in fade-in slide-in-from-bottom-4 duration-700">
+      
+      {/* ── Universal Control Bar ── */}
+      <div className="shrink-0 flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-white border border-gray-100 rounded-2xl p-3 sm:px-5 sm:py-4 shadow-sm mb-6">
+        
+        {/* Left: View Toggle & Realtime Status */}
+        <div className="flex items-center gap-4 sm:gap-6">
+          <div className="flex p-1 bg-gray-50 border border-gray-100 rounded-xl shadow-sm">
+            <button onClick={() => setViewMode("active")}
+              className={`px-4 sm:px-6 py-2 rounded-lg text-[12px] font-black transition-all flex items-center gap-2 ${viewMode === "active" ? "text-white shadow-md" : "text-gray-400 hover:text-gray-600"}`}
+              style={viewMode === "active" ? { backgroundColor: themeColor } : undefined}>
+              <ChefHat size={14} />
+              طلبات المطبخ ({activeCount})
+            </button>
+            <button onClick={() => setViewMode("history")}
+              className={`px-4 sm:px-6 py-2 rounded-lg text-[12px] font-black transition-all flex items-center gap-2 ${viewMode === "history" ? "text-white shadow-md" : "text-gray-400 hover:text-gray-600"}`}
+              style={viewMode === "history" ? { backgroundColor: themeColor } : undefined}>
+              <CheckCircle2 size={14} />
+              السجل والإحصائيات
+            </button>
+          </div>
+          
+          <div className="hidden sm:flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-gray-50 border border-gray-100">
+            <div className={`h-2.5 w-2.5 rounded-full ${realtimeConnected ? "bg-emerald-500 animate-pulse" : "bg-red-400"}`} />
+            <span className="text-[11px] font-black text-gray-500">
+              {realtimeConnected ? "متصل" : "غير متصل"}
+            </span>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
+
+        {/* Right: Search & Utils */}
+        <div className="flex items-center gap-3 w-full xl:w-auto">
+          <div className="relative flex-1 xl:w-72">
+            <input type="text" placeholder="ابحث برقم الطلب أو الهاتف..."
+              value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full rounded-xl bg-gray-50 border border-gray-100 pl-4 pr-10 py-2.5 text-[13px] font-bold outline-none focus:border-[var(--dynamic-color)] focus:bg-white transition-all" />
+            <Filter className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+          </div>
           <button onClick={() => setSoundEnabled(!soundEnabled)}
-            className={`flex h-9 w-9 items-center justify-center rounded-xl border transition-all ${soundEnabled ? "bg-emerald-50 border-emerald-200 text-emerald-600" : "bg-gray-50 border-gray-200 text-gray-400"}`}
+            className={`flex shrink-0 h-10 w-10 items-center justify-center rounded-xl border transition-all ${soundEnabled ? "bg-emerald-50 border-emerald-200 text-emerald-600" : "bg-gray-50 border-gray-200 text-gray-400 hover:bg-gray-100"}`}
             title={soundEnabled ? "كتم الصوت" : "تشغيل الصوت"}>
-            {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+            {soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
           </button>
           <button onClick={() => { requestNotificationPermission().then(g => setNotifEnabled(g)); }}
-            className={`flex h-9 w-9 items-center justify-center rounded-xl border transition-all ${notifEnabled ? "bg-emerald-50 border-emerald-200 text-emerald-600" : "bg-gray-50 border-gray-200 text-gray-400"}`}
+            className={`flex shrink-0 h-10 w-10 items-center justify-center rounded-xl border transition-all ${notifEnabled ? "bg-emerald-50 border-emerald-200 text-emerald-600" : "bg-gray-50 border-gray-200 text-gray-400 hover:bg-gray-100"}`}
             title={notifEnabled ? "إشعارات مفعلة" : "تفعيل الإشعارات"}>
-            {notifEnabled ? <Bell size={16} /> : <BellOff size={16} />}
+            {notifEnabled ? <Bell size={18} /> : <BellOff size={18} />}
           </button>
         </div>
       </div>
 
-      {/* ── Stats ── */}
-      <section>
-        <div className="mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-1.5 rounded-full" style={{ backgroundColor: themeColor }} />
-            <h2 className="text-[18px] font-black text-gray-900" style={{ fontFamily: "var(--font-display)" }}>نظرة عامة على الأداء</h2>
-          </div>
-          <div className="flex p-1 bg-white border border-gray-100 rounded-2xl shadow-sm">
-            {RANGES.map((r) => (
-              <button key={r.id} onClick={() => setDateRange(r.id)}
-                className={`px-4 py-1.5 rounded-xl text-[12px] font-bold transition-all ${dateRange === r.id ? "text-white shadow-sm" : "text-gray-400 hover:text-gray-700"}`}
-                style={dateRange === r.id ? { backgroundColor: themeColor } : undefined}>
-                {r.label}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard label="إجمالي الإيرادات" value={`${stats.revenue.toFixed(0)}`} unit="ج.م" icon={DollarSign} color={themeColor} trend="صافي الدخل" />
-          <StatCard label="عدد الطلبات" value={stats.total} icon={ShoppingBag} color="#3b82f6" trend={`${stats.pending} جديد · ${stats.preparing} قيد التجهيز`} />
-          <StatCard label="متوسط الطلب" value={stats.aov.toFixed(0)} unit="ج.م" icon={TrendingUp} color="#8b5cf6" trend="AOV" />
-          <StatCard label="نسبة النجاح" value={`${stats.rate.toFixed(0)}%`} icon={Target} color="#10b981" trend="الطلبات المكتملة" />
-        </div>
-      </section>
-
-      {/* ── Orders Section ── */}
-      <section>
-        <div className="mb-6 flex flex-col lg:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 shrink-0">
-            <Filter size={18} className="text-gray-400" />
-            <h2 className="text-[16px] font-black text-gray-900">إدارة الطلبات</h2>
-          </div>
-          <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-            <div className="relative w-full sm:w-64">
-              <input type="text" placeholder="ابحث بالاسم أو رقم الطلب..."
-                value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-2xl bg-white border border-gray-100 pl-4 pr-10 py-2.5 text-[13px] font-bold outline-none focus:border-[var(--dynamic-color)] transition-all shadow-sm" />
-              <ShoppingBag className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-300" size={16} />
+      {/* ── Dynamic Content Area ── */}
+      <div className="flex-1 flex flex-col min-h-0">
+        
+        {viewMode === "active" ? (
+          /* KITCHEN DISPLAY SYSTEM (Kanban) */
+          <div className="flex-1 flex gap-4 overflow-x-auto overflow-y-hidden pb-4 snap-x snap-mandatory hide-scrollbar">
+            
+            {/* Column 1: Pending */}
+            <div className="flex flex-col w-[90vw] sm:w-[360px] shrink-0 snap-center bg-amber-50/30 rounded-[32px] p-2 sm:p-3 border border-amber-100 max-h-full">
+              <div className="shrink-0 flex items-center justify-between px-4 py-3 mb-2 bg-white rounded-2xl shadow-sm border border-amber-100/50">
+                <div className="flex items-center gap-2.5 text-amber-600">
+                  <Clock size={18} strokeWidth={2.5} />
+                  <span className="font-black text-[15px]">طلبات جديدة</span>
+                </div>
+                <span className="bg-amber-100 text-amber-700 px-2.5 py-1 rounded-lg text-[12px] font-black">
+                  {filteredOrders.filter(o => o.status === "pending").length}
+                </span>
+              </div>
+              <div className="flex-1 overflow-y-auto px-1 pb-4 space-y-3 hide-scrollbar">
+                {filteredOrders.filter(o => o.status === "pending").map((order) => (
+                  <KitchenTicket key={order.id} order={order}
+                    onStatusUpdate={updateStatus} themeColor={themeColor}
+                    onPrint={() => setReceiptOrder(order)} />
+                ))}
+              </div>
             </div>
-            {/* Active / History Toggle */}
-            <div className="flex p-1 bg-white border border-gray-100 rounded-2xl shadow-sm">
-              <button onClick={() => setViewMode("active")}
-                className={`px-5 py-2 rounded-xl text-[12px] font-black transition-all flex items-center gap-2 ${viewMode === "active" ? "text-white shadow-sm" : "text-gray-400"}`}
-                style={viewMode === "active" ? { backgroundColor: themeColor } : undefined}>
-                <Clock size={14} />
-                نشط ({activeCount})
-              </button>
-              <button onClick={() => setViewMode("history")}
-                className={`px-5 py-2 rounded-xl text-[12px] font-black transition-all flex items-center gap-2 ${viewMode === "history" ? "text-white shadow-sm" : "text-gray-400"}`}
-                style={viewMode === "history" ? { backgroundColor: themeColor } : undefined}>
-                <CheckCircle2 size={14} />
-                السجل
-              </button>
-            </div>
-          </div>
-        </div>
 
-        <div className="space-y-4">
-          {filteredOrders.map((order) => (
-            <OrderCard key={order.id} order={order}
-              isExpanded={expandedOrder === order.id}
-              onToggle={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
-              onStatusUpdate={updateStatus} themeColor={themeColor}
-              onPrint={() => setReceiptOrder(order)} />
-          ))}
-          {filteredOrders.length === 0 && (
-            <EmptyState text={viewMode === "active" ? "لا توجد طلبات نشطة حالياً 🎉" : "لا توجد طلبات في السجل."} icon={ClipboardList} />
-          )}
-        </div>
-      </section>
+            {/* Column 2: Preparing */}
+            <div className="flex flex-col w-[90vw] sm:w-[360px] shrink-0 snap-center bg-blue-50/30 rounded-[32px] p-2 sm:p-3 border border-blue-100 max-h-full">
+              <div className="shrink-0 flex items-center justify-between px-4 py-3 mb-2 bg-white rounded-2xl shadow-sm border border-blue-100/50">
+                <div className="flex items-center gap-2.5 text-blue-600">
+                  <ChefHat size={18} strokeWidth={2.5} />
+                  <span className="font-black text-[15px]">قيد التجهيز</span>
+                </div>
+                <span className="bg-blue-100 text-blue-700 px-2.5 py-1 rounded-lg text-[12px] font-black">
+                  {filteredOrders.filter(o => o.status === "preparing").length}
+                </span>
+              </div>
+              <div className="flex-1 overflow-y-auto px-1 pb-4 space-y-3 hide-scrollbar">
+                {filteredOrders.filter(o => o.status === "preparing").map((order) => (
+                  <KitchenTicket key={order.id} order={order}
+                    onStatusUpdate={updateStatus} themeColor={themeColor}
+                    onPrint={() => setReceiptOrder(order)} />
+                ))}
+              </div>
+            </div>
+
+            {/* Column 3: Ready */}
+            <div className="flex flex-col w-[90vw] sm:w-[360px] shrink-0 snap-center bg-emerald-50/30 rounded-[32px] p-2 sm:p-3 border border-emerald-100 max-h-full">
+              <div className="shrink-0 flex items-center justify-between px-4 py-3 mb-2 bg-white rounded-2xl shadow-sm border border-emerald-100/50">
+                <div className="flex items-center gap-2.5 text-emerald-600">
+                  <PackageCheck size={18} strokeWidth={2.5} />
+                  <span className="font-black text-[15px]">جاهزة للاستلام</span>
+                </div>
+                <span className="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-lg text-[12px] font-black">
+                  {filteredOrders.filter(o => o.status === "ready" || o.status === "confirmed").length}
+                </span>
+              </div>
+              <div className="flex-1 overflow-y-auto px-1 pb-4 space-y-3 hide-scrollbar">
+                {filteredOrders.filter(o => o.status === "ready" || o.status === "confirmed").map((order) => (
+                  <KitchenTicket key={order.id} order={order}
+                    onStatusUpdate={updateStatus} themeColor={themeColor}
+                    onPrint={() => setReceiptOrder(order)} />
+                ))}
+              </div>
+            </div>
+
+            
+          </div>
+        ) : (
+          /* HISTORY & STATS VIEW */
+          <div className="flex-1 overflow-y-auto pr-1 pb-20 space-y-8">
+            
+            <section>
+              <div className="mb-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="h-6 w-1.5 rounded-full" style={{ backgroundColor: themeColor }} />
+                  <h2 className="text-[16px] font-black text-gray-900">إحصائيات الأداء</h2>
+                </div>
+                <div className="flex p-1 bg-white border border-gray-100 rounded-xl shadow-sm">
+                  {RANGES.map((r) => (
+                    <button key={r.id} onClick={() => setDateRange(r.id)}
+                      className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all ${dateRange === r.id ? "text-white shadow-sm" : "text-gray-400 hover:text-gray-700"}`}
+                      style={dateRange === r.id ? { backgroundColor: themeColor } : undefined}>
+                      {r.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <StatCard label="إجمالي الإيرادات" value={`${stats.revenue.toFixed(0)}`} unit="ج.م" icon={DollarSign} color={themeColor} trend="صافي الدخل" />
+                <StatCard label="عدد الطلبات" value={stats.total} icon={ShoppingBag} color="#3b82f6" trend={`${stats.pending} جديد · ${stats.preparing} تجهيز`} />
+                <StatCard label="متوسط الطلب" value={stats.aov.toFixed(0)} unit="ج.م" icon={TrendingUp} color="#8b5cf6" trend="AOV" />
+                <StatCard label="نسبة النجاح" value={`${stats.rate.toFixed(0)}%`} icon={Target} color="#10b981" trend="الطلبات المكتملة" />
+              </div>
+            </section>
+
+            <section className="space-y-4">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="h-6 w-1.5 rounded-full bg-gray-800" />
+                <h2 className="text-[16px] font-black text-gray-900">سجل الطلبات</h2>
+              </div>
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                {filteredOrders.map((order) => (
+                  <OrderCard key={order.id} order={order}
+                    isExpanded={expandedOrders.has(order.id)}
+                    onToggle={() => toggleOrder(order.id)}
+                    onStatusUpdate={updateStatus} themeColor={themeColor}
+                    onPrint={() => setReceiptOrder(order)} />
+                ))}
+              </div>
+              {filteredOrders.length === 0 && (
+                <EmptyState text="لا توجد طلبات في السجل تطابق بحثك." icon={ClipboardList} />
+              )}
+            </section>
+          </div>
+        )}
+
+      </div>
 
       {/* Receipt Modal */}
       {receiptOrder && (
@@ -294,15 +379,169 @@ function StatCard({ label, value, unit, icon: Icon, color, trend }) {
   );
 }
 
-// ── OrderCard (enhanced with OMS actions, order type, time elapsed, WhatsApp) ──
+// ── OrderCard (History List View) ──
 function OrderCard({ order, isExpanded, onToggle, onStatusUpdate, themeColor, onPrint }) {
   const statusInfo = STATUS_MAP[order.status] || STATUS_MAP.pending;
   const StatusIcon = statusInfo.icon;
   const TypeIcon = ORDER_TYPE_ICONS[order.order_type] || Truck;
   const cart = order.cart_snapshot || [];
+  
   const createdAt = new Date(order.created_at);
   const timeStr = createdAt.toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" });
-  const dateStr = createdAt.toLocaleDateString("ar-EG", { day: "numeric", month: "short" });
+  const dateStr = createdAt.toLocaleDateString("ar-EG", { day: "numeric", month: "long" });
+
+  const waLink = `https://wa.me/${order.customer_phone?.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`مرحباً ${order.customer_name}، بخصوص طلبك ${order.tracking_id} ✨`)}`;
+
+  return (
+    <div className={`rounded-3xl bg-white border shadow-sm overflow-hidden transition-all duration-300 ${isExpanded ? "border-gray-300 shadow-md" : "border-gray-100 hover:border-gray-200"}`}>
+      {/* ── Collapsed Header (Always Visible) ── */}
+      <button onClick={onToggle} className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 text-right bg-white hover:bg-gray-50/50 transition-colors">
+        
+        {/* Left Side: Status & Type */}
+        <div className="flex items-center gap-4 flex-1 min-w-0">
+          <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border ${statusInfo.color}`}>
+            <StatusIcon size={20} strokeWidth={2.5} />
+          </div>
+          <div className="flex-1 min-w-0 flex flex-col justify-center">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[16px] font-black text-gray-900 truncate">{order.customer_name}</span>
+              <span className="text-[11px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-md shrink-0 border border-gray-200">
+                <Hash size={10} className="inline mr-0.5" />{order.tracking_id}
+              </span>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[12px] font-bold text-gray-500">
+              <span className="flex items-center gap-1 bg-gray-50 px-2 py-0.5 rounded-md border border-gray-100"><Clock size={12} /> {timeStr} · {dateStr}</span>
+              <span className="flex items-center gap-1"><TypeIcon size={12} className="opacity-70" /> {order.order_type === "in_house" ? `طاولة ${order.table_number}` : ORDER_TYPE_LABELS[order.order_type]}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side: Price & Status Label */}
+        <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-6 border-t sm:border-t-0 border-gray-100 pt-3 sm:pt-0">
+          <div className="flex flex-col sm:items-end">
+            <span className="text-[11px] font-bold text-gray-400 mb-0.5">الإجمالي</span>
+            <span className="text-[16px] font-black text-gray-900">{Number(order.total_amount).toFixed(0)} <span className="text-[12px] text-gray-500">ج.م</span></span>
+          </div>
+          <div className={`shrink-0 rounded-xl px-3 py-1.5 text-[12px] font-black border ${statusInfo.color}`}>
+            {statusInfo.label}
+          </div>
+        </div>
+      </button>
+
+      {/* ── Expanded Content ── */}
+      {isExpanded && (
+        <div className="border-t border-gray-100 bg-gray-50/50 flex flex-col lg:flex-row animate-in slide-in-from-top-2 fade-in duration-300">
+          
+          {/* Order Items Section */}
+          <div className="flex-1 p-5 sm:p-6 border-b lg:border-b-0 lg:border-l border-gray-200">
+            <h4 className="text-[14px] font-black text-gray-900 mb-4 flex items-center gap-2">
+              <ClipboardList size={16} className="text-gray-400" /> تفاصيل الطلب
+            </h4>
+            <div className="space-y-4">
+              {cart.map((item, idx) => (
+                <div key={idx} className="flex gap-3 border-b border-gray-100 pb-4 last:border-0 last:pb-0">
+                  <span className="text-[14px] font-black text-gray-900 w-6 text-left shrink-0 bg-white border border-gray-200 rounded-md py-0.5 shadow-sm h-max">x{item.quantity}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between gap-4">
+                      <span className="text-[14px] font-black text-gray-900 break-words leading-tight">{item.itemName}</span>
+                      <span className="text-[14px] font-bold text-gray-600 shrink-0">{(item.quantity * (Number(item.size?.price || 0) + (item.extras?.reduce((s,e)=>s+Number(e.price),0) || 0))).toFixed(0)} ج</span>
+                    </div>
+                    
+                    {(item.size?.name || item.extras?.length > 0) && (
+                      <div className="flex flex-wrap gap-1.5 mt-2">
+                        {item.size?.name && (
+                          <span className="bg-white text-gray-600 px-2 py-0.5 rounded-md text-[11px] font-black border border-gray-200 shadow-sm">
+                            حجم: {item.size.name}
+                          </span>
+                        )}
+                        {item.extras?.map(e => (
+                          <span key={e.name} className="bg-orange-50 text-orange-700 px-2 py-0.5 rounded-md text-[11px] font-black border border-orange-100 shadow-sm">
+                            + {e.name}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+            {/* Totals Sub-block */}
+            <div className="mt-5 pt-4 border-t border-gray-200 flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border">
+              <span className="text-[14px] font-black text-gray-900">المبلغ الإجمالي</span>
+              <span className="text-[20px] font-black" style={{ color: themeColor }}>{Number(order.total_amount).toFixed(0)} ج.م</span>
+            </div>
+          </div>
+
+          {/* Customer & Delivery Section */}
+          <div className="w-full lg:w-[340px] shrink-0 p-5 sm:p-6 bg-white">
+            <h4 className="text-[14px] font-black text-gray-900 mb-4 flex items-center gap-2">
+              <Phone size={16} className="text-gray-400" /> العميل والتوصيل
+            </h4>
+            
+            <div className="space-y-3 mb-6">
+              <div className="flex items-center gap-3 bg-gray-50 rounded-2xl px-4 py-3 border border-gray-100">
+                <div className="bg-white p-2 rounded-xl shadow-sm"><Phone size={14} className="text-gray-500" /></div>
+                <div className="flex flex-col">
+                  <span className="text-[11px] font-bold text-gray-400 mb-0.5">رقم الهاتف</span>
+                  <a href={`tel:${order.customer_phone}`} className="text-[14px] font-black text-gray-900 hover:text-blue-600 transition-colors" dir="ltr">{order.customer_phone}</a>
+                </div>
+              </div>
+
+              {order.order_type === "delivery" && order.delivery_zones && (
+                <div className="flex items-start gap-3 bg-blue-50/50 rounded-2xl px-4 py-3 border border-blue-100">
+                  <div className="bg-white p-2 rounded-xl shadow-sm border border-blue-50 mt-0.5"><MapPin size={14} className="text-blue-500" /></div>
+                  <div className="flex flex-col flex-1 min-w-0">
+                    <span className="text-[11px] font-bold text-blue-400 mb-0.5">المنطقة ({order.delivery_zones.fee} ج.م)</span>
+                    <span className="text-[13px] font-black text-blue-900 mb-1">{order.delivery_zones.region_name}</span>
+                    {order.delivery_address && (
+                      <span className="text-[12px] font-bold text-blue-700/80 leading-relaxed bg-white/60 p-2 rounded-lg border border-blue-100/50">
+                        {order.delivery_address}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Quick Actions Panel */}
+            <div className="space-y-2">
+               {/* State actions for history view (if they need to revert or update old orders) */}
+               {order.status === "pending" && (
+                 <div className="flex gap-2">
+                   <button onClick={() => onStatusUpdate(order.id, "preparing")} className="flex-1 py-3 bg-[var(--dynamic-color)] text-white text-[13px] font-black rounded-xl hover:brightness-110 shadow-sm" style={{ backgroundColor: themeColor }}>قبول وتجهيز</button>
+                   <button onClick={() => onStatusUpdate(order.id, "cancelled")} className="px-4 py-3 bg-red-50 text-red-600 border border-red-100 text-[13px] font-black rounded-xl hover:bg-red-100">إلغاء</button>
+                 </div>
+               )}
+               {(order.status === "preparing" || order.status === "ready" || order.status === "confirmed") && (
+                 <button onClick={() => onStatusUpdate(order.id, "completed")} className="w-full py-3 bg-gray-100 text-gray-700 text-[13px] font-black rounded-xl hover:bg-gray-200 border border-gray-200">
+                   نقل إلى المكتملة
+                 </button>
+               )}
+
+               {/* Utils */}
+               <div className="flex gap-2 pt-2 border-t border-gray-100 mt-2">
+                 <a href={waLink} target="_blank" rel="noreferrer" className="flex-1 flex justify-center items-center gap-2 py-2.5 bg-green-50 text-green-700 text-[13px] font-black rounded-xl border border-green-200 hover:bg-green-100 transition-colors">
+                   <MessageCircle size={14} /> واتساب
+                 </a>
+                 <button onClick={onPrint} className="flex-1 flex justify-center items-center gap-2 py-2.5 bg-white text-gray-700 text-[13px] font-black rounded-xl border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors">
+                   <Printer size={14} /> طباعة الفاتورة
+                 </button>
+               </div>
+            </div>
+          </div>
+
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── KitchenTicket (Fully Expanded KDS View for Active Orders) ──
+function KitchenTicket({ order, onStatusUpdate, themeColor, onPrint }) {
+  const statusInfo = STATUS_MAP[order.status] || STATUS_MAP.pending;
+  const TypeIcon = ORDER_TYPE_ICONS[order.order_type] || Truck;
+  const cart = order.cart_snapshot || [];
+  const createdAt = new Date(order.created_at);
   const [elapsed, setElapsed] = useState(getRelativeTime(order.created_at));
 
   useEffect(() => {
@@ -313,126 +552,124 @@ function OrderCard({ order, isExpanded, onToggle, onStatusUpdate, themeColor, on
   const waLink = `https://wa.me/${order.customer_phone?.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`مرحباً ${order.customer_name}، بخصوص طلبك ${order.tracking_id} ✨`)}`;
 
   return (
-    <div className={`rounded-[28px] bg-white border shadow-sm overflow-hidden transition-all ${
-      order.status === "pending" ? "border-amber-200 ring-2 ring-amber-100" : "border-gray-100 hover:border-[var(--dynamic-color)]/30"
+    <div className={`flex flex-col bg-white rounded-3xl overflow-hidden border shadow-sm transition-all ${
+      order.status === "pending" ? "border-amber-300 ring-2 ring-amber-100" : "border-gray-200 hover:border-gray-300"
     }`}>
-      <button onClick={onToggle} className="w-full flex items-center justify-between gap-4 p-5 text-right transition-colors">
-        <div className="flex items-center gap-4 flex-1 min-w-0">
-          <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[16px] border ${statusInfo.color}`}>
-            <StatusIcon size={18} strokeWidth={2.5} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-0.5">
-              <span className="text-[16px] font-black text-gray-900 truncate">{order.customer_name}</span>
-              <span className="text-[11px] font-bold text-gray-400 shrink-0 bg-gray-50 px-2 py-0.5 rounded-full"><Hash size={10} className="inline" />{order.tracking_id}</span>
-            </div>
-            <div className="flex items-center gap-3 text-[12px] font-bold text-gray-400">
-              <span className="flex items-center gap-1"><Clock size={12} /> {elapsed}</span>
-              <span className="flex items-center gap-1"><TypeIcon size={12} /> {ORDER_TYPE_LABELS[order.order_type] || "توصيل"}</span>
-              {order.table_number && <span className="font-black text-blue-500">طاولة {order.table_number}</span>}
-              <span className="font-black text-gray-600">{Number(order.total_amount).toFixed(0)} ج.م</span>
-            </div>
-          </div>
+      {/* Header Bar */}
+      <div className={`px-4 py-3 border-b flex justify-between items-center ${statusInfo.color.replace('border', 'border-b')}`}>
+        <div className="flex flex-col">
+          <span className="text-[11px] font-black opacity-60 flex items-center gap-1">
+            <Hash size={10} /> {order.tracking_id}
+          </span>
+          <span className="text-[15px] font-black mt-0.5">{statusInfo.label}</span>
         </div>
-        <div className={`shrink-0 rounded-full px-3 py-1 text-[11px] font-black border ${statusInfo.color}`}>{statusInfo.label}</div>
-      </button>
+        <div className="text-left flex flex-col items-end">
+          <span className="text-[12px] font-bold opacity-70 flex items-center gap-1">
+            <Clock size={12} /> {elapsed}
+          </span>
+          <span className="text-[13px] font-black flex items-center gap-1 mt-0.5">
+            <TypeIcon size={14} /> 
+            {order.order_type === "in_house" ? `طاولة ${order.table_number}` : ORDER_TYPE_LABELS[order.order_type]}
+          </span>
+        </div>
+      </div>
 
-      {isExpanded && (
-        <div className="border-t border-gray-100 p-6 bg-gray-50/30 space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Customer Info */}
-            <div className="space-y-4">
-              <h4 className="text-[13px] font-black text-gray-400 px-1">معلومات العميل</h4>
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-3 bg-white rounded-2xl px-4 py-3 border border-gray-100 shadow-sm">
-                  <Phone size={16} className="text-gray-400" />
-                  <a href={`tel:${order.customer_phone}`} className="text-[14px] font-black text-gray-800" dir="ltr">{order.customer_phone}</a>
+      {/* Customer Info */}
+      <div className="px-4 py-3 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+        <div className="flex flex-col flex-1 min-w-0 pr-2">
+          <span className="text-[14px] font-black text-gray-900 truncate">{order.customer_name}</span>
+          <a href={`tel:${order.customer_phone}`} className="text-[12px] font-bold text-gray-500 truncate" dir="ltr">{order.customer_phone}</a>
+        </div>
+        <div className="flex gap-2 shrink-0">
+          <a href={waLink} target="_blank" rel="noreferrer" className="flex h-9 w-9 items-center justify-center rounded-xl bg-green-100 text-green-600 hover:bg-green-200 transition-colors">
+            <MessageCircle size={16} />
+          </a>
+          <button onClick={onPrint} className="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-200 text-gray-600 hover:bg-gray-300 transition-colors">
+            <Printer size={16} />
+          </button>
+        </div>
+      </div>
+
+      {/* Items List */}
+      <div className="p-4 space-y-4">
+        {cart.map((item, idx) => (
+          <div key={idx} className="flex gap-3">
+            <span className="text-[15px] font-black text-gray-900 w-6 text-left shrink-0 opacity-80">x{item.quantity}</span>
+            <div className="flex-1 min-w-0">
+              <span className="text-[14px] font-black text-gray-900 break-words leading-tight block mb-1">
+                {item.itemName}
+              </span>
+              {item.size?.name && (
+                <span className="inline-block bg-gray-100 text-gray-600 px-2 py-0.5 rounded-lg text-[11px] font-bold border border-gray-200 mr-1 mb-1">
+                  حجم: {item.size.name}
+                </span>
+              )}
+              {item.extras?.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {item.extras.map(e => (
+                    <span key={e.name} className="bg-orange-50 text-orange-700 px-2 py-0.5 rounded-lg text-[11px] font-bold border border-orange-100">
+                      + {e.name}
+                    </span>
+                  ))}
                 </div>
-                {order.delivery_address && (
-                  <div className="flex items-start gap-3 bg-white rounded-2xl px-4 py-3 border border-gray-100 shadow-sm">
-                    <MapPin size={16} className="text-gray-400 mt-0.5" />
-                    <span className="text-[14px] font-bold text-gray-700 leading-relaxed">{order.delivery_address}</span>
-                  </div>
-                )}
-                {order.delivery_zones && (
-                  <div className="flex items-center gap-3 bg-blue-50/50 rounded-2xl px-4 py-3 border border-blue-100">
-                    <Truck size={16} className="text-blue-500" />
-                    <span className="text-[14px] font-black text-blue-700">{order.delivery_zones.region_name} (+{order.delivery_zones.fee} ج.م)</span>
-                  </div>
-                )}
-              </div>
-            </div>
-            {/* Cart */}
-            <div className="space-y-4">
-              <h4 className="text-[13px] font-black text-gray-400 px-1">تفاصيل الفاتورة</h4>
-              <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-3">
-                {cart.map((item, idx) => (
-                  <div key={idx} className="flex justify-between gap-4 text-[14px]">
-                    <div className="flex-1 min-w-0">
-                      <div className="font-black text-gray-900 truncate"><span className="text-gray-400 ml-1">×{item.quantity}</span> {item.itemName}</div>
-                      <div className="text-[11px] font-bold text-gray-400 mt-0.5">
-                        {item.size?.name} {item.extras?.length > 0 && `· ${item.extras.map(e => e.name).join("، ")}`}
-                      </div>
-                    </div>
-                    <span className="font-bold text-gray-600 shrink-0">{(item.quantity * (Number(item.size?.price || 0) + (item.extras?.reduce((s,e)=>s+Number(e.price),0) || 0))).toFixed(0)}</span>
-                  </div>
-                ))}
-                <div className="border-t border-gray-100 pt-3 flex justify-between items-center">
-                  <span className="text-[14px] font-black text-gray-900">الإجمالي النهائي</span>
-                  <span className="text-[18px] font-black" style={{ color: themeColor }}>{Number(order.total_amount).toFixed(0)} ج.م</span>
-                </div>
-              </div>
+              )}
             </div>
           </div>
+        ))}
+      </div>
 
-          {/* ── Quick Actions Row ── */}
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            {/* Status Actions */}
-            {order.status === "pending" && (<>
-              <button onClick={() => onStatusUpdate(order.id, "preparing")}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-2xl px-8 py-3.5 text-[14px] font-black text-white transition-all active:scale-95 shadow-lg"
-                style={{ backgroundColor: themeColor, boxShadow: `0 10px 20px -5px ${themeColor}40` }}>
-                <ChefHat size={18} /> قبول وبدء التجهيز
-              </button>
-              <button onClick={() => onStatusUpdate(order.id, "cancelled")}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-2xl px-6 py-3.5 text-[14px] font-black text-red-600 bg-white border border-red-100 transition-all active:scale-95 hover:bg-red-50">
-                <XCircle size={18} /> رفض
-              </button>
-            </>)}
-            {order.status === "preparing" && (
-              <button onClick={() => onStatusUpdate(order.id, "ready")}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-2xl px-8 py-3.5 text-[14px] font-black text-white bg-emerald-600 transition-all active:scale-95 hover:bg-emerald-700 shadow-lg shadow-emerald-600/20">
-                <PackageCheck size={18} /> جاهز للاستلام / التوصيل
-              </button>
-            )}
-            {order.status === "ready" && (
-              <button onClick={() => onStatusUpdate(order.id, "completed")}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-2xl px-8 py-3.5 text-[14px] font-black text-white bg-green-600 transition-all active:scale-95 hover:bg-green-700 shadow-lg shadow-green-600/20">
-                <CheckCircle2 size={18} /> تم التسليم ✓
-              </button>
-            )}
-            {/* Legacy status support */}
-            {order.status === "confirmed" && (
-              <button onClick={() => onStatusUpdate(order.id, "delivered")}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-2xl px-8 py-3.5 text-[14px] font-black text-white bg-green-600 transition-all active:scale-95 hover:bg-green-700 shadow-lg shadow-green-600/20">
-                <Truck size={18} /> تم التوصيل
-              </button>
-            )}
-
-            {/* Utility Actions — always visible */}
-            <div className="flex items-center gap-2 mr-auto">
-              <a href={waLink} target="_blank" rel="noreferrer"
-                className="flex h-11 w-11 items-center justify-center rounded-[16px] bg-green-50 text-green-600 border border-green-200 hover:bg-green-100 transition-all" title="واتساب">
-                <MessageCircle size={18} />
-              </a>
-              <button onClick={onPrint}
-                className="flex h-11 w-11 items-center justify-center rounded-[16px] bg-gray-50 text-gray-500 border border-gray-200 hover:bg-gray-100 transition-all" title="طباعة">
-                <Printer size={18} />
-              </button>
+      {/* Delivery Zone / Address */}
+      {order.order_type === "delivery" && (
+        <div className="px-4 pb-4">
+          <div className="bg-blue-50 border border-blue-100 rounded-2xl p-3">
+            <div className="flex items-center gap-2 text-blue-700 mb-1.5">
+              <Truck size={14} />
+              <span className="text-[12px] font-black">{order.delivery_zones?.region_name}</span>
             </div>
+            {order.delivery_address && (
+              <p className="text-[12px] font-bold text-gray-600 leading-relaxed flex items-start gap-1.5">
+                <MapPin size={14} className="mt-0.5 shrink-0" />
+                {order.delivery_address}
+              </p>
+            )}
           </div>
         </div>
       )}
+
+      {/* Actions */}
+      <div className="p-4 border-t border-gray-100 bg-gray-50 flex gap-2">
+        {order.status === "pending" && (
+          <>
+            <button onClick={() => onStatusUpdate(order.id, "preparing")} 
+              className="flex-1 py-3 bg-[var(--dynamic-color)] text-white text-[13px] font-black rounded-2xl hover:brightness-110 active:scale-95 shadow-md flex justify-center items-center gap-2"
+              style={{ backgroundColor: themeColor }}>
+              <ChefHat size={16} /> تجهيز
+            </button>
+            <button onClick={() => onStatusUpdate(order.id, "cancelled")} 
+              className="px-4 py-3 bg-white border border-red-200 text-red-600 text-[13px] font-black rounded-2xl hover:bg-red-50 active:scale-95 flex justify-center items-center gap-1.5">
+              <XCircle size={16} /> رفض
+            </button>
+          </>
+        )}
+        {order.status === "preparing" && (
+          <button onClick={() => onStatusUpdate(order.id, "ready")} 
+            className="flex-1 py-3 bg-emerald-600 text-white text-[13px] font-black rounded-2xl hover:bg-emerald-700 active:scale-95 shadow-md flex justify-center items-center gap-2">
+            <PackageCheck size={16} /> جاهز للتسليم
+          </button>
+        )}
+        {order.status === "ready" && (
+          <button onClick={() => onStatusUpdate(order.id, "completed")} 
+            className="flex-1 py-3 bg-green-600 text-white text-[13px] font-black rounded-2xl hover:bg-green-700 active:scale-95 shadow-md flex justify-center items-center gap-2">
+            <CheckCircle2 size={16} /> إنهاء وتسليم
+          </button>
+        )}
+        {order.status === "confirmed" && (
+          <button onClick={() => onStatusUpdate(order.id, "delivered")} 
+            className="flex-1 py-3 bg-green-600 text-white text-[13px] font-black rounded-2xl hover:bg-green-700 active:scale-95 shadow-md flex justify-center items-center gap-2">
+            <Truck size={16} /> تم التوصيل
+          </button>
+        )}
+      </div>
     </div>
   );
 }

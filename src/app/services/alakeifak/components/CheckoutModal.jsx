@@ -6,11 +6,7 @@ import { supabase } from "../lib/supabaseClient";
 import { generateWhatsAppUrl } from "../lib/whatsappUtils";
 import { X, Send, MapPin, User, Phone, ArrowRight, Truck, ShoppingBag, UtensilsCrossed, Hash } from "lucide-react";
 
-const ORDER_MODES = [
-  { id: "delivery", label: "توصيل", icon: Truck, desc: "توصيل لباب البيت" },
-  { id: "pickup", label: "استلام", icon: ShoppingBag, desc: "استلام من المحل" },
-  { id: "in_house", label: "داخلي", icon: UtensilsCrossed, desc: "اطلب من داخل المحل" },
-];
+
 
 export default function CheckoutModal({ restaurant, deliveryZones, themeColor, isOpen, onBack, onClose }) {
   const { items, deliveryZone, orderType, getSubtotal, getDeliveryFee, getTotal, clearCart, setOrderType } = useCartStore();
@@ -106,22 +102,25 @@ export default function CheckoutModal({ restaurant, deliveryZones, themeColor, i
         orderType, tableNumber,
       });
 
-      // For in-house orders, store the ticket in localStorage for DigitalTicket
-      if (orderType === "in_house") {
-        localStorage.setItem("khatwah_active_ticket", JSON.stringify({
-          orderId: order.id,
-          trackingId: order.tracking_id,
-          restaurantName: restaurant.name,
-          restaurantSlug: restaurant.slug,
-          tableNumber,
-          total: getTotal(),
-          themeColor: activeColor,
-          createdAt: new Date().toISOString(),
-        }));
-      }
+      // For ALL orders, store the ticket in localStorage for DigitalTicket
+      localStorage.setItem("khatwah_active_ticket", JSON.stringify({
+        orderId: order.id,
+        trackingId: order.tracking_id,
+        restaurantName: restaurant.name,
+        restaurantSlug: restaurant.slug,
+        tableNumber,
+        items: orderPayload.cart_snapshot,
+        total: getTotal(),
+        themeColor: activeColor,
+        createdAt: new Date().toISOString(),
+      }));
 
       clearCart();
-      window.open(whatsappUrl, "_blank");
+      if (orderType !== "in_house") {
+        window.open(whatsappUrl, "_blank");
+      }
+      
+      window.dispatchEvent(new Event("khatwah_ticket_created"));
       onClose();
     } catch (err) {
       setError("حدث خطأ غير متوقع. يرجى المحاولة لاحقاً.");
@@ -166,38 +165,7 @@ export default function CheckoutModal({ restaurant, deliveryZones, themeColor, i
               </div>
             )}
 
-            {/* ── Order Mode Selector ── */}
-            <div>
-              <label className="text-[13px] font-black text-gray-500 mb-3 block px-1">نوع الطلب</label>
-              <div className="grid grid-cols-3 gap-3">
-                {ORDER_MODES.map((mode) => {
-                  const isActive = orderType === mode.id;
-                  const ModeIcon = mode.icon;
-                  return (
-                    <button
-                      key={mode.id}
-                      onClick={() => { setOrderType(mode.id); setError(""); }}
-                      className={`relative flex flex-col items-center gap-2 rounded-[20px] p-4 text-center transition-all duration-300 border-2 ${
-                        isActive
-                          ? "border-[var(--dynamic-color)] bg-[var(--dynamic-color)]/5 shadow-md"
-                          : "border-gray-100 bg-white hover:border-gray-200"
-                      }`}
-                    >
-                      <div className={`flex h-11 w-11 items-center justify-center rounded-[14px] transition-all ${
-                        isActive ? "bg-[var(--dynamic-color)] text-white shadow-lg" : "bg-gray-100 text-gray-400"
-                      }`}
-                        style={isActive ? { backgroundColor: activeColor, boxShadow: `0 8px 16px -4px ${activeColor}40` } : undefined}>
-                        <ModeIcon size={20} />
-                      </div>
-                      <span className={`text-[13px] font-black ${isActive ? "text-gray-900" : "text-gray-500"}`}>
-                        {mode.label}
-                      </span>
-                      <span className="text-[10px] font-bold text-gray-400 leading-tight">{mode.desc}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+
 
             {/* ── Customer Info ── */}
             <div className="space-y-4">
