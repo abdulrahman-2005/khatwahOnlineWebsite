@@ -8,6 +8,7 @@ import ItemCard from "../components/ItemCard";
 import ItemModal from "../components/ItemModal";
 import CartDrawer from "../components/CartDrawer";
 import CheckoutModal from "../components/CheckoutModal";
+import DigitalTicket from "../components/DigitalTicket";
 import { useCartStore } from "../lib/cartStore";
 import { ShoppingCart, Store, ChevronLeft, Info, ArrowRight, Clock, Sparkles } from "lucide-react";
 
@@ -18,6 +19,7 @@ export default function MenuContent({ restaurant, categories, groupedData, extra
   
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [activeTicket, setActiveTicket] = useState(null);
 
   const { items: cartItems, getSubtotal, initCart } = useCartStore();
   const itemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
@@ -27,6 +29,25 @@ export default function MenuContent({ restaurant, categories, groupedData, extra
       initCart(restaurant.slug);
     }
   }, [restaurant?.slug, initCart]);
+
+  // Check for active digital ticket (in-house orders)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("khatwah_active_ticket");
+      if (saved) {
+        const ticket = JSON.parse(saved);
+        // Only show if it's for this restaurant and less than 2 hours old
+        if (ticket.restaurantSlug === restaurant?.slug) {
+          const age = Date.now() - new Date(ticket.createdAt).getTime();
+          if (age < 2 * 60 * 60 * 1000) {
+            setActiveTicket(ticket);
+          } else {
+            localStorage.removeItem("khatwah_active_ticket");
+          }
+        }
+      }
+    } catch { /* ignore */ }
+  }, [restaurant?.slug]);
 
   const themeColor = restaurant.theme_color || "#ee930c";
   const isClosed = !restaurant.is_open;
@@ -396,6 +417,14 @@ export default function MenuContent({ restaurant, categories, groupedData, extra
         onClose={() => setIsCheckoutOpen(false)}
         onBack={() => { setIsCheckoutOpen(false); setTimeout(() => setIsCartOpen(true), 400); }}
       />
+
+      {/* ═══ DIGITAL TICKET (in-house) ═══ */}
+      {activeTicket && (
+        <DigitalTicket
+          ticket={activeTicket}
+          onDismiss={() => setActiveTicket(null)}
+        />
+      )}
     </main>
   );
 }

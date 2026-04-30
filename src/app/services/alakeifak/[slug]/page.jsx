@@ -97,6 +97,32 @@ export default async function RestaurantMenuPage({ params }) {
     groupedData[cat.id] = subWithItems;
   });
 
+  // ── KILL SWITCH CHECK ──
+  // If the super admin has deactivated this restaurant, show an unavailable screen
+  if (restaurant.is_active === false) {
+    return (
+      <main className="min-h-screen bg-gray-50 flex items-center justify-center p-6" dir="rtl">
+        <div className="w-full max-w-md text-center">
+          <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-[32px] bg-gray-100 border border-gray-200">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400">
+              <path d="M18.36 6.64a9 9 0 1 1-12.73 0" /><line x1="12" y1="2" x2="12" y2="12" />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-black text-gray-900 mb-3">هذا المنيو غير متاح حالياً</h1>
+          <p className="text-gray-500 font-bold mb-8">
+            عذراً، {restaurant.name} غير متاح للطلب في الوقت الحالي. يُرجى المحاولة لاحقاً أو التواصل مع المطعم مباشرة.
+          </p>
+          <a
+            href="/services/alakeifak"
+            className="inline-flex items-center gap-2 rounded-2xl bg-gray-900 px-8 py-4 text-sm font-black text-white hover:bg-black transition-all"
+          >
+            العودة لقائمة المطاعم
+          </a>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <>
       <script

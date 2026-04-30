@@ -1,4 +1,4 @@
-﻿import imageCompression from 'browser-image-compression';
+import imageCompression from 'browser-image-compression';
 
 const MAX_RAW_SIZE_MB = 10;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/heic', 'image/heif'];
@@ -101,10 +101,16 @@ export async function uploadImage(compressedFile, folder) {
     body: formData,
   });
 
-  const result = await response.json();
+  const textResult = await response.text();
+  let result = {};
+  try {
+    result = JSON.parse(textResult);
+  } catch (e) {
+    console.warn('[imageUtils] Non-JSON response:', textResult);
+  }
 
   if (!response.ok) {
-    console.error('[imageUtils] Upload failed:', result);
+    console.warn(`[imageUtils] Upload failed with status ${response.status}:`, textResult);
     throw new Error(result.error || 'فشل رفع الصورة. حاول مرة أخرى.');
   }
 

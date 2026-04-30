@@ -14,6 +14,12 @@ export default function SettingsTab({ restaurant, onUpdate }) {
   const [saving, setSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState("");
 
+  const handleNameChange = (value) => {
+    // Only allow Arabic letters, English letters, Numbers, and Spaces. No punctuation or special chars.
+    const sanitized = value.replace(/[^a-zA-Z0-9\s\u0621-\u064A\u0660-\u0669]/g, "");
+    setName(sanitized);
+  };
+
   // Logo
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState(restaurant.logo_url || null);
@@ -79,7 +85,7 @@ export default function SettingsTab({ restaurant, onUpdate }) {
           <p className="text-[14px] text-gray-500 mt-1 font-medium">المعلومات التي ستظهر لعملائك وتشكل هويتك.</p>
         </div>
         
-        <InputField label="الاسم التجاري للمطعم" value={name} onChange={(e) => setName(e.target.value)} />
+        <InputField label="الاسم التجاري للمطعم" value={name} onChange={(e) => handleNameChange(e.target.value)} />
         <InputField label="رقم المبيعات (واتساب)" type="tel" dir="ltr" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} className="text-right" />
         
         <div className="space-y-3 w-full pt-2">
@@ -155,6 +161,32 @@ export default function SettingsTab({ restaurant, onUpdate }) {
         <button onClick={() => setIsOpen(!isOpen)} className="shrink-0 hover:scale-105 transition-transform bg-gray-50 p-1 rounded-full border border-gray-100">
           {isOpen ? <ToggleRight size={64} className="text-[var(--dynamic-color)]" /> : <ToggleLeft size={64} className="text-gray-300" />}
         </button>
+      </div>
+
+      {/* Subscription Status */}
+      <div className="rounded-[36px] bg-white border border-gray-100 p-8 shadow-sm">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div className="flex-1">
+            <span className="text-[18px] font-black text-gray-900 leading-tight block">حالة الاشتراك 💳</span>
+            <p className="text-[14px] font-bold text-gray-500 mt-2 leading-relaxed">
+              توضيح لحالة اشتراك المطعم في المنصة وعدد الأيام المتبقية. لتجديد الاشتراك، يرجى التواصل مع فريق الدعم.
+            </p>
+          </div>
+          <div className={`shrink-0 px-6 py-3 rounded-[20px] border shadow-sm font-black text-[15px] flex items-center justify-center text-center
+            ${(function() {
+              if (!restaurant.subscription_end_date) return 'bg-gray-50 text-gray-600 border-gray-200';
+              const daysLeft = Math.ceil((new Date(restaurant.subscription_end_date) - new Date()) / (1000 * 60 * 60 * 24));
+              return daysLeft > 0 ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-red-50 text-red-600 border-red-100';
+            })()}`}>
+            {(function() {
+              if (!restaurant.subscription_end_date) return "نسخة مجانية / غير مشترك";
+              const daysLeft = Math.ceil((new Date(restaurant.subscription_end_date) - new Date()) / (1000 * 60 * 60 * 24));
+              if (daysLeft < 0) return "الاشتراك منتهي";
+              if (daysLeft === 0) return "ينتهي اليوم";
+              return `متبقي ${daysLeft} يوم`;
+            })()}
+          </div>
+        </div>
       </div>
 
       <div className="pt-2">

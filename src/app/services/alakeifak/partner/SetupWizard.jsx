@@ -5,32 +5,51 @@ import { supabase } from "../lib/supabaseClient";
 import { compressLogo, fileToDataUrl, uploadImage } from "../lib/imageUtils";
 import {
   ArrowLeft,
-  ChevronLeft,
   Loader2,
-  UtensilsCrossed,
   UploadCloud,
   CheckCircle2,
-  Sparkles
+  Sparkles,
+  ArrowRight,
+  Store,
+  MessageCircle,
+  Image as ImageIcon
 } from "lucide-react";
 import Image from "next/image";
 
 const STEPS = [
-  { id: 1, title: "هوية المطعم", desc: "اختر اسماً يعبر عنك ورابطاً لمنيوك الخاص." },
-  { id: 2, title: "بيانات التواصل", desc: "أضف رقم مبيعات الواتساب لاستقبال الطلبات." },
-  { id: 3, title: "الواجهة البصرية", desc: "قم بإدراج الشعار التجاري وأبهر عملائك." },
+  { id: 1, icon: Store, title: "هوية المطعم", desc: "اختر اسماً يعبر عنك ورابطاً لمنيوك الخاص." },
+  { id: 2, icon: MessageCircle, title: "بيانات التواصل", desc: "أضف رقم مبيعات الواتساب لاستقبال الطلبات." },
+  { id: 3, icon: ImageIcon, title: "الواجهة البصرية", desc: "قم بإدراج الشعار التجاري وأبهر عملائك." },
 ];
 
-function generateSlug(name) {
-  return name
-    .trim()
-    .toLowerCase()
-    .replace(/[^\u0600-\u06FFa-zA-Z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .substring(0, 40);
+const ARABIC_MAP = {
+  'ا': 'a', 'أ': 'a', 'إ': 'e', 'آ': 'a', 'ب': 'b', 'ت': 't', 'ث': 'th',
+  'ج': 'j', 'ح': 'h', 'خ': 'kh', 'د': 'd', 'ذ': 'th', 'ر': 'r', 'ز': 'z',
+  'س': 's', 'ش': 'sh', 'ص': 's', 'ض': 'd', 'ط': 't', 'ظ': 'z', 'ع': 'a',
+  'غ': 'gh', 'ف': 'f', 'ق': 'q', 'ك': 'k', 'ل': 'l', 'م': 'm', 'ن': 'n',
+  'ه': 'h', 'ة': 'a', 'و': 'w', 'ي': 'y', 'ى': 'a', 'ئ': 'e', 'ء': 'a', 'ؤ': 'o'
+};
+
+function transliterateArabic(str) {
+  return str.split('').map(char => ARABIC_MAP[char] || char).join('');
 }
 
-export default function SetupWizard({ userId, onComplete }) {
+function generateSlug(name) {
+  let transliterated = transliterateArabic(name.trim().toLowerCase());
+  let slug = transliterated
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, '')
+    .substring(0, 40);
+  
+  if (!slug) {
+    slug = "restaurant-" + Math.floor(Math.random() * 10000);
+  }
+  return slug;
+}
+
+export default function SetupWizard({ userId, userEmail, onComplete }) {
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
@@ -43,9 +62,11 @@ export default function SetupWizard({ userId, onComplete }) {
   const [error, setError] = useState("");
 
   const handleNameChange = (value) => {
-    setName(value);
+    // Only allow Arabic letters, English letters, Numbers, and Spaces. No punctuation or special chars.
+    const sanitized = value.replace(/[^a-zA-Z0-9\s\u0621-\u064A\u0660-\u0669]/g, "");
+    setName(sanitized);
     if (!slugEdited) {
-      setSlug(generateSlug(value));
+      setSlug(generateSlug(sanitized));
     }
   };
 
@@ -73,7 +94,7 @@ export default function SetupWizard({ userId, onComplete }) {
       return;
     }
 
-    if (slug === "partner" || slug === "migrations") {
+    if (slug === "partner" || slug === "migrations" || slug === "admin") {
       setError("عنوان الصفحة محجوز، يرجى اختيار رابط مختلف.");
       return;
     }
@@ -113,7 +134,7 @@ export default function SetupWizard({ userId, onComplete }) {
           slug: slug.trim(),
           whatsapp_number: whatsappNumber.trim(),
           logo_url: logoUrl,
-          theme_color: "#ee930c",
+          theme_color: "#f97316", // Default orange
           is_verified: false,
           is_open: true,
         })
@@ -128,9 +149,21 @@ export default function SetupWizard({ userId, onComplete }) {
       );
       if (seedError) console.warn("Failed to seed delivery zones:", seedError);
 
+      if (userEmail) {
+        const { error: memberError } = await supabase
+          .from("restaurant_members")
+          .insert({
+            restaurant_id: restaurant.id,
+            email: userEmail,
+            user_id: userId,
+            role: "owner",
+          });
+        if (memberError) console.warn("Failed to insert restaurant_member:", memberError);
+      }
+
       onComplete(restaurant);
     } catch (err) {
-      console.error("Setup error:", err);
+      console.warn("Setup error:", err);
       setError(err.message || "عذراً، حدث خطأ غير طبيعي.");
     } finally {
       setSubmitting(false);
@@ -149,53 +182,49 @@ export default function SetupWizard({ userId, onComplete }) {
     setStep(step + 1);
   };
 
-  const color = "#ee930c";
-
   return (
-    <div className="min-h-screen bg-[#070908] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#ee930c]/[0.05] via-transparent to-transparent flex items-center justify-center p-4 sm:p-8" dir="rtl">
+    <div className="w-full max-w-2xl mx-auto px-4 sm:px-6">
       
       {/* Immersive Setup Container */}
-      <div className="w-full max-w-xl">
+      <div className="w-full">
         
-        {/* Glow Element */}
-        <div className="relative mb-12 flex justify-center">
-          <div className="absolute top-1/2 left-1/2 -z-10 h-[200px] w-[200px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 blur-[60px]" style={{ backgroundColor: color }} />
-          <div className="flex items-center gap-3 rounded-full bg-white/5 border border-white/10 px-5 py-2.5 backdrop-blur-md">
-            <Sparkles size={18} style={{ color }} />
-            <span className="text-[13px] font-black tracking-widest text-white">إعداد أولي للمتجر</span>
+        {/* Header Glow Elements */}
+        <div className="relative mb-10 flex justify-center">
+          <div className="flex items-center gap-2 rounded-full bg-orange-50 px-5 py-2.5 border border-orange-200">
+            <Sparkles size={16} className="text-orange-500" />
+            <span className="text-[13px] font-black tracking-widest text-orange-700">تجهيز مساحة العمل</span>
           </div>
         </div>
         
-        {/* Progress Bar (Neo style) */}
-        <div className="mb-12 relative px-4">
-          <div className="absolute top-1/2 left-4 right-4 -z-10 h-0.5 -translate-y-1/2 rounded-full bg-white/10" />
-          <div 
-            className="absolute top-1/2 right-4 -z-10 h-0.5 -translate-y-1/2 rounded-full transition-all duration-700 ease-out shadow-[0_0_10px_var(--dynamic-color)]" 
-            style={{ 
-              width: `calc(${((step - 1) / (STEPS.length - 1)) * 100}% - 2rem)`,
-              backgroundColor: color,
-              '--dynamic-color': color
-            }} 
-          />
-          
-          <div className="flex items-center justify-between relative z-10 w-full">
-            {STEPS.map((s) => {
+        {/* Progress Stepper */}
+        <div className="mb-10 px-2 sm:px-8">
+          <div className="flex items-center justify-between relative">
+            {/* Background Line */}
+            <div className="absolute top-1/2 left-0 right-0 h-[2px] -translate-y-1/2 bg-gray-200 z-0" />
+            
+            {/* Active Line */}
+            <div 
+              className="absolute top-1/2 right-0 h-[2px] -translate-y-1/2 bg-orange-500 z-0 transition-all duration-700 ease-out" 
+              style={{ width: `${((step - 1) / (STEPS.length - 1)) * 100}%` }} 
+            />
+            
+            {STEPS.map((s, idx) => {
               const isCompleted = step > s.id;
               const isActive = step === s.id;
+              const Icon = s.icon;
+              
               return (
-                <div key={s.id} className="relative flex flex-col items-center">
+                <div key={s.id} className="relative z-10 flex flex-col items-center">
                   <div 
-                    className={`flex h-12 w-12 items-center justify-center rounded-full transition-all duration-500 ${
-                      isActive ? "scale-110 shadow-[0_0_20px_-5px_var(--dynamic-color)] border-[3px]" : "border-[2px]"
+                    className={`flex h-12 w-12 items-center justify-center rounded-full transition-all duration-500 border-[3px] bg-white ${
+                      isActive 
+                        ? "border-orange-500 text-orange-500 scale-110 shadow-lg shadow-orange-500/20" 
+                        : isCompleted 
+                          ? "border-orange-500 bg-orange-500 text-white" 
+                          : "border-gray-200 text-gray-300"
                     }`}
-                    style={{ 
-                      borderColor: isCompleted || isActive ? color : "rgba(255,255,255,0.1)",
-                      backgroundColor: isCompleted ? color : "#070908",
-                      color: isCompleted ? "#000" : (isActive ? "#FFF" : "rgba(255,255,255,0.3)"),
-                      '--dynamic-color': color
-                    }}
                   >
-                    {isCompleted ? <CheckCircle2 size={24} strokeWidth={3} /> : <span className="text-[15px] font-black">{s.id}</span>}
+                    {isCompleted ? <CheckCircle2 size={24} strokeWidth={2.5} /> : <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />}
                   </div>
                 </div>
               );
@@ -203,43 +232,42 @@ export default function SetupWizard({ userId, onComplete }) {
           </div>
         </div>
 
-        {/* Card Component */}
-        <div className="relative overflow-hidden rounded-[40px] bg-[#0A0C0B]/80 p-8 sm:p-12 border border-white/5 shadow-2xl backdrop-blur-2xl">
+        {/* Form Card */}
+        <div className="relative overflow-hidden rounded-[40px] bg-white p-8 sm:p-12 border border-gray-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)]">
           
-          {/* Subtle top glare */}
-          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-
           {/* Header */}
           <div className="mb-10 text-center">
-            <h2 className="mb-3 text-3xl font-black text-white" style={{ fontFamily: "var(--font-display)" }}>
+            <h2 className="mb-3 text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
               {STEPS[step - 1].title}
             </h2>
-            <p className="text-[16px] font-medium text-white/50">
+            <p className="text-[15px] font-bold text-gray-500 max-w-sm mx-auto leading-relaxed">
               {STEPS[step - 1].desc}
             </p>
           </div>
 
-          {/* Form Content Wrapper (Min-height to prevent jumping) */}
+          {/* Dynamic Form Area (Min-height preserves layout stability) */}
           <div className="min-h-[220px]">
+            
             {/* Step 1: Basics */}
             {step === 1 && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <div className="space-y-2">
-                  <label className="text-[14px] font-bold text-white/50 px-1">الاسم التجاري للمطعم</label>
+              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="space-y-2.5">
+                  <label className="text-[14px] font-bold text-gray-600 px-1 block">الاسم التجاري للمطعم</label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => handleNameChange(e.target.value)}
-                    placeholder="مطعم أكلات البحر..."
-                    className="w-full rounded-[20px] border border-white/10 bg-white/5 px-6 py-5 text-[18px] font-black text-white outline-none transition-all placeholder:text-white/20 focus:bg-white/10 focus:border-[var(--dynamic-color)] focus:shadow-[0_0_20px_-5px_var(--dynamic-color)]"
-                    style={{ '--dynamic-color': color }}
+                    placeholder="مثال: مطعم شاورما الريم..."
+                    className="w-full rounded-[24px] border border-gray-200 bg-gray-50 px-6 py-5 text-[18px] font-black text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 shadow-sm"
                   />
                 </div>
 
-                <div className="space-y-2 pt-2">
-                  <label className="text-[14px] font-bold text-white/50 px-1">الرابط الفريد (المنيو)</label>
-                  <div className="flex flex-col sm:flex-row gap-3 items-center rounded-[20px] bg-white/5 px-6 py-5 border border-white/10 focus-within:border-[var(--dynamic-color)] focus-within:bg-white/10 focus-within:shadow-[0_0_20px_-5px_var(--dynamic-color)] transition-all" style={{ '--dynamic-color': color, direction: 'ltr' }}>
-                    <span className="text-[15px] text-white/30 font-black">khatwah.online/services/alakeifak/</span>
+                <div className="space-y-2.5 pt-2">
+                  <label className="text-[14px] font-bold text-gray-600 px-1 block">الرابط الفريد (المنيو)</label>
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center rounded-[24px] bg-gray-50 border border-gray-200 focus-within:border-orange-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-orange-500/10 transition-all shadow-sm overflow-hidden" dir="ltr">
+                    <div className="bg-gray-100/50 px-5 py-5 sm:border-r border-gray-200 flex items-center justify-center">
+                      <span className="text-[14px] text-gray-500 font-bold whitespace-nowrap">alakeifak/</span>
+                    </div>
                     <input
                       type="text"
                       value={slug}
@@ -247,30 +275,32 @@ export default function SetupWizard({ userId, onComplete }) {
                         setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""));
                         setSlugEdited(true);
                       }}
-                      className="w-full sm:flex-1 bg-transparent text-[18px] font-black text-white outline-none placeholder:text-white/10"
+                      className="w-full sm:flex-1 bg-transparent px-5 py-4 text-[18px] font-black text-gray-900 outline-none placeholder:text-gray-300"
                       placeholder="restaurant-name"
                     />
                   </div>
+                  <p className="text-[12px] font-bold text-gray-400 px-2 mt-2">
+                    يجب أن يكون باللغة الإنجليزية وبدون مسافات.
+                  </p>
                 </div>
               </div>
             )}
 
             {/* Step 2: WhatsApp */}
             {step === 2 && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="space-y-3">
-                  <label className="text-[14px] font-bold text-white/50 px-1">رقم المبيعات (واتساب)</label>
+                  <label className="text-[14px] font-bold text-gray-600 px-1 block">رقم المبيعات (واتساب)</label>
                   <input
                     type="tel"
                     value={whatsappNumber}
                     onChange={(e) => setWhatsappNumber(e.target.value)}
                     dir="ltr"
-                    className=" w-full rounded-[24px] border border-white/10 bg-white/5 px-6 py-6 text-[22px] font-black text-white outline-none transition-all placeholder:text-white/20 focus:bg-white/10 focus:border-[var(--dynamic-color)] focus:shadow-[0_0_20px_-5px_var(--dynamic-color)]"
-                    style={{ '--dynamic-color': color}}
+                    className="w-full rounded-[24px] border border-gray-200 bg-gray-50 px-6 py-6 text-[22px] font-black text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 shadow-sm "
                     placeholder="+201xxxxxxxxx"
                   />
-                  <p className="text-[14px] text-white/40 font-medium px-2 mt-2 leading-relaxed text-center sm:text-right">
-                    نرجو توفير مفتاح الدولة الدولي (كمثال: +20) لإتمام الربط وتمرير رسائل الطلبات بنجاح.
+                  <p className="text-[14px] text-gray-500 font-medium px-2 pt-2 leading-relaxed text-right">
+                    نرجو توفير <strong>مفتاح الدولة الدولي</strong> (كمثال: +20 لمصر أو +966 للسعودية) لإتمام الربط وتمرير رسائل الطلبات بنجاح.
                   </p>
                 </div>
               </div>
@@ -278,91 +308,89 @@ export default function SetupWizard({ userId, onComplete }) {
 
             {/* Step 3: Logo */}
             {step === 3 && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <div className="flex flex-col items-center">
-                  <input
-                    type="file"
-                    id="logo-upload"
-                    accept="image/jpeg,image/png,image/webp"
-                    className="hidden"
-                    onChange={handleLogoChange}
-                  />
-                  <label
-                    htmlFor="logo-upload"
-                    className="group relative flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[40px] border-2 border-dashed border-white/10 bg-white/[0.02] transition-all hover:border-[var(--dynamic-color)] hover:bg-white/[0.05]"
-                    style={{ width: "200px", height: "200px", '--dynamic-color': color }}
-                  >
-                    {compressing ? (
-                      <div className="flex flex-col items-center gap-4">
-                        <Loader2 size={36} className="animate-spin text-[var(--dynamic-color)]" style={{ color }} />
-                        <span className="text-[14px] font-black text-white/60">تجهيز المعروضات...</span>
+              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 flex flex-col items-center">
+                <input
+                  type="file"
+                  id="logo-upload"
+                  accept="image/jpeg,image/png,image/webp"
+                  className="hidden"
+                  onChange={handleLogoChange}
+                />
+                <label
+                  htmlFor="logo-upload"
+                  className="group relative flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[40px] border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-orange-50/50 hover:border-orange-300 transition-all shadow-sm"
+                  style={{ width: "200px", height: "200px" }}
+                >
+                  {compressing ? (
+                    <div className="flex flex-col items-center gap-4">
+                      <Loader2 size={36} className="animate-spin text-orange-500" />
+                      <span className="text-[14px] font-black text-orange-600">تجهيز الشعار...</span>
+                    </div>
+                  ) : logoPreview ? (
+                    <>
+                      <Image src={logoPreview} alt="Preview" fill className="object-cover" />
+                      <div className="absolute inset-0 bg-gray-900/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex items-center justify-center backdrop-blur-sm">
+                        <span className="text-[15px] font-black text-white">تغيير الصورة</span>
                       </div>
-                    ) : logoPreview ? (
-                      <>
-                        <Image src={logoPreview} alt="Preview" fill className="object-cover" />
-                        <div className="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex items-center justify-center backdrop-blur-sm">
-                          <span className="text-[15px] font-black text-white">تعديل الصورة</span>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="flex flex-col items-center gap-4 text-white/30 transition-colors group-hover:text-white/70">
-                        <UploadCloud size={48} strokeWidth={1.5} />
-                        <span className="text-[15px] font-black">إدراج صورة</span>
+                    </>
+                  ) : (
+                    <div className="flex flex-col items-center gap-4 text-gray-400 group-hover:text-orange-500 transition-colors">
+                      <div className="h-16 w-16 bg-white rounded-full flex items-center justify-center shadow-sm border border-gray-100 group-hover:scale-110 transition-transform">
+                        <UploadCloud size={28} />
                       </div>
-                    )}
-                  </label>
-                  <p className="mt-6 text-center text-[14px] font-medium text-white/40">
-                    يمكن للملفات العالية الدقة أن يبلغ حجمها 5MB كحد أقصى.
-                  </p>
-                </div>
+                      <span className="text-[15px] font-black">إدراج صورة</span>
+                    </div>
+                  )}
+                </label>
+                <p className="mt-4 text-center text-[13px] font-bold text-gray-400 max-w-xs">
+                  يمكن للملفات العالية الدقة أن يبلغ حجمها 5MB كحد أقصى. سيتم ضغطها تلقائياً لتسريع المنيو.
+                </p>
               </div>
             )}
           </div>
 
           {/* Form Error Handling */}
           {error && (
-            <div className="mt-6 rounded-[20px] bg-red-500/10 border border-red-500/20 p-5 text-center px-4 animate-in fade-in zoom-in duration-300">
-              <p className="text-[15px] font-black text-red-400">{error}</p>
+            <div className="mt-8 rounded-[20px] bg-red-50 border border-red-100 p-4 text-center animate-in fade-in zoom-in duration-300">
+              <p className="text-[14px] font-black text-red-600">{error}</p>
             </div>
           )}
 
           {/* Navigation Controls */}
-          <div className="mt-12 flex gap-4 border-t border-white/10 pt-8">
+          <div className="mt-10 flex gap-4 pt-6">
             <button
               onClick={() => { setError(""); setStep(step - 1); }}
               disabled={step === 1 || submitting}
-              className={`flex h-14 w-14 sm:w-auto sm:px-8 items-center justify-center rounded-[20px] transition-all border ${
+              className={`flex h-14 w-14 sm:w-auto sm:px-8 items-center justify-center rounded-[20px] transition-all border font-black text-[16px] ${
                 step === 1 
-                  ? "opacity-0 pointer-events-none" 
-                  : "bg-white/5 border-white/10 text-white/50 hover:bg-white/10 hover:text-white"
+                  ? "opacity-0 pointer-events-none w-0 sm:w-0 sm:px-0 border-transparent" 
+                  : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-gray-900 active:scale-95 shadow-sm"
               }`}
             >
-              <ArrowLeft size={24} className="sm:hidden" />
-              <span className="hidden sm:block text-[16px] font-black">السابق</span>
+              <ArrowRight size={20} className="sm:hidden" />
+              <span className="hidden sm:block">السابق</span>
             </button>
 
             {step < STEPS.length ? (
               <button
                 onClick={goNext}
-                className="flex h-14 flex-1 items-center justify-center rounded-[20px] text-[18px] font-black text-black transition-all hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_30px_-10px_var(--dynamic-color)]"
-                style={{ backgroundColor: color, '--dynamic-color': color }}
+                className="flex h-14 flex-1 items-center justify-center rounded-[20px] bg-orange-500 text-[18px] font-black text-white transition-all hover:bg-orange-600 active:scale-[0.98] shadow-lg shadow-orange-500/20"
               >
-                المرحلة التالية
+                التالي
               </button>
             ) : (
               <button
                 onClick={handleSubmit}
                 disabled={submitting || compressing}
-                className="flex h-14 flex-1 items-center justify-center gap-3 rounded-[20px] text-[18px] font-black text-black transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100 shadow-[0_0_30px_-10px_var(--dynamic-color)]"
-                style={{ backgroundColor: color, '--dynamic-color': color }}
+                className="flex h-14 flex-1 items-center justify-center gap-3 rounded-[20px] bg-gray-900 text-[18px] font-black text-white transition-all hover:bg-black active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100 shadow-xl shadow-gray-900/10"
               >
                 {submitting ? (
                   <>
-                    <Loader2 size={24} className="animate-spin text-black" />
-                    <span>يتم المعالجة...</span>
+                    <Loader2 size={24} className="animate-spin" />
+                    <span>جاري التجهيز...</span>
                   </>
                 ) : (
-                  "إنهاء المعالج وتدشين النظام"
+                  "كله تمام"
                 )}
               </button>
             )}

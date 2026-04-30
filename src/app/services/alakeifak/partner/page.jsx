@@ -5,6 +5,7 @@ import { supabase } from "../lib/supabaseClient";
 import AuthButton from "../components/AuthButton";
 import SetupWizard from "./SetupWizard";
 import DashboardContent from "./DashboardContent";
+import WorkspaceSelector from "./WorkspaceSelector";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -17,36 +18,48 @@ import {
   Smartphone,
   TrendingUp,
   Sparkles,
+  ArrowLeftRight,
 } from "lucide-react";
 
 export default function PartnerPage() {
   const [user, setUser] = useState(null);
   const [restaurant, setRestaurant] = useState(null);
+  const [memberships, setMemberships] = useState(null); // null = not loaded, [] = no memberships
   const [loading, setLoading] = useState(true);
   const [authChecked, setAuthChecked] = useState(false);
   const [headerVisible, setHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [isCreatingNew, setIsCreatingNew] = useState(false);
+
   useEffect(() => {
     if (!supabase) { setLoading(false); setAuthChecked(true); return; }
 
-    checkAuth();
+    let isMounted = true;
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user || null);
-      if (session?.user) {
-        fetchRestaurant(session.user.id);
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!isMounted) return;
+
+      const u = session?.user || null;
+      setUser(u);
+
+      if (u) {
+        await handleUserLogin(u);
       } else {
         setRestaurant(null);
+        setMemberships(null);
         setLoading(false);
       }
       setAuthChecked(true);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   // Hide header on scroll
@@ -73,40 +86,90 @@ export default function PartnerPage() {
     return () => observer.disconnect();
   }, []);
 
-  async function checkAuth() {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    setUser(session?.user || null);
-    if (session?.user) {
-      await fetchRestaurant(session.user.id);
+  /**
+   * Called on login — links the user_id if they were invited by email,
+   * then fetches their restaurant memberships.
+   */
+  async function handleUserLogin(u) {
+    // Auto-link user_id for invited members (invited by email before they signed up)
+    try {
+      await supabase.rpc("link_member_on_login", {
+        p_email: u.email,
+        p_user_id: u.id,
+      });
+    } catch {
+      // Non-critical — the function may not exist yet if migration hasn't run
     }
-    setLoading(false);
-    setAuthChecked(true);
+
+    await fetchMemberships(u.email);
   }
 
-  async function fetchRestaurant(userId) {
+  /**
+   * Multi-tenancy fetch: queries restaurant_members by email,
+   * joins the restaurant data, and decides the UI flow.
+   */
+  async function fetchMemberships(email) {
+    // Query memberships with joined restaurant data
     const { data, error } = await supabase
-      .from("restaurants")
-      .select("*")
-      .eq("owner_id", userId)
-      .single();
+      .from("restaurant_members")
+      .select("*, restaurant:restaurants(*)")
+      .eq("email", email);
 
-    if (!error && data) {
-      setRestaurant(data);
-    } else {
-      setRestaurant(null);
+    if (error) {
+      // Fallback to legacy owner_id query if restaurant_members table doesn't exist yet
+      console.warn("restaurant_members query failed, falling back to owner_id:", error.message);
+      const { data: legacyData } = await supabase
+        .from("restaurants")
+        .select("*")
+        .eq("owner_id", (await supabase.auth.getUser()).data?.user?.id)
+        .single();
+
+      if (legacyData) {
+        setRestaurant(null);
+        setMemberships([{ id: "legacy", restaurant: legacyData, role: "owner" }]);
+        setIsCreatingNew(false);
+      } else {
+        setRestaurant(null);
+        setMemberships([]);
+        setIsCreatingNew(true);
+      }
+      setLoading(false);
+      return;
     }
+
+    const validMemberships = (data || []).filter((m) => m.restaurant);
+    setMemberships(validMemberships);
+    setRestaurant(null);
+
+    // If they have no memberships, force them to create one
+    if (validMemberships.length === 0) {
+      setIsCreatingNew(true);
+    } else {
+      setIsCreatingNew(false);
+    }
+
+    setLoading(false);
   }
 
   async function handleLogout() {
     await supabase.auth.signOut();
     setUser(null);
     setRestaurant(null);
+    setMemberships(null);
+    setIsCreatingNew(false);
   }
 
   function handleSetupComplete(newRestaurant) {
     setRestaurant(newRestaurant);
+    setMemberships(prev => [...(prev || []), { id: "new", restaurant: newRestaurant, role: "owner" }]);
+    setIsCreatingNew(false);
+  }
+
+  /**
+   * Switch workspace — go back to the workspace selector
+   */
+  function handleSwitchWorkspace() {
+    setRestaurant(null);
   }
 
   // Loading state
@@ -132,8 +195,56 @@ export default function PartnerPage() {
     );
   }
 
-  // Logged in but no restaurant → Setup wizard
+  // Logged in but no restaurant selected
   if (!restaurant) {
+    
+    // Create New Restaurant Flow (Setup Wizard)
+    if (isCreatingNew) {
+      return (
+        <main className="min-h-screen bg-gray-50 text-gray-900" dir="rtl">
+          <style jsx global>{`
+            nav { display: none !important; }
+            main { padding-top: 0 !important; }
+            footer { display: none !important; }
+          `}</style>
+  
+          {/* Setup Bar */}
+          <div className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50">
+            <div className="mx-auto flex max-w-4xl items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500 text-white shadow-lg shadow-orange-500/20">
+                  <Store size={20} />
+                </div>
+                <span className="text-[18px] font-black tracking-tight">إعداد مطعمك الجديد</span>
+              </div>
+              <div className="flex items-center gap-2">
+                {memberships && memberships.length > 0 && (
+                  <button
+                    onClick={() => setIsCreatingNew(false)}
+                    className="flex items-center gap-2 rounded-[14px] bg-gray-100 px-4 py-2 text-[14px] font-black text-gray-600 hover:bg-gray-200 transition-colors"
+                  >
+                    تراجع
+                  </button>
+                )}
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 rounded-[14px] bg-red-50 px-4 py-2 text-[14px] font-black text-red-600 hover:bg-red-100 transition-colors"
+                >
+                  <LogOut size={16} />
+                  خروج
+                </button>
+              </div>
+            </div>
+          </div>
+  
+          <div className="py-12">
+            <SetupWizard userId={user.id} userEmail={user.email} onComplete={handleSetupComplete} />
+          </div>
+        </main>
+      );
+    }
+
+    // Workspace Selector Flow
     return (
       <main className="min-h-screen bg-gray-50 text-gray-900" dir="rtl">
         <style jsx global>{`
@@ -142,14 +253,14 @@ export default function PartnerPage() {
           footer { display: none !important; }
         `}</style>
 
-        {/* Setup Bar */}
+        {/* Top Bar */}
         <div className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50">
           <div className="mx-auto flex max-w-4xl items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500 text-white shadow-lg shadow-orange-500/20">
                 <Store size={20} />
               </div>
-              <span className="text-[18px] font-black tracking-tight">إعداد مطعمك الجديد</span>
+              <span className="text-[18px] font-black tracking-tight">مساحات العمل</span>
             </div>
             <button
               onClick={handleLogout}
@@ -161,8 +272,49 @@ export default function PartnerPage() {
           </div>
         </div>
 
-        <div className="py-12">
-          <SetupWizard userId={user.id} onComplete={handleSetupComplete} />
+        <WorkspaceSelector
+          memberships={memberships}
+          onSelect={(r) => setRestaurant(r)}
+          onCreateNew={() => setIsCreatingNew(true)}
+        />
+      </main>
+    );
+  }
+
+  // Logged in but restaurant is deactivated (kill switch)
+  if (restaurant && restaurant.is_active === false) {
+    return (
+      <main className="min-h-screen bg-gray-50 text-gray-900 flex items-center justify-center p-6" dir="rtl">
+        <style jsx global>{`
+          nav { display: none !important; }
+          main { padding-top: 0 !important; }
+          footer { display: none !important; }
+        `}</style>
+        <div className="w-full max-w-md text-center">
+          <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-[32px] bg-red-50 border border-red-100">
+            <ShieldCheck size={40} className="text-red-400" />
+          </div>
+          <h1 className="text-2xl font-black text-gray-900 mb-3">تم تعليق الحساب</h1>
+          <p className="text-gray-500 font-bold mb-4 leading-relaxed">
+            تم تعليق حساب <span className="text-gray-900">{restaurant.name}</span> مؤقتاً. 
+            للاستفسار عن حالة الاشتراك أو لتجديده، يُرجى التواصل مع فريق الدعم.
+          </p>
+          <a
+            href="https://khatwah.online/contact"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-2xl bg-gray-900 px-8 py-4 text-sm font-black text-white hover:bg-black transition-all mb-4"
+          >
+            تواصل مع فريق الدعم
+          </a>
+          <div className="mt-4">
+            <button
+              onClick={handleLogout}
+              className="text-sm font-bold text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              تسجيل الخروج
+            </button>
+          </div>
         </div>
       </main>
     );
@@ -207,6 +359,18 @@ export default function PartnerPage() {
               <ShieldCheck size={14} className="text-emerald-500 animate-pulse" />
               <span className="text-[13px] font-black text-emerald-700">شريك معتمد</span>
             </div>
+
+            {/* Switch Workspace — only shown when user has >1 restaurant */}
+            {memberships && memberships.length > 1 && (
+              <button
+                onClick={handleSwitchWorkspace}
+                className="flex h-11 items-center justify-center gap-2 rounded-[18px] bg-gray-100 px-5 text-[14px] font-black text-gray-600 hover:bg-gray-200 transition-all active:scale-95 border border-gray-200"
+                title="تبديل مساحة العمل"
+              >
+                <ArrowLeftRight size={16} />
+                <span className="hidden sm:inline">تبديل</span>
+              </button>
+            )}
 
             <button
               onClick={handleLogout}

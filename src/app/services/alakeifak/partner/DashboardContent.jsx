@@ -1,18 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Copy, ExternalLink, LayoutGrid, UtensilsCrossed, Truck, Settings, ClipboardList, Eye } from "lucide-react";
+import { Copy, ExternalLink, LayoutGrid, UtensilsCrossed, Truck, Settings, ClipboardList, Eye, Users } from "lucide-react";
 import OrdersTab from "./components/tabs/OrdersTab";
 import MenuEditorTab from "./components/tabs/MenuEditorTab";
 import ExtrasTab from "./components/tabs/ExtrasTab";
 import ZonesTab from "./components/tabs/ZonesTab";
 import SettingsTab from "./components/tabs/SettingsTab";
+import TeamTab from "./components/tabs/TeamTab";
 
 const TABS = [
   { id: "orders", label: "الطلبات", icon: ClipboardList },
   { id: "menu", label: "القائمة", icon: LayoutGrid },
   { id: "extras", label: "الإضافات", icon: UtensilsCrossed },
   { id: "zones", label: "التوصيل", icon: Truck },
+  { id: "team", label: "الفريق", icon: Users },
   { id: "settings", label: "الإعدادات", icon: Settings },
 ];
 
@@ -99,6 +101,7 @@ export default function DashboardContent({ restaurant, onRestaurantUpdate }) {
           {activeTab === "menu" && <MenuEditorTab restaurantId={restaurant.id} restaurant={restaurant} themeColor={themeColor} />}
           {activeTab === "extras" && <ExtrasTab restaurantId={restaurant.id} />}
           {activeTab === "zones" && <ZonesTab restaurantId={restaurant.id} />}
+          {activeTab === "team" && <TeamTab restaurantId={restaurant.id} />}
           {activeTab === "settings" && <SettingsTab restaurant={restaurant} onUpdate={onRestaurantUpdate} />}
         </div>
       </div>

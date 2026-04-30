@@ -1,4 +1,4 @@
-﻿/**
+/**
  * WhatsApp Order Formatting Utilities
  * Generates URL-encoded WhatsApp messages from cart data
  */
@@ -28,11 +28,19 @@ export function formatOrderMessage({
   customerPhone,
   deliveryAddress,
   restaurantName,
+  orderType,
+  tableNumber,
 }) {
   const lines = [];
   
+  const typeLabels = { delivery: '🚚 توصيل', pickup: '🥡 استلام من المحل', in_house: '🍽️ طلب داخلي' };
+  
   lines.push(`🧾 طلب جديد — ${restaurantName}`);
   lines.push(`📋 رقم التتبع: ${trackingId}`);
+  lines.push(`📦 النوع: ${typeLabels[orderType] || typeLabels.delivery}`);
+  if (orderType === 'in_house' && tableNumber) {
+    lines.push(`🪑 طاولة رقم: ${tableNumber}`);
+  }
   lines.push('─'.repeat(20));
   lines.push('');
   
@@ -59,7 +67,7 @@ export function formatOrderMessage({
   lines.push('─'.repeat(20));
   lines.push(`💰 المجموع الفرعي: ${subtotal.toFixed(2)} جنيه`);
   
-  if (deliveryZone) {
+  if (orderType === 'delivery' && deliveryZone) {
     lines.push(`🚚 التوصيل (${deliveryZone.region_name}): ${deliveryZone.fee.toFixed(2)} جنيه`);
   }
   
@@ -71,7 +79,7 @@ export function formatOrderMessage({
   lines.push(`الاسم: ${customerName}`);
   lines.push(`الهاتف: ${customerPhone}`);
   
-  if (deliveryAddress) {
+  if (orderType === 'delivery' && deliveryAddress) {
     lines.push(`العنوان: ${deliveryAddress}`);
   }
   

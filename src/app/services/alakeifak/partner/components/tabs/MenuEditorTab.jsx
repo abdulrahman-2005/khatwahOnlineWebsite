@@ -50,15 +50,25 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
   }, [showQR]);
 
   const fetchData = useCallback(async () => {
-    const [catRes, subRes, itemRes] = await Promise.all([
-      supabase.from("categories").select("*").eq("restaurant_id", restaurantId).order("sort_order"),
-      supabase.from("subcategories").select("*, categories!inner(restaurant_id)").eq("categories.restaurant_id", restaurantId).order("sort_order"),
-      supabase.from("items").select("*, item_sizes(*), subcategories!inner(categories!inner(restaurant_id))").eq("subcategories.categories.restaurant_id", restaurantId).order("sort_order"),
-    ]);
-    setCategories(catRes.data || []);
-    setSubcategories(subRes.data || []);
-    setItems(itemRes.data || []);
-    setLoading(false);
+    try {
+      const [catRes, subRes, itemRes] = await Promise.all([
+        supabase.from("categories").select("*").eq("restaurant_id", restaurantId).order("sort_order"),
+        supabase.from("subcategories").select("*, categories!inner(restaurant_id)").eq("categories.restaurant_id", restaurantId).order("sort_order"),
+        supabase.from("items").select("*, item_sizes(*), subcategories!inner(categories!inner(restaurant_id))").eq("subcategories.categories.restaurant_id", restaurantId).order("sort_order"),
+      ]);
+      
+      if (catRes.error) throw catRes.error;
+      if (subRes.error) throw subRes.error;
+      if (itemRes.error) throw itemRes.error;
+
+      setCategories(catRes.data || []);
+      setSubcategories(subRes.data || []);
+      setItems(itemRes.data || []);
+    } catch (err) {
+      console.error("Error fetching menu data:", err);
+    } finally {
+      setLoading(false);
+    }
   }, [restaurantId]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
