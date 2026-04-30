@@ -30,13 +30,14 @@ body:has(.alakeifak-active) .khatwah-chrome {
   }
 }
 
-@font-face {
+/* @font-face {
   font-family: "terrabica";
   src: url('/fonts/khatwah.otf')  ;
   font-weight: normal;
   font-style: normal;
-  font-display: swap; /* Critical for performance! */
-}
+  font-display: swap;
+} 
+*/
 
 :root {
   /* === CORE BRAND === */
@@ -224,7 +225,7 @@ body {
 /* Language-specific font overrides */
 html[lang="ar"] {
   /* Arabic: Aggressive fonts for display/heading/UI, IBM Plex for body only */
-  --font-display: "terrabica", "IBM Plex Sans Arabic", sans-serif;
+  --font-display:  "IBM Plex Sans Arabic", sans-serif;
   --font-heading: "IBM Plex Sans Arabic", sans-serif;
   --font-body: "IBM Plex Sans Arabic", sans-serif;
   --font-ui: "IBM Plex Sans Arabic", sans-serif;

@@ -33,6 +33,22 @@ export default function AdminPage() {
 
   useEffect(() => {
     fetchRestaurants();
+
+    // Subscribe to realtime changes to keep the CRM dashboard in sync
+    const channel = supabase
+      .channel("admin_restaurants_changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "restaurants" },
+        () => {
+          fetchRestaurants();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   async function fetchRestaurants() {
@@ -62,10 +78,12 @@ export default function AdminPage() {
     );
 
     // Database update
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("restaurants")
       .update({ [field]: newValue })
-      .eq("id", restaurantId);
+      .eq("id", restaurantId)
+      .select()
+      .single();
 
     // Revert on error
     if (error) {
