@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../../../lib/supabaseClient";
+import { safeQuery, safeMutation } from "../../../lib/safeQuery";
 import { compressImage, uploadImage, fileToDataUrl } from "../../../lib/imageUtils";
 import { Plus, X, Loader2, UploadCloud, UtensilsCrossed, Edit3, Trash2, ToggleRight, ToggleLeft, Save } from "lucide-react";
 import { LoadingSpinner, EmptyState, PrimaryBtn, InputField, IconButton } from "../ui/PartnerUI";
@@ -39,14 +40,18 @@ export default function ExtrasTab({ restaurantId }) {
   }, [showForm]);
 
   const fetchData = useCallback(async () => {
-    // Fetch extras
-    const { data: exData } = await supabase.from("extras").select("*").eq("restaurant_id", restaurantId).order("created_at", { ascending: false });
-    // Fetch available subcategories logic seamlessly
-    const { data: catData } = await supabase.from("categories").select("*").eq("restaurant_id", restaurantId);
+    const { data: exData } = await safeQuery(() =>
+      supabase.from("extras").select("*").eq("restaurant_id", restaurantId).order("created_at", { ascending: false })
+    );
+    const { data: catData } = await safeQuery(() =>
+      supabase.from("categories").select("*").eq("restaurant_id", restaurantId)
+    );
     let allSubcats = [];
     if (catData && catData.length > 0) {
       const catIds = catData.map(c => c.id);
-      const { data: subData } = await supabase.from("subcategories").select("*").in("category_id", catIds);
+      const { data: subData } = await safeQuery(() =>
+        supabase.from("subcategories").select("*").in("category_id", catIds)
+      );
       allSubcats = subData || [];
     }
     setSubcategories(allSubcats);
@@ -92,9 +97,9 @@ export default function ExtrasTab({ restaurantId }) {
       };
 
       if (editingExtra) {
-        await supabase.from("extras").update(payload).eq("id", editingExtra.id);
+        await safeMutation(() => supabase.from("extras").update(payload).eq("id", editingExtra.id));
       } else {
-        await supabase.from("extras").insert(payload);
+        await safeMutation(() => supabase.from("extras").insert(payload));
       }
       resetForm(); fetchData();
     } catch { }
@@ -112,13 +117,20 @@ export default function ExtrasTab({ restaurantId }) {
 
   const deleteExtra = async (id) => {
     if(!confirm("إلغاء الإضافة نهائياً؟")) return;
-    await supabase.from("extras").delete().eq("id", id);
-    fetchData();
+    await safeMutation(
+      () => supabase.from("extras").delete().eq("id", id),
+      { onSuccess: fetchData }
+    );
   };
 
   const toggleAvailability = async (extra) => {
-    await supabase.from("extras").update({ is_available: !extra.is_available }).eq("id", extra.id);
-    fetchData();
+    await safeMutation(
+      () => supabase.from("extras").update({ is_available: !extra.is_available }).eq("id", extra.id),
+      {
+        optimisticUpdate: () => setExtras(prev => prev.map(e => e.id === extra.id ? { ...e, is_available: !e.is_available } : e)),
+        rollback: () => setExtras(prev => prev.map(e => e.id === extra.id ? { ...e, is_available: extra.is_available } : e)),
+      }
+    );
   };
 
   if (loading) return <LoadingSpinner />;

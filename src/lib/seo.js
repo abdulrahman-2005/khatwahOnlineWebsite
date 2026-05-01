@@ -347,7 +347,7 @@ export function generateProductDetailMetadata(product, locale = "ar") {
 export function generateAlakeifakMetadata(locale = "ar") {
   return generatePageMetadata({
     title: "على كيفك — قوائم مطاعم العريش الرقمية | khatwah.online",
-    description: "اطلب من مطعمك المفضل في العريش عبر منصة على كيفك من خطوة اونلاين (khatwah.online). تصفح المنيو الرقمي واطلب عبر واتساب بسهولة ومجاناً.",
+    description: "اطلب من مطعمك المفضل في العريش عبر منصة على كيفك من خطوة اونلاين (khatwah.online). تصفح المنيو الرقمي واطلب عبر واتساب بسهولة.",
     path: "/services/alakeifak",
     locale,
     images: [

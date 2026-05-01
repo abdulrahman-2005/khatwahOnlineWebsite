@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "../lib/supabaseClient";
+import { safeQuery, safeMutation } from "../lib/safeQuery";
 import AuthButton from "../components/AuthButton";
 import SetupWizard from "./SetupWizard";
 import DashboardContent from "./DashboardContent";
@@ -40,15 +41,14 @@ export default function PartnerPage() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       if (!isMounted) return;
+      if (event === 'TOKEN_REFRESHED') return;
 
       const u = session?.user || null;
       setUser(u);
 
-      if (u) {
-        await handleUserLogin(u);
-      } else {
+      if (!u) {
         setRestaurant(null);
         setMemberships(null);
         setLoading(false);
@@ -56,11 +56,26 @@ export default function PartnerPage() {
       setAuthChecked(true);
     });
 
+    // Check initial session immediately without waiting for event
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (isMounted) {
+        setUser(session?.user || null);
+        setAuthChecked(true);
+      }
+    });
+
     return () => {
       isMounted = false;
       subscription.unsubscribe();
     };
   }, []);
+
+  // Fetch data only when user changes, independent of auth state change events
+  useEffect(() => {
+    if (user && authChecked) {
+      handleUserLogin(user);
+    }
+  }, [user?.id, authChecked]);
 
   // Hide header on scroll
   useEffect(() => {
@@ -101,27 +116,28 @@ export default function PartnerPage() {
       // Non-critical — the function may not exist yet if migration hasn't run
     }
 
-    await fetchMemberships(u.email);
+    await fetchMemberships(u.email, u);
   }
 
   /**
    * Multi-tenancy fetch: queries restaurant_members by email,
    * joins the restaurant data, and decides the UI flow.
    */
-  async function fetchMemberships(email) {
+  async function fetchMemberships(email, u) {
     // Query memberships with joined restaurant data
     const { data, error } = await supabase
       .from("restaurant_members")
       .select("*, restaurant:restaurants(*)")
-      .eq("email", email);
+      .or(`email.eq.${email},user_id.eq.${u.id}`);
 
     if (error) {
       // Fallback to legacy owner_id query if restaurant_members table doesn't exist yet
       console.warn("restaurant_members query failed, falling back to owner_id:", error.message);
+      const userId = u?.id;
       const { data: legacyData } = await supabase
         .from("restaurants")
         .select("*")
-        .eq("owner_id", (await supabase.auth.getUser()).data?.user?.id)
+        .eq("owner_id", userId)
         .single();
 
       if (legacyData) {
@@ -139,9 +155,20 @@ export default function PartnerPage() {
 
     const validMemberships = (data || []).filter((m) => m.restaurant);
     setMemberships(validMemberships);
-    setRestaurant(null);
+    
+    // Auto-select workspace persistence
+    const savedId = localStorage.getItem('alakeifak_active_restaurant');
+    if (savedId && validMemberships.length > 0) {
+      const found = validMemberships.find(m => m.restaurant.id === savedId);
+      if (found) {
+        setRestaurant(found.restaurant);
+      } else {
+        setRestaurant(null);
+      }
+    } else {
+      setRestaurant(null);
+    }
 
-    // If they have no memberships, force them to create one
     if (validMemberships.length === 0) {
       setIsCreatingNew(true);
     } else {
@@ -151,17 +178,21 @@ export default function PartnerPage() {
     setLoading(false);
   }
 
+  const handleSetupComplete = (newRestaurant) => {
+    // Instantly transition the user into their new workspace without a network round-trip.
+    // The SetupWizard guarantees the database transaction succeeded.
+    setMemberships((prev) => [...(prev || []), { id: `mem_${Date.now()}`, restaurant: newRestaurant, role: "owner" }]);
+    localStorage.setItem('alakeifak_active_restaurant', newRestaurant.id);
+    setRestaurant(newRestaurant);
+    setIsCreatingNew(false);
+  };
+
   async function handleLogout() {
     await supabase.auth.signOut();
+    localStorage.removeItem('alakeifak_active_restaurant');
     setUser(null);
     setRestaurant(null);
     setMemberships(null);
-    setIsCreatingNew(false);
-  }
-
-  function handleSetupComplete(newRestaurant) {
-    setRestaurant(newRestaurant);
-    setMemberships(prev => [...(prev || []), { id: "new", restaurant: newRestaurant, role: "owner" }]);
     setIsCreatingNew(false);
   }
 
@@ -169,8 +200,29 @@ export default function PartnerPage() {
    * Switch workspace — go back to the workspace selector
    */
   function handleSwitchWorkspace() {
+    localStorage.removeItem('alakeifak_active_restaurant');
     setRestaurant(null);
   }
+
+  // Realtime listener for active restaurant status
+  useEffect(() => {
+    if (!restaurant?.id) return;
+
+    const channel = supabase.channel(`partner_restaurant_${restaurant.id}`)
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "restaurants", filter: `id=eq.${restaurant.id}` },
+        (payload) => {
+          setRestaurant(payload.new);
+          setMemberships((prev) => prev?.map((m) => m.restaurant.id === restaurant.id ? { ...m, restaurant: payload.new } : m));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [restaurant?.id]);
 
   // Loading state
   if (loading) {
@@ -190,8 +242,29 @@ export default function PartnerPage() {
 
   // Not logged in
   if (!user) {
+    return <PartnerLogin />;
+  }
+
+  // Logged in but missing email (e.g. invalid auth provider for our system)
+  if (!user.email) {
     return (
-      <PartnerLogin />
+      <main className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4" dir="rtl">
+        <div className="max-w-md rounded-[32px] bg-white p-8 text-center shadow-xl border border-red-100">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 text-red-500">
+            <AlertTriangle size={24} />
+          </div>
+          <h2 className="mb-3 text-[24px] font-black text-gray-900">حساب غير مكتمل</h2>
+          <p className="mb-6 text-[15px] font-bold text-gray-500 leading-relaxed">
+            النظام يتطلب تسجيل الدخول باستخدام حساب جوجل لضمان ربط المطعم ببريدك الإلكتروني بشكل صحيح. يرجى تسجيل الخروج والمحاولة مرة أخرى بحساب جوجل.
+          </p>
+          <button
+            onClick={() => supabase.auth.signOut()}
+            className="w-full rounded-xl bg-gray-900 px-4 py-3 text-[15px] font-black text-white hover:bg-black transition-colors"
+          >
+            تسجيل الخروج
+          </button>
+        </div>
+      </main>
     );
   }
 
@@ -274,7 +347,10 @@ export default function PartnerPage() {
 
         <WorkspaceSelector
           memberships={memberships}
-          onSelect={(r) => setRestaurant(r)}
+          onSelect={(r) => {
+            localStorage.setItem('alakeifak_active_restaurant', r.id);
+            setRestaurant(r);
+          }}
           onCreateNew={() => setIsCreatingNew(true)}
         />
       </main>
@@ -326,58 +402,61 @@ export default function PartnerPage() {
 
       {/* DASHBOARD NAVBAR (Premium Glass) */}
       <div 
-        className={`no-print print:hidden fixed top-0 left-0 right-0 z-50 px-4 py-3 transition-all duration-500 ease-in-out ${
+        className={`no-print print:hidden fixed top-0 left-0 right-0 z-50 px-3 sm:px-4 py-2 sm:py-3 transition-all duration-500 ease-in-out ${
           headerVisible && !isModalOpen ? "translate-y-0 opacity-100" : "-translate-y-24 opacity-0 pointer-events-none"
         }`}
       >
-        <div className="mx-auto max-w-6xl rounded-[28px] bg-white/80 backdrop-blur-xl border border-gray-200 shadow-sm flex items-center justify-between px-6 py-3">
-          <div className="flex items-center gap-4">
+        <div className="mx-auto max-w-6xl rounded-[24px] sm:rounded-[28px] bg-white/80 backdrop-blur-xl border border-gray-200 shadow-sm flex items-center justify-between px-3 sm:px-6 py-2 sm:py-3">
+          
+          {/* Left Side: Brand & Identity */}
+          <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0 pr-2">
             <Link
               href="/services/alakeifak"
-              className="flex h-10 w-10 items-center justify-center rounded-[18px] bg-gray-50 text-gray-400 hover:text-orange-500 hover:bg-orange-50 transition-all border border-gray-100"
+              className="flex shrink-0 h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-[14px] sm:rounded-[18px] bg-gray-50 text-gray-400 hover:text-orange-500 hover:bg-orange-50 transition-all border border-gray-100"
             >
-              <ArrowRight size={20} />
+              <ArrowRight size={18} className="sm:w-5 sm:h-5" />
             </Link>
 
-            <div className="flex items-center gap-3 h-10 px-1">
-              <div className="h-10 w-10 shrink-0 overflow-hidden rounded-[14px] border-2 border-white shadow-sm bg-gray-100">
+            <div className="flex items-center gap-2 sm:gap-3 h-10 px-1 min-w-0">
+              <div className="h-9 w-9 sm:h-10 sm:w-10 shrink-0 overflow-hidden rounded-[12px] sm:rounded-[14px] border-2 border-white shadow-sm bg-gray-100">
                 {restaurant.logo_url ? (
                   <img src={restaurant.logo_url} alt="" className="h-full w-full object-cover" />
                 ) : (
-                  <div className="h-full w-full flex items-center justify-center bg-gray-50"><Store size={18} className="text-gray-300" /></div>
+                  <div className="h-full w-full flex items-center justify-center bg-gray-50"><Store size={16} className="text-gray-300 sm:w-5 sm:h-5" /></div>
                 )}
               </div>
-              <div className="flex flex-col">
-                <h1 className="text-[17px] font-black leading-tight tracking-tight text-gray-900">{restaurant.name}</h1>
-                <p className="text-[12px] font-bold uppercase tracking-wider text-orange-500">لوحة التحكم</p>
+              <div className="flex flex-col min-w-0 justify-center">
+                <h1 className="text-[14px] sm:text-[17px] font-black leading-tight tracking-tight text-gray-900 truncate">{restaurant.name}</h1>
+                <p className="text-[10px] sm:text-[12px] font-bold uppercase tracking-wider text-orange-500 truncate mt-0.5">لوحة التحكم</p>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-100">
+          {/* Right Side: Actions */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <div className="hidden lg:flex items-center gap-2 bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-100">
               <ShieldCheck size={14} className="text-emerald-500 animate-pulse" />
               <span className="text-[13px] font-black text-emerald-700">شريك معتمد</span>
             </div>
 
-            {/* Switch Workspace — only shown when user has >1 restaurant */}
+            {/* Switch Workspace */}
             {memberships && memberships.length > 1 && (
               <button
                 onClick={handleSwitchWorkspace}
-                className="flex h-11 items-center justify-center gap-2 rounded-[18px] bg-gray-100 px-5 text-[14px] font-black text-gray-600 hover:bg-gray-200 transition-all active:scale-95 border border-gray-200"
+                className="flex h-9 sm:h-11 items-center justify-center gap-1.5 sm:gap-2 rounded-[14px] sm:rounded-[18px] bg-gray-100 px-3 sm:px-5 text-[13px] sm:text-[14px] font-black text-gray-600 hover:bg-gray-200 transition-all active:scale-95 border border-gray-200"
                 title="تبديل مساحة العمل"
               >
-                <ArrowLeftRight size={16} />
-                <span className="hidden sm:inline">تبديل</span>
+                <ArrowLeftRight size={16} className="sm:w-4 sm:h-4" />
+                <span className="hidden md:inline">تبديل</span>
               </button>
             )}
 
             <button
               onClick={handleLogout}
-              className="flex h-11 items-center justify-center gap-2 rounded-[18px] bg-gray-900 px-5 text-[14px] font-black text-white hover:bg-black transition-all shadow-xl shadow-gray-900/10 active:scale-95"
+              className="flex h-9 sm:h-11 items-center justify-center gap-1.5 sm:gap-2 rounded-[14px] sm:rounded-[18px] bg-gray-900 px-3 sm:px-5 text-[13px] sm:text-[14px] font-black text-white hover:bg-black transition-all shadow-xl shadow-gray-900/10 active:scale-95"
             >
-              <LogOut size={16} />
-              <span className="hidden sm:inline">خروج</span>
+              <LogOut size={16} className="sm:w-4 sm:h-4" />
+              <span className="hidden md:inline">خروج</span>
             </button>
           </div>
         </div>

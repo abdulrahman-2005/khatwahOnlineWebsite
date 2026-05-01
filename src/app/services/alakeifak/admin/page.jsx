@@ -1,7 +1,10 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { supabase } from "../lib/supabaseClient";
+import { safeQuery, safeMutation, createDebouncedFetcher } from "../lib/safeQuery";
+import { createManagedChannel } from "../lib/realtimeManager";
+import SessionRecoveryBanner from "../components/SessionRecoveryBanner";
 import RestaurantsTable from "./components/RestaurantsTable";
 import PaymentModal from "./components/PaymentModal";
 import MembersModal from "./components/MembersModal";
@@ -32,68 +35,85 @@ export default function AdminPage() {
   const [membersModalRestaurant, setMembersModalRestaurant] = useState(null);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
 
-  useEffect(() => {
-    fetchRestaurants();
+  // Track which tabs have been mounted (lazy-mount, then persist via CSS)
+  const [mountedTabs, setMountedTabs] = useState(new Set(["crm"]));
 
-    // Subscribe to realtime changes to keep the CRM dashboard in sync
-    const channel = supabase
-      .channel("admin_restaurants_changes")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "restaurants" },
-        () => {
-          fetchRestaurants();
-        }
-      )
-      .subscribe();
+  function handleTabChange(tabId) {
+    setActiveTab(tabId);
+    setMountedTabs(prev => {
+      if (prev.has(tabId)) return prev;
+      const next = new Set(prev);
+      next.add(tabId);
+      return next;
+    });
+  }
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
-
-  async function fetchRestaurants() {
+  const fetchRestaurants = useCallback(async () => {
     setLoading(true);
-    // Use service_role behavior via the client-side anon key — 
-    // the super admin RLS policies will allow reading all restaurants
-    const { data, error } = await supabase
-      .from("restaurants")
-      .select(`
-        *,
-        orders(count),
-        restaurant_members(count)
-      `)
-      .order("created_at", { ascending: false });
+    const { data, error } = await safeQuery(() =>
+      supabase
+        .from("restaurants")
+        .select(`
+          *,
+          orders(count),
+          restaurant_members(count)
+        `)
+        .order("created_at", { ascending: false })
+    );
 
     if (!error && data) {
       setRestaurants(data);
     }
     setLoading(false);
-  }
+  }, []);
 
-  // Optimistic update for boolean fields
-  async function updateField(restaurantId, field, newValue) {
-    // Optimistic UI update
-    setRestaurants((prev) =>
-      prev.map((r) => (r.id === restaurantId ? { ...r, [field]: newValue } : r))
+  // Debounced version for realtime events (batches rapid events into single fetch)
+  const debouncedFetch = useMemo(() => createDebouncedFetcher(fetchRestaurants, 600), [fetchRestaurants]);
+
+  useEffect(() => {
+    fetchRestaurants();
+
+    // Subscribe to realtime changes — uses self-healing managed channel
+    const { unsubscribe } = createManagedChannel(
+      "admin_restaurants_changes",
+      (channel) => {
+        channel.on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "restaurants" },
+          () => {
+            debouncedFetch();
+          }
+        );
+      }
     );
 
-    // Database update
-    const { data, error } = await supabase
-      .from("restaurants")
-      .update({ [field]: newValue })
-      .eq("id", restaurantId)
-      .select()
-      .single();
+    return () => {
+      unsubscribe();
+    };
+  }, [fetchRestaurants, debouncedFetch]);
 
-    // Revert on error
-    if (error) {
-      console.error(`Failed to update ${field}:`, error);
-      alert(`Failed to update ${field}. Changes reverted.`);
-      setRestaurants((prev) =>
-        prev.map((r) => (r.id === restaurantId ? { ...r, [field]: !newValue } : r))
-      );
-    }
+  // Optimistic update with rollback for boolean fields
+  async function updateField(restaurantId, field, newValue) {
+    const previousRestaurants = [...restaurants];
+    await safeMutation(
+      () => supabase
+        .from("restaurants")
+        .update({ [field]: newValue })
+        .eq("id", restaurantId)
+        .select()
+        .single(),
+      {
+        optimisticUpdate: () => {
+          setRestaurants((prev) =>
+            prev.map((r) => (r.id === restaurantId ? { ...r, [field]: newValue } : r))
+          );
+        },
+        rollback: () => {
+          setRestaurants(previousRestaurants);
+          alert(`Failed to update ${field}. Changes reverted.`);
+        },
+      }
+    );
   }
 
   // Stats
@@ -122,38 +142,40 @@ export default function AdminPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
+      {/* Session Recovery Banner */}
+      <SessionRecoveryBanner />
       
       {/* ── TABS & SETTINGS ── */}
-      <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-b border-zinc-800 pb-4">
+        <div className="flex bg-zinc-900/80 p-1 rounded-xl border border-zinc-800 w-full sm:w-auto overflow-x-auto scrollbar-hide">
           <button
-            onClick={() => setActiveTab("crm")}
-            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold transition-all ${
+            onClick={() => handleTabChange("crm")}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-bold transition-all whitespace-nowrap ${
               activeTab === "crm" 
-                ? "bg-zinc-800 text-white shadow-sm" 
-                : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50"
+                ? "bg-zinc-800 text-white shadow-md border border-zinc-700" 
+                : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50 border border-transparent"
             }`}
           >
             <Activity size={16} className={activeTab === "crm" ? "text-orange-400" : ""} />
             CRM
           </button>
           <button
-            onClick={() => setActiveTab("financials")}
-            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold transition-all ${
+            onClick={() => handleTabChange("financials")}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-bold transition-all whitespace-nowrap ${
               activeTab === "financials" 
-                ? "bg-zinc-800 text-white shadow-sm" 
-                : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50"
+                ? "bg-zinc-800 text-white shadow-md border border-zinc-700" 
+                : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50 border border-transparent"
             }`}
           >
             <DollarSign size={16} className={activeTab === "financials" ? "text-emerald-400" : ""} />
             Financials
           </button>
           <button
-            onClick={() => setActiveTab("analytics")}
-            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold transition-all ${
+            onClick={() => handleTabChange("analytics")}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-bold transition-all whitespace-nowrap ${
               activeTab === "analytics" 
-                ? "bg-zinc-800 text-white shadow-sm" 
-                : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50"
+                ? "bg-zinc-800 text-white shadow-md border border-zinc-700" 
+                : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50 border border-transparent"
             }`}
           >
             <PieChart size={16} className={activeTab === "analytics" ? "text-purple-400" : ""} />
@@ -163,17 +185,18 @@ export default function AdminPage() {
         
         <button
           onClick={() => setSettingsModalOpen(true)}
-          className="flex items-center gap-2 rounded-lg bg-zinc-800 px-3 py-1.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-700 transition-all border border-zinc-700"
+          className="flex items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 py-2.5 text-sm font-bold text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all border border-zinc-800 w-full sm:w-auto shrink-0"
         >
-          <Settings size={14} />
+          <Settings size={16} />
           Super Admins
         </button>
       </div>
 
-      {activeTab === "crm" ? (
+      {/* CRM Tab — always rendered since it's the default */}
+      <div style={{ display: activeTab === "crm" ? "block" : "none" }}>
         <>
           {/* ── STATS GRID (CRM) ── */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
             <StatCard
               label="Total Restaurants"
               value={stats.total}
@@ -224,7 +247,7 @@ export default function AdminPage() {
           </div>
 
           {/* ── MAIN TABLE ── */}
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 overflow-hidden">
+          <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 overflow-hidden mt-6">
             <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-800">
               <div className="flex items-center gap-3">
                 <Store size={16} className="text-zinc-400" />
@@ -259,10 +282,18 @@ export default function AdminPage() {
             )}
           </div>
         </>
-      ) : activeTab === "financials" ? (
-        <FinancialsDashboard />
-      ) : (
-        <AnalyticsDashboard />
+      </div>
+
+      {/* Financials & Analytics — mount on first visit, persist via CSS */}
+      {mountedTabs.has("financials") && (
+        <div style={{ display: activeTab === "financials" ? "block" : "none" }}>
+          <FinancialsDashboard />
+        </div>
+      )}
+      {mountedTabs.has("analytics") && (
+        <div style={{ display: activeTab === "analytics" ? "block" : "none" }}>
+          <AnalyticsDashboard />
+        </div>
       )}
 
       {/* ── MODALS ── */}

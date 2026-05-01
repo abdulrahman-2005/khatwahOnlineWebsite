@@ -98,8 +98,8 @@ export default async function RestaurantMenuPage({ params }) {
   });
 
   // ── KILL SWITCH CHECK ──
-  // If the super admin has deactivated this restaurant, show an unavailable screen
-  if (restaurant.is_active === false) {
+  // If the super admin has deactivated this restaurant OR it is unverified, show an unavailable screen
+  if (restaurant.is_active === false || restaurant.is_verified === false) {
     return (
       <main className="min-h-screen bg-gray-50 flex items-center justify-center p-6" dir="rtl">
         <div className="w-full max-w-md text-center">

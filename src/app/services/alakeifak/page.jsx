@@ -277,7 +277,7 @@ export default function AlakeifakPage() {
                   
                   <h2 className="mb-6 text-[32px] sm:text-[44px] font-black text-white leading-[1.2] tracking-tight">
                     حوّل مطعمك لديجيتال <br/>
-                    <span className="text-transparent bg-clip-text bg-gradient-to-l from-orange-400 to-yellow-400">وكبر مبيعاتك مجاناً!</span>
+                    <span className="text-transparent bg-clip-text bg-gradient-to-l from-orange-400 to-yellow-400">وكبر مبيعاتك بسرعة!</span>
                   </h2>
                   
                   <p className="mb-8 text-[17px] font-medium leading-relaxed text-gray-300 max-w-lg">
@@ -301,7 +301,7 @@ export default function AlakeifakPage() {
                   
                   <div className="flex flex-col sm:flex-row items-center gap-4">
                     <Link href="/services/alakeifak/partner" className="group flex w-full sm:w-auto items-center justify-center gap-3 rounded-[20px] bg-orange-500 px-8 py-4 text-[16px] font-black text-white transition-all duration-300 hover:bg-orange-400 hover:shadow-[0_10px_40px_-10px_rgba(249,115,22,0.6)] hover:-translate-y-1">
-                      <span>انضم كشريك مجاناً</span>
+                      <span>انضم كشريك الآن</span>
                       <ArrowUpRight size={20} className="transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
                     </Link>
                   </div>

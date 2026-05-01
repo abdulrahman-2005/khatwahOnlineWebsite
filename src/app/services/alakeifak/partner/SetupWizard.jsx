@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { supabase } from "../lib/supabaseClient";
+import { safeMutation } from "../lib/safeQuery";
 import { compressLogo, fileToDataUrl, uploadImage } from "../lib/imageUtils";
+import { formatEgyptianPhone, isValidEgyptianPhone } from "../lib/whatsappUtils";
 import {
   ArrowLeft,
   Loader2,
@@ -12,7 +14,8 @@ import {
   ArrowRight,
   Store,
   MessageCircle,
-  Image as ImageIcon
+  Image as ImageIcon,
+  AlertTriangle
 } from "lucide-react";
 import Image from "next/image";
 
@@ -94,6 +97,12 @@ export default function SetupWizard({ userId, userEmail, onComplete }) {
       return;
     }
 
+    const formattedPhone = formatEgyptianPhone(whatsappNumber);
+    if (!isValidEgyptianPhone(formattedPhone)) {
+      setError("يرجى إدخال رقم هاتف مصري صحيح (مثال: 01012345678 أو +201...)");
+      return;
+    }
+
     if (slug === "partner" || slug === "migrations" || slug === "admin") {
       setError("عنوان الصفحة محجوز، يرجى اختيار رابط مختلف.");
       return;
@@ -126,39 +135,47 @@ export default function SetupWizard({ userId, userEmail, onComplete }) {
         logoUrl = await uploadImage(logoFile, 'logos');
       }
 
-      const { data: restaurant, error: createError } = await supabase
-        .from("restaurants")
-        .insert({
-          owner_id: userId,
-          name: name.trim(),
-          slug: slug.trim(),
-          whatsapp_number: whatsappNumber.trim(),
-          logo_url: logoUrl,
-          theme_color: "#f97316", // Default orange
-          is_verified: false,
-          is_open: true,
-        })
-        .select()
-        .single();
+      const { data: restaurant, error: createError, ok: createOk } = await safeMutation(
+        () => supabase
+          .from("restaurants")
+          .insert({
+            owner_id: userId,
+            name: name.trim(),
+            slug: slug.trim(),
+            whatsapp_number: formattedPhone,
+            logo_url: logoUrl,
+            theme_color: "#f97316", // Default orange
+            is_verified: false,
+            is_open: true,
+          })
+          .select()
+          .single()
+      );
+
+      if (!createOk) throw createError || new Error("Failed to create restaurant.");
 
       if (createError) throw createError;
 
-      const { error: seedError } = await supabase.rpc(
+      const { error: seedError } = await safeMutation(() => supabase.rpc(
         "seed_default_delivery_zones",
         { p_restaurant_id: restaurant.id }
-      );
+      ));
       if (seedError) console.warn("Failed to seed delivery zones:", seedError);
 
-      if (userEmail) {
-        const { error: memberError } = await supabase
-          .from("restaurant_members")
-          .insert({
-            restaurant_id: restaurant.id,
-            email: userEmail,
-            user_id: userId,
-            role: "owner",
-          });
-        if (memberError) console.warn("Failed to insert restaurant_member:", memberError);
+      const { error: memberError, ok: memberOk } = await safeMutation(() => supabase
+        .from("restaurant_members")
+        .insert({
+          restaurant_id: restaurant.id,
+          email: userEmail,
+          user_id: userId,
+          role: "owner",
+        }));
+
+      if (!memberOk || memberError) {
+        console.warn("Failed to insert restaurant_member:", memberError);
+        // ROLLBACK: Delete the orphaned restaurant so the user can try again
+        await supabase.from("restaurants").delete().eq("id", restaurant.id);
+        throw new Error("فشل إسناد صلاحية المالك للمطعم. تم التراجع، يرجى المحاولة مرة أخرى.");
       }
 
       onComplete(restaurant);
@@ -183,15 +200,15 @@ export default function SetupWizard({ userId, userEmail, onComplete }) {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-4 sm:px-6">
+    <div className="w-full max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
       
       {/* Immersive Setup Container */}
       <div className="w-full">
         
         {/* Header Glow Elements */}
-        <div className="relative mb-10 flex justify-center">
-          <div className="flex items-center gap-2 rounded-full bg-orange-50 px-5 py-2.5 border border-orange-200">
-            <Sparkles size={16} className="text-orange-500" />
+        <div className="relative mb-8 sm:mb-10 flex justify-center">
+          <div className="flex items-center gap-2 rounded-full bg-orange-50 px-5 py-2.5 border border-orange-200/60 shadow-sm">
+            <Sparkles size={16} className="text-orange-500 animate-pulse" />
             <span className="text-[13px] font-black tracking-widest text-orange-700">تجهيز مساحة العمل</span>
           </div>
         </div>
@@ -233,20 +250,28 @@ export default function SetupWizard({ userId, userEmail, onComplete }) {
         </div>
 
         {/* Form Card */}
-        <div className="relative overflow-hidden rounded-[40px] bg-white p-8 sm:p-12 border border-gray-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)]">
+        <div className="relative overflow-hidden rounded-[32px] sm:rounded-[40px] bg-white p-6 sm:p-12 border border-gray-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)]">
           
           {/* Header */}
-          <div className="mb-10 text-center">
+          <div className="mb-8 sm:mb-10 text-center">
             <h2 className="mb-3 text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
               {STEPS[step - 1].title}
             </h2>
-            <p className="text-[15px] font-bold text-gray-500 max-w-sm mx-auto leading-relaxed">
+            <p className="text-[14px] sm:text-[15px] font-bold text-gray-500 max-w-sm mx-auto leading-relaxed px-2">
               {STEPS[step - 1].desc}
             </p>
           </div>
 
-          {/* Dynamic Form Area (Min-height preserves layout stability) */}
-          <div className="min-h-[220px]">
+          {/* Form Error Handling - Moved to top of form area for immediate visibility */}
+          {error && (
+            <div className="mb-6 rounded-[20px] bg-red-50 border border-red-100 p-4 flex items-start sm:items-center gap-3 animate-in fade-in zoom-in duration-300">
+              <div className="shrink-0 mt-0.5 sm:mt-0"><AlertTriangle size={18} className="text-red-500" /></div>
+              <p className="text-[14px] font-black text-red-600 leading-tight text-right flex-1">{error}</p>
+            </div>
+          )}
+
+          {/* Dynamic Form Area */}
+          <div className="min-h-[200px] sm:min-h-[220px]">
             
             {/* Step 1: Basics */}
             {step === 1 && (
@@ -258,15 +283,15 @@ export default function SetupWizard({ userId, userEmail, onComplete }) {
                     value={name}
                     onChange={(e) => handleNameChange(e.target.value)}
                     placeholder="مثال: مطعم شاورما الريم..."
-                    className="w-full rounded-[24px] border border-gray-200 bg-gray-50 px-6 py-5 text-[18px] font-black text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 shadow-sm"
+                    className="w-full rounded-[20px] sm:rounded-[24px] border border-gray-200 bg-gray-50 px-5 sm:px-6 py-4 sm:py-5 text-[16px] sm:text-[18px] font-black text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 shadow-sm"
                   />
                 </div>
 
                 <div className="space-y-2.5 pt-2">
                   <label className="text-[14px] font-bold text-gray-600 px-1 block">الرابط الفريد (المنيو)</label>
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center rounded-[24px] bg-gray-50 border border-gray-200 focus-within:border-orange-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-orange-500/10 transition-all shadow-sm overflow-hidden" dir="ltr">
-                    <div className="bg-gray-100/50 px-5 py-5 sm:border-r border-gray-200 flex items-center justify-center">
-                      <span className="text-[14px] text-gray-500 font-bold whitespace-nowrap">alakeifak/</span>
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center rounded-[20px] sm:rounded-[24px] bg-gray-50 border border-gray-200 focus-within:border-orange-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-orange-500/10 transition-all shadow-sm overflow-hidden" dir="ltr">
+                    <div className="bg-gray-100/50 px-4 sm:px-5 py-3 sm:py-5 border-b sm:border-b-0 sm:border-r border-gray-200 flex items-center justify-center">
+                      <span className="text-[13px] sm:text-[14px] text-gray-500 font-bold whitespace-nowrap">alakeifak/</span>
                     </div>
                     <input
                       type="text"
@@ -275,7 +300,7 @@ export default function SetupWizard({ userId, userEmail, onComplete }) {
                         setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""));
                         setSlugEdited(true);
                       }}
-                      className="w-full sm:flex-1 bg-transparent px-5 py-4 text-[18px] font-black text-gray-900 outline-none placeholder:text-gray-300"
+                      className="w-full sm:flex-1 bg-transparent px-4 sm:px-5 py-4 text-[16px] sm:text-[18px] font-black text-gray-900 outline-none placeholder:text-gray-300"
                       placeholder="restaurant-name"
                     />
                   </div>
@@ -295,12 +320,13 @@ export default function SetupWizard({ userId, userEmail, onComplete }) {
                     type="tel"
                     value={whatsappNumber}
                     onChange={(e) => setWhatsappNumber(e.target.value)}
+                    onBlur={() => setWhatsappNumber(formatEgyptianPhone(whatsappNumber))}
                     dir="ltr"
-                    className="w-full rounded-[24px] border border-gray-200 bg-gray-50 px-6 py-6 text-[22px] font-black text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 shadow-sm "
+                    className="w-full rounded-[20px] sm:rounded-[24px] border border-gray-200 bg-gray-50 px-5 sm:px-6 py-5 sm:py-6 text-[20px] sm:text-[22px] font-black text-gray-900 outline-none transition-all placeholder:text-gray-400 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 shadow-sm "
                     placeholder="+201xxxxxxxxx"
                   />
-                  <p className="text-[14px] text-gray-500 font-medium px-2 pt-2 leading-relaxed text-right">
-                    نرجو توفير <strong>مفتاح الدولة الدولي</strong> (كمثال: +20 لمصر أو +966 للسعودية) لإتمام الربط وتمرير رسائل الطلبات بنجاح.
+                  <p className="text-[13px] sm:text-[14px] text-gray-500 font-medium px-2 pt-2 leading-relaxed text-right">
+                    نرجو توفير <strong>مفتاح الدولة الدولي</strong> (كمثال: +20 لمصر) لإتمام الربط وتمرير رسائل الطلبات بنجاح.
                   </p>
                 </div>
               </div>
@@ -349,22 +375,15 @@ export default function SetupWizard({ userId, userEmail, onComplete }) {
             )}
           </div>
 
-          {/* Form Error Handling */}
-          {error && (
-            <div className="mt-8 rounded-[20px] bg-red-50 border border-red-100 p-4 text-center animate-in fade-in zoom-in duration-300">
-              <p className="text-[14px] font-black text-red-600">{error}</p>
-            </div>
-          )}
-
           {/* Navigation Controls */}
-          <div className="mt-10 flex gap-4 pt-6">
+          <div className="mt-8 sm:mt-10 flex gap-3 sm:gap-4 pt-6 border-t border-gray-100">
             <button
               onClick={() => { setError(""); setStep(step - 1); }}
               disabled={step === 1 || submitting}
               className={`flex h-14 w-14 sm:w-auto sm:px-8 items-center justify-center rounded-[20px] transition-all border font-black text-[16px] ${
                 step === 1 
-                  ? "opacity-0 pointer-events-none w-0 sm:w-0 sm:px-0 border-transparent" 
-                  : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-gray-900 active:scale-95 shadow-sm"
+                  ? "opacity-0 pointer-events-none hidden sm:hidden border-transparent" 
+                  : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-gray-900 active:scale-95 shadow-sm shrink-0"
               }`}
             >
               <ArrowRight size={20} className="sm:hidden" />
@@ -374,7 +393,7 @@ export default function SetupWizard({ userId, userEmail, onComplete }) {
             {step < STEPS.length ? (
               <button
                 onClick={goNext}
-                className="flex h-14 flex-1 items-center justify-center rounded-[20px] bg-orange-500 text-[18px] font-black text-white transition-all hover:bg-orange-600 active:scale-[0.98] shadow-lg shadow-orange-500/20"
+                className="flex h-14 flex-1 items-center justify-center rounded-[20px] bg-orange-500 text-[16px] sm:text-[18px] font-black text-white transition-all hover:bg-orange-600 active:scale-[0.98] shadow-[0_10px_30px_-10px_rgba(249,115,22,0.5)]"
               >
                 التالي
               </button>
@@ -382,7 +401,7 @@ export default function SetupWizard({ userId, userEmail, onComplete }) {
               <button
                 onClick={handleSubmit}
                 disabled={submitting || compressing}
-                className="flex h-14 flex-1 items-center justify-center gap-3 rounded-[20px] bg-gray-900 text-[18px] font-black text-white transition-all hover:bg-black active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100 shadow-xl shadow-gray-900/10"
+                className="flex h-14 flex-1 items-center justify-center gap-3 rounded-[20px] bg-gray-900 text-[16px] sm:text-[18px] font-black text-white transition-all hover:bg-black active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100 shadow-[0_10px_30px_-10px_rgba(17,24,39,0.5)]"
               >
                 {submitting ? (
                   <>

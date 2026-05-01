@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../../../lib/supabaseClient";
+import { safeQuery, safeMutation } from "../../../lib/safeQuery";
 import {
   Users,
   Plus,
@@ -32,18 +33,20 @@ export default function TeamTab({ restaurantId }) {
   const [currentUserEmail, setCurrentUserEmail] = useState("");
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setCurrentUserEmail(data?.user?.email?.toLowerCase() || "");
-    });
+    supabase.auth.getSession().then(({ data }) => {
+      setCurrentUserEmail(data?.session?.user?.email?.toLowerCase() || "");
+    }).catch(() => {});
   }, []);
 
   const fetchMembers = useCallback(async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("restaurant_members")
-      .select("*")
-      .eq("restaurant_id", restaurantId)
-      .order("created_at", { ascending: true });
+    const { data, error } = await safeQuery(() =>
+      supabase
+        .from("restaurant_members")
+        .select("*")
+        .eq("restaurant_id", restaurantId)
+        .order("created_at", { ascending: true })
+    );
 
     if (!error) setMembers(data || []);
     setLoading(false);
@@ -70,27 +73,25 @@ export default function TeamTab({ restaurantId }) {
     setAdding(true);
     setError("");
 
-    try {
-      const { error: insertError } = await supabase
+    const { ok, error: mutErr } = await safeMutation(
+      () => supabase
         .from("restaurant_members")
         .insert({
           restaurant_id: restaurantId,
           email: email,
           role: "admin",
-        });
+        })
+    );
 
-      if (insertError) throw insertError;
-
+    if (ok) {
       setNewEmail("");
       setSuccessMsg(`تمت إضافة ${email} بنجاح!`);
       setTimeout(() => setSuccessMsg(""), 4000);
       fetchMembers();
-    } catch (err) {
-      console.error("Invite failed:", err);
-      setError(err.message || "فشلت عملية الدعوة.");
-    } finally {
-      setAdding(false);
+    } else {
+      setError(mutErr?.message || "فشلت عملية الدعوة.");
     }
+    setAdding(false);
   }
 
   async function handleRemove(memberId, memberEmail) {
@@ -104,23 +105,21 @@ export default function TeamTab({ restaurantId }) {
     setRemoving(memberId);
     setError("");
 
-    try {
-      const { error: deleteError } = await supabase
+    const { ok, error: mutErr } = await safeMutation(
+      () => supabase
         .from("restaurant_members")
         .delete()
-        .eq("id", memberId);
+        .eq("id", memberId)
+    );
 
-      if (deleteError) throw deleteError;
-
+    if (ok) {
       setSuccessMsg(`تم إزالة ${memberEmail}.`);
       setTimeout(() => setSuccessMsg(""), 4000);
       fetchMembers();
-    } catch (err) {
-      console.error("Remove failed:", err);
-      setError(err.message || "فشلت عملية الإزالة.");
-    } finally {
-      setRemoving(null);
+    } else {
+      setError(mutErr?.message || "فشلت عملية الإزالة.");
     }
+    setRemoving(null);
   }
 
   if (loading) {

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../../../lib/supabaseClient";
+import { safeQuery, safeMutation } from "../../../lib/safeQuery";
 import { compressImage, uploadImage, fileToDataUrl } from "../../../lib/imageUtils";
 import PrintableMenu from "../../PrintableMenu";
 import { 
@@ -50,25 +51,20 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
   }, [showQR]);
 
   const fetchData = useCallback(async () => {
-    try {
-      const [catRes, subRes, itemRes] = await Promise.all([
-        supabase.from("categories").select("*").eq("restaurant_id", restaurantId).order("sort_order"),
-        supabase.from("subcategories").select("*, categories!inner(restaurant_id)").eq("categories.restaurant_id", restaurantId).order("sort_order"),
-        supabase.from("items").select("*, item_sizes(*), subcategories!inner(categories!inner(restaurant_id))").eq("subcategories.categories.restaurant_id", restaurantId).order("sort_order"),
-      ]);
-      
-      if (catRes.error) throw catRes.error;
-      if (subRes.error) throw subRes.error;
-      if (itemRes.error) throw itemRes.error;
+    const { data: catData, error: catErr } = await safeQuery(() =>
+      supabase.from("categories").select("*").eq("restaurant_id", restaurantId).order("sort_order")
+    );
+    const { data: subData, error: subErr } = await safeQuery(() =>
+      supabase.from("subcategories").select("*, categories!inner(restaurant_id)").eq("categories.restaurant_id", restaurantId).order("sort_order")
+    );
+    const { data: itemData, error: itemErr } = await safeQuery(() =>
+      supabase.from("items").select("*, item_sizes(*), subcategories!inner(categories!inner(restaurant_id))").eq("subcategories.categories.restaurant_id", restaurantId).order("sort_order")
+    );
 
-      setCategories(catRes.data || []);
-      setSubcategories(subRes.data || []);
-      setItems(itemRes.data || []);
-    } catch (err) {
-      console.error("Error fetching menu data:", err);
-    } finally {
-      setLoading(false);
-    }
+    if (!catErr) setCategories(catData || []);
+    if (!subErr) setSubcategories(subData || []);
+    if (!itemErr) setItems(itemData || []);
+    setLoading(false);
   }, [restaurantId]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
@@ -76,18 +72,24 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
   // ── Category CRUD ──
   const addCategory = async () => {
     if (!newCatName.trim()) return;
-    await supabase.from("categories").insert({ restaurant_id: restaurantId, name: newCatName.trim(), icon: newCatIcon, sort_order: categories.length });
-    setNewCatName(""); setNewCatIcon("🔥"); fetchData();
+    await safeMutation(
+      () => supabase.from("categories").insert({ restaurant_id: restaurantId, name: newCatName.trim(), icon: newCatIcon, sort_order: categories.length }),
+      { onSuccess: () => { setNewCatName(""); setNewCatIcon("🔥"); fetchData(); } }
+    );
   };
   const updateCategory = async (id) => {
     if (!editCatName.trim()) return;
-    await supabase.from("categories").update({ name: editCatName.trim(), icon: editCatIcon }).eq("id", id);
-    setEditingCat(null); fetchData();
+    await safeMutation(
+      () => supabase.from("categories").update({ name: editCatName.trim(), icon: editCatIcon }).eq("id", id),
+      { onSuccess: () => { setEditingCat(null); fetchData(); } }
+    );
   };
   const deleteCategory = async (id) => {
-    if (!confirm("هل أنت متأكد من حذف القسم وكل التصنيفات والأصناف المرتبطة به نهائياً؟")) return;
-    await supabase.from("categories").delete().eq("id", id);
-    fetchData();
+    if (!confirm("هل أنت متأكد من حذف القسم وكل التصنيفات والأصناف المرتبطة به نهائيا؟")) return;
+    await safeMutation(
+      () => supabase.from("categories").delete().eq("id", id),
+      { onSuccess: fetchData }
+    );
   };
 
   // ── Subcategory CRUD ──
@@ -95,18 +97,24 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
     const subName = newSubNames[categoryId];
     if (!subName || !subName.trim()) return;
     const catSubs = subcategories.filter(s => s.category_id === categoryId);
-    await supabase.from("subcategories").insert({ category_id: categoryId, name: subName.trim(), sort_order: catSubs.length });
-    setNewSubNames({ ...newSubNames, [categoryId]: "" }); fetchData();
+    await safeMutation(
+      () => supabase.from("subcategories").insert({ category_id: categoryId, name: subName.trim(), sort_order: catSubs.length }),
+      { onSuccess: () => { setNewSubNames({ ...newSubNames, [categoryId]: "" }); fetchData(); } }
+    );
   };
   const updateSubcategory = async (id) => {
     if (!editSubName.trim()) return;
-    await supabase.from("subcategories").update({ name: editSubName.trim() }).eq("id", id);
-    setEditingSub(null); fetchData();
+    await safeMutation(
+      () => supabase.from("subcategories").update({ name: editSubName.trim() }).eq("id", id),
+      { onSuccess: () => { setEditingSub(null); fetchData(); } }
+    );
   };
   const deleteSubcategory = async (id) => {
     if (!confirm("حذف هذا التصنيف وكل الأصناف المرتبطة به؟")) return;
-    await supabase.from("subcategories").delete().eq("id", id);
-    fetchData();
+    await safeMutation(
+      () => supabase.from("subcategories").delete().eq("id", id),
+      { onSuccess: fetchData }
+    );
   };
 
   // ── Item CRUD ──
@@ -151,22 +159,43 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
     try {
       let imageUrl = editingItem?.image_url || null;
       if (imageFile) imageUrl = await uploadImage(imageFile, 'items');
+
       if (editingItem) {
-        await supabase.from("items").update({ subcategory_id: itemFormSubId, name: formData.name.trim(), description: formData.description.trim(), ingredients: formData.ingredients.trim(), image_url: imageUrl, is_available: formData.is_available }).eq("id", editingItem.id);
-        await supabase.from("item_sizes").delete().eq("item_id", editingItem.id);
-        await supabase.from("item_sizes").insert(validSizes.map((s, idx) => ({ item_id: editingItem.id, name: s.name.trim(), price: Number(s.price), sort_order: idx })));
+        const { ok, error } = await safeMutation(
+          () => supabase.from("items").update({ subcategory_id: itemFormSubId, name: formData.name.trim(), description: formData.description.trim(), ingredients: formData.ingredients.trim(), image_url: imageUrl, is_available: formData.is_available }).eq("id", editingItem.id)
+        );
+        if (!ok) throw error || new Error("فشل تحديث الصنف.");
+        await safeMutation(() => supabase.from("item_sizes").delete().eq("item_id", editingItem.id));
+        await safeMutation(() => supabase.from("item_sizes").insert(validSizes.map((s, idx) => ({ item_id: editingItem.id, name: s.name.trim(), price: Number(s.price), sort_order: idx }))));
       } else {
         const subItems = items.filter(i => i.subcategory_id === itemFormSubId);
-        const { data: newItem } = await supabase.from("items").insert({ subcategory_id: itemFormSubId, name: formData.name.trim(), description: formData.description.trim(), ingredients: formData.ingredients.trim(), image_url: imageUrl, is_available: formData.is_available, sort_order: subItems.length }).select().single();
-        if (newItem) await supabase.from("item_sizes").insert(validSizes.map((s, idx) => ({ item_id: newItem.id, name: s.name.trim(), price: Number(s.price), sort_order: idx })));
+        const { data: newItem, ok, error } = await safeMutation(
+          () => supabase.from("items").insert({ subcategory_id: itemFormSubId, name: formData.name.trim(), description: formData.description.trim(), ingredients: formData.ingredients.trim(), image_url: imageUrl, is_available: formData.is_available, sort_order: subItems.length }).select().single()
+        );
+        if (!ok) throw error || new Error("فشل إضافة الصنف.");
+        if (newItem) await safeMutation(() => supabase.from("item_sizes").insert(validSizes.map((s, idx) => ({ item_id: newItem.id, name: s.name.trim(), price: Number(s.price), sort_order: idx }))));
       }
       resetItemForm(); fetchData();
     } catch (err) { setFormError(err.message || "حدث خطأ."); }
     finally { setSaving(false); }
   };
 
-  const toggleAvailability = async (item) => { await supabase.from("items").update({ is_available: !item.is_available }).eq("id", item.id); fetchData(); };
-  const deleteItem = async (id) => { if (!confirm("حذف هذا الصنف نهائياً؟")) return; await supabase.from("items").delete().eq("id", id); fetchData(); };
+  const toggleAvailability = async (item) => {
+    await safeMutation(
+      () => supabase.from("items").update({ is_available: !item.is_available }).eq("id", item.id),
+      {
+        optimisticUpdate: () => setItems(prev => prev.map(i => i.id === item.id ? { ...i, is_available: !i.is_available } : i)),
+        rollback: () => setItems(prev => prev.map(i => i.id === item.id ? { ...i, is_available: item.is_available } : i)),
+      }
+    );
+  };
+  const deleteItem = async (id) => {
+    if (!confirm("حذف هذا الصنف نهائيا؟")) return;
+    await safeMutation(
+      () => supabase.from("items").delete().eq("id", id),
+      { onSuccess: fetchData }
+    );
+  };
 
   if (loading) return <LoadingSpinner />;
 

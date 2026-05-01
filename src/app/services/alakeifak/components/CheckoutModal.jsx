@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useCartStore } from "../lib/cartStore";
 import { supabase } from "../lib/supabaseClient";
-import { generateWhatsAppUrl } from "../lib/whatsappUtils";
+import { generateWhatsAppUrl, formatEgyptianPhone, isValidEgyptianPhone } from "../lib/whatsappUtils";
 import { X, Send, MapPin, User, Phone, ArrowRight, Truck, ShoppingBag, UtensilsCrossed, Hash } from "lucide-react";
 
 
@@ -49,16 +49,29 @@ export default function CheckoutModal({ restaurant, deliveryZones, themeColor, i
   }, []);
 
   const handleSubmit = async () => {
-    if (!customerName.trim() || !customerPhone.trim()) {
-      setError("الاسم ورقم الهاتف مطلوبين لتأكيد الطلب.");
-      return;
+    let finalPhone = customerPhone;
+    if (orderType !== "in_house") {
+      if (!customerName.trim() || !customerPhone.trim()) {
+        setError("الاسم ورقم الهاتف مطلوبين لتأكيد الطلب.");
+        return;
+      }
+      finalPhone = formatEgyptianPhone(customerPhone);
+      if (!isValidEgyptianPhone(finalPhone)) {
+        setError("يرجى إدخال رقم هاتف مصري صحيح.");
+        return;
+      }
+    } else {
+      if (customerPhone.trim()) {
+        finalPhone = formatEgyptianPhone(customerPhone);
+        if (!isValidEgyptianPhone(finalPhone)) {
+          setError("يرجى إدخال رقم هاتف مصري صحيح.");
+          return;
+        }
+      }
     }
+
     if (orderType === "delivery" && !deliveryZone) {
       setError("يرجى اختيار منطقة التوصيل من السلة.");
-      return;
-    }
-    if (orderType === "in_house" && !tableNumber.trim()) {
-      setError("يرجى إدخال رقم الطاولة.");
       return;
     }
 
@@ -73,9 +86,15 @@ export default function CheckoutModal({ restaurant, deliveryZones, themeColor, i
         total_amount: getTotal(),
         cart_snapshot: items.map((item) => ({ itemName: item.itemName, size: item.size, extras: item.extras, quantity: item.quantity })),
         customer_name: customerName,
-        customer_phone: customerPhone,
+        customer_phone: finalPhone,
         order_type: orderType,
       };
+
+      if (orderType !== "in_house") {
+        setCustomerPhone(finalPhone);
+      } else if (customerPhone.trim()) {
+        setCustomerPhone(finalPhone);
+      }
 
       // Delivery-specific fields
       if (orderType === "delivery") {
@@ -102,18 +121,19 @@ export default function CheckoutModal({ restaurant, deliveryZones, themeColor, i
         orderType, tableNumber,
       });
 
-      // For ALL orders, store the ticket in localStorage for DigitalTicket
-      localStorage.setItem("khatwah_active_ticket", JSON.stringify({
-        orderId: order.id,
-        trackingId: order.tracking_id,
-        restaurantName: restaurant.name,
-        restaurantSlug: restaurant.slug,
-        tableNumber,
-        items: orderPayload.cart_snapshot,
-        total: getTotal(),
-        themeColor: activeColor,
-        createdAt: new Date().toISOString(),
-      }));
+      // Store the ticket in localStorage for DigitalTicket ONLY for in_house
+      if (orderType === "in_house") {
+        localStorage.setItem("khatwah_active_ticket", JSON.stringify({
+          orderId: order.id,
+          trackingId: order.tracking_id,
+          restaurantName: restaurant.name,
+          restaurantSlug: restaurant.slug,
+          items: orderPayload.cart_snapshot,
+          total: getTotal(),
+          themeColor: activeColor,
+          createdAt: new Date().toISOString(),
+        }));
+      }
 
       clearCart();
       if (orderType !== "in_house") {
@@ -174,7 +194,7 @@ export default function CheckoutModal({ restaurant, deliveryZones, themeColor, i
                   <User size={20} className="text-gray-400" />
                 </div>
                 <input
-                  type="text" placeholder="الاسم بالكامل" value={customerName}
+                  type="text" placeholder={orderType === "in_house" ? "الاسم (اختياري)" : "الاسم بالكامل"} value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
                   className="w-full rounded-[24px] border border-gray-200 bg-white py-4 pl-5 pr-14 text-[16px] font-bold text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:border-[var(--dynamic-color)] focus:ring-4 focus:ring-[var(--dynamic-color)]/20 shadow-sm"
                 />
@@ -185,8 +205,9 @@ export default function CheckoutModal({ restaurant, deliveryZones, themeColor, i
                   <Phone size={20} className="text-gray-400" />
                 </div>
                 <input
-                  type="tel" placeholder="رقم الهاتف (واتساب)" value={customerPhone}
+                  type="tel" placeholder={orderType === "in_house" ? "رقم الهاتف (اختياري)" : "رقم الهاتف (واتساب)"} value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
+                  onBlur={() => setCustomerPhone(formatEgyptianPhone(customerPhone))}
                   className="w-full rounded-[24px] border border-gray-200 bg-white py-4 pl-5 pr-14 text-[16px] font-bold text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:border-[var(--dynamic-color)] focus:ring-4 focus:ring-[var(--dynamic-color)]/20 shadow-sm"
                   dir="ltr" style={{ textAlign: "right" }}
                 />
@@ -207,19 +228,6 @@ export default function CheckoutModal({ restaurant, deliveryZones, themeColor, i
                 </div>
               )}
 
-              {/* In-house only: Table Number */}
-              {orderType === "in_house" && (
-                <div className="relative animate-in fade-in slide-in-from-top-2 duration-300">
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-5 pointer-events-none">
-                    <Hash size={20} className="text-gray-400" />
-                  </div>
-                  <input
-                    type="text" placeholder="رقم الطاولة" value={tableNumber}
-                    onChange={(e) => setTableNumber(e.target.value)}
-                    className="w-full rounded-[24px] border border-gray-200 bg-white py-4 pl-5 pr-14 text-[16px] font-bold text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:border-[var(--dynamic-color)] focus:ring-4 focus:ring-[var(--dynamic-color)]/20 shadow-sm"
-                  />
-                </div>
-              )}
             </div>
             
             {/* Info banner — contextual */}
@@ -241,12 +249,6 @@ export default function CheckoutModal({ restaurant, deliveryZones, themeColor, i
                 <div className="flex justify-between text-[14px]">
                   <span className="font-bold text-gray-500">التوصيل ({deliveryZone.region_name})</span>
                   <span className="font-black text-gray-900">{getDeliveryFee().toFixed(0)} ج.م</span>
-                </div>
-              )}
-              {orderType !== "delivery" && (
-                <div className="flex justify-between text-[14px]">
-                  <span className="font-bold text-gray-500">التوصيل</span>
-                  <span className="font-black text-emerald-600">مجاناً ✓</span>
                 </div>
               )}
               <div className="border-t border-dashed border-gray-200 pt-3 flex justify-between">

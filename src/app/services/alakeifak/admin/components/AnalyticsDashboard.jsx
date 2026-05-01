@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "../../lib/supabaseClient";
+import { safeQuery } from "../../lib/safeQuery";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer,
   AreaChart, Area, PieChart, Pie, Cell, LabelList
@@ -38,12 +39,13 @@ export default function AnalyticsDashboard() {
 
   async function fetchData() {
     setLoading(true);
-    const { data: restData } = await supabase.from("restaurants").select("id, name, slug");
-    // Fetching the expanded data set (order_type, cart_snapshot)
-    const { data: ordData } = await supabase.from("orders").select("id, restaurant_id, status, total_amount, customer_phone, created_at, order_type, cart_snapshot");
+    const [restResult, ordResult] = await Promise.all([
+      safeQuery(() => supabase.from("restaurants").select("id, name, slug")),
+      safeQuery(() => supabase.from("orders").select("id, restaurant_id, status, total_amount, customer_phone, created_at, order_type, cart_snapshot")),
+    ]);
 
-    if (restData) setRestaurants(restData);
-    if (ordData) setOrders(ordData);
+    if (restResult.data) setRestaurants(restResult.data);
+    if (ordResult.data) setOrders(ordResult.data);
     setLoading(false);
   }
 

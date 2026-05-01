@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { supabase } from "../../../lib/supabaseClient";
+import { safeMutation } from "../../../lib/safeQuery";
 import { compressImage, uploadImage, fileToDataUrl } from "../../../lib/imageUtils";
+import { formatEgyptianPhone, isValidEgyptianPhone } from "../../../lib/whatsappUtils";
 import { ToggleRight, ToggleLeft, UploadCloud, Loader2, CheckCircle2, Save } from "lucide-react";
 import { InputField, PrimaryBtn } from "../ui/PartnerUI";
 
@@ -56,21 +58,32 @@ export default function SettingsTab({ restaurant, onUpdate }) {
 
   const handleSave = async () => {
     setSaving(true); setSaveStatus("");
+    
+    const formattedPhone = formatEgyptianPhone(whatsapp);
+    if (!isValidEgyptianPhone(formattedPhone)) {
+      alert("يرجى إدخال رقم هاتف مصري صحيح (مثال: 01012345678 أو +201...)");
+      setSaving(false);
+      return;
+    }
+    setWhatsapp(formattedPhone);
+
     try {
       let logoUrl = restaurant.logo_url;
       let bannerUrl = restaurant.banner_url;
       if (logoFile) logoUrl = await uploadImage(logoFile, 'logos');
       if (bannerFile) bannerUrl = await uploadImage(bannerFile, 'banners');
 
-      const { data, error } = await supabase.from("restaurants").update({ 
-        name: name.trim(), 
-        whatsapp_number: whatsapp.trim(), 
-        theme_color: themeColor, 
-        is_open: isOpen,
-        logo_url: logoUrl,
-        banner_url: bannerUrl,
-      }).eq("id", restaurant.id).select().single();
-      if (error) setSaveStatus("error");
+      const { data, error, ok } = await safeMutation(
+        () => supabase.from("restaurants").update({ 
+          name: name.trim(), 
+          whatsapp_number: formattedPhone, 
+          theme_color: themeColor, 
+          is_open: isOpen,
+          logo_url: logoUrl,
+          banner_url: bannerUrl,
+        }).eq("id", restaurant.id).select().single()
+      );
+      if (!ok || error) setSaveStatus("error");
       else if (data) { onUpdate(data); setSaveStatus("success"); setTimeout(() => setSaveStatus(""), 3000); }
     } catch (err) { setSaveStatus("error"); }
     setSaving(false);
@@ -86,7 +99,7 @@ export default function SettingsTab({ restaurant, onUpdate }) {
         </div>
         
         <InputField label="الاسم التجاري للمطعم" value={name} onChange={(e) => handleNameChange(e.target.value)} />
-        <InputField label="رقم المبيعات (واتساب)" type="tel" dir="ltr" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} className="text-right" />
+        <InputField label="رقم المبيعات (واتساب)" type="tel" dir="ltr" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} onBlur={() => setWhatsapp(formatEgyptianPhone(whatsapp))} className="text-right" />
         
         <div className="space-y-3 w-full pt-2">
           <label className="text-[14px] font-bold text-gray-500 px-1">الهوية البصرية السائدة (لون الأزرار والمتجر)</label>

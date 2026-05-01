@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { supabase } from "../../lib/supabaseClient";
+import { safeMutation } from "../../lib/safeQuery";
 import {
   X,
   DollarSign,
@@ -68,51 +69,52 @@ export default function PaymentModal({ restaurant, onClose, onSuccess }) {
         if (!daysNum || daysNum <= 0) throw new Error("Please enter a valid duration.");
 
         // 1. Record payment history
-        const { error: paymentError } = await supabase
-          .from("restaurant_payments")
-          .insert({
+        const { error: paymentError } = await safeMutation(
+          () => supabase.from("restaurant_payments").insert({
             restaurant_id: restaurant.id,
             amount: amountNum,
             duration_days: daysNum,
             recorded_by: user?.id || null,
             notes: notes.trim() || null,
-          });
+          })
+        );
         
-        // Non-fatal if payment history table doesn't exist yet, we still want to extend the sub
+        // Non-fatal if payment history table doesn't exist yet
         if (paymentError && paymentError.code !== '42P01') {
           throw paymentError;
         }
 
         // 2. Extend subscription
-        const { error: updateError } = await supabase
-          .from("restaurants")
-          .update({ subscription_end_date: projectedEnd.toISOString() })
-          .eq("id", restaurant.id);
-          
+        const { error: updateError } = await safeMutation(
+          () => supabase.from("restaurants")
+            .update({ subscription_end_date: projectedEnd.toISOString() })
+            .eq("id", restaurant.id)
+        );
         if (updateError) throw updateError;
 
       } else if (mode === "revoke") {
         const newDate = new Date();
-        newDate.setDate(newDate.getDate() - 1); // Set to yesterday
+        newDate.setDate(newDate.getDate() - 1);
         
-        // Log the revocation as a negative payment if amount is provided
         const refundNum = parseFloat(amount) || 0;
         
         if (refundNum > 0 || notes.trim()) {
-          await supabase.from("restaurant_payments").insert({
-            restaurant_id: restaurant.id,
-            amount: -Math.abs(refundNum), // force negative
-            duration_days: 0,
-            recorded_by: user?.id || null,
-            notes: notes.trim() || "Subscription Revoked",
-          });
+          await safeMutation(
+            () => supabase.from("restaurant_payments").insert({
+              restaurant_id: restaurant.id,
+              amount: -Math.abs(refundNum),
+              duration_days: 0,
+              recorded_by: user?.id || null,
+              notes: notes.trim() || "Subscription Revoked",
+            })
+          );
         }
 
-        const { error: updateError } = await supabase
-          .from("restaurants")
-          .update({ subscription_end_date: newDate.toISOString() })
-          .eq("id", restaurant.id);
-          
+        const { error: updateError } = await safeMutation(
+          () => supabase.from("restaurants")
+            .update({ subscription_end_date: newDate.toISOString() })
+            .eq("id", restaurant.id)
+        );
         if (updateError) throw updateError;
         
       } else {
@@ -120,11 +122,11 @@ export default function PaymentModal({ restaurant, onClose, onSuccess }) {
         if (!exactDate) throw new Error("Please select a date.");
         const newDate = new Date(exactDate);
         
-        const { error: updateError } = await supabase
-          .from("restaurants")
-          .update({ subscription_end_date: newDate.toISOString() })
-          .eq("id", restaurant.id);
-          
+        const { error: updateError } = await safeMutation(
+          () => supabase.from("restaurants")
+            .update({ subscription_end_date: newDate.toISOString() })
+            .eq("id", restaurant.id)
+        );
         if (updateError) throw updateError;
       }
 

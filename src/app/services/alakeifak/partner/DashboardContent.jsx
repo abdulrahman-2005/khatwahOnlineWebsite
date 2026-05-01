@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Copy, ExternalLink, LayoutGrid, UtensilsCrossed, Truck, Settings, ClipboardList, Eye, Users } from "lucide-react";
 import OrdersTab from "./components/tabs/OrdersTab";
 import MenuEditorTab from "./components/tabs/MenuEditorTab";
@@ -8,6 +8,7 @@ import ExtrasTab from "./components/tabs/ExtrasTab";
 import ZonesTab from "./components/tabs/ZonesTab";
 import SettingsTab from "./components/tabs/SettingsTab";
 import TeamTab from "./components/tabs/TeamTab";
+import SessionRecoveryBanner from "../components/SessionRecoveryBanner";
 
 const TABS = [
   { id: "orders", label: "الطلبات", icon: ClipboardList },
@@ -22,8 +23,24 @@ export default function DashboardContent({ restaurant, onRestaurantUpdate }) {
   const [activeTab, setActiveTab] = useState("orders");
   const themeColor = restaurant.theme_color || "#ee930c";
 
+  // Track which tabs have been visited so we only mount them once they're first opened
+  const [mountedTabs, setMountedTabs] = useState(new Set(["orders"]));
+
+  function handleTabChange(tabId) {
+    setActiveTab(tabId);
+    setMountedTabs(prev => {
+      if (prev.has(tabId)) return prev;
+      const next = new Set(prev);
+      next.add(tabId);
+      return next;
+    });
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 pb-32 text-gray-900 overflow-x-hidden print:pb-0 print:bg-white" dir="rtl" style={{ '--dynamic-color': themeColor, fontFamily: "var(--font-body)" }}>
+      {/* Session Recovery Banner */}
+      <SessionRecoveryBanner />
+
       {/* Dynamic Glow Background */}
       <div className="absolute top-0 left-1/2 -z-10 h-[500px] w-full -translate-x-1/2 rounded-full opacity-10 blur-[120px] pointer-events-none print:hidden" style={{ backgroundColor: themeColor }} />
 
@@ -70,7 +87,7 @@ export default function DashboardContent({ restaurant, onRestaurantUpdate }) {
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => handleTabChange(tab.id)}
                   className={`relative flex items-center justify-center gap-2.5 rounded-[18px] px-6 py-3.5 text-[15px] font-bold transition-all duration-400 ease-out ${
                     isActive ? "text-gray-900" : "text-gray-400 hover:text-gray-700 hover:bg-gray-50"
                   }`}
@@ -95,14 +112,42 @@ export default function DashboardContent({ restaurant, onRestaurantUpdate }) {
           </div>
         </div>
 
-        {/* Content Area Rendering */}
+        {/* 
+          Content Area — PERSISTENT TABS (CSS visibility, not conditional rendering).
+          Tabs are mounted on first visit and hidden via CSS when inactive.
+          This preserves component state, realtime channels, and loaded data.
+        */}
         <div className="w-full">
-          {activeTab === "orders" && <OrdersTab restaurantId={restaurant.id} themeColor={themeColor} />}
-          {activeTab === "menu" && <MenuEditorTab restaurantId={restaurant.id} restaurant={restaurant} themeColor={themeColor} />}
-          {activeTab === "extras" && <ExtrasTab restaurantId={restaurant.id} />}
-          {activeTab === "zones" && <ZonesTab restaurantId={restaurant.id} />}
-          {activeTab === "team" && <TeamTab restaurantId={restaurant.id} />}
-          {activeTab === "settings" && <SettingsTab restaurant={restaurant} onUpdate={onRestaurantUpdate} />}
+          {mountedTabs.has("orders") && (
+            <div style={{ display: activeTab === "orders" ? "block" : "none" }}>
+              <OrdersTab restaurantId={restaurant.id} themeColor={themeColor} />
+            </div>
+          )}
+          {mountedTabs.has("menu") && (
+            <div style={{ display: activeTab === "menu" ? "block" : "none" }}>
+              <MenuEditorTab restaurantId={restaurant.id} restaurant={restaurant} themeColor={themeColor} />
+            </div>
+          )}
+          {mountedTabs.has("extras") && (
+            <div style={{ display: activeTab === "extras" ? "block" : "none" }}>
+              <ExtrasTab restaurantId={restaurant.id} />
+            </div>
+          )}
+          {mountedTabs.has("zones") && (
+            <div style={{ display: activeTab === "zones" ? "block" : "none" }}>
+              <ZonesTab restaurantId={restaurant.id} />
+            </div>
+          )}
+          {mountedTabs.has("team") && (
+            <div style={{ display: activeTab === "team" ? "block" : "none" }}>
+              <TeamTab restaurantId={restaurant.id} />
+            </div>
+          )}
+          {mountedTabs.has("settings") && (
+            <div style={{ display: activeTab === "settings" ? "block" : "none" }}>
+              <SettingsTab restaurant={restaurant} onUpdate={onRestaurantUpdate} />
+            </div>
+          )}
         </div>
       </div>
     </div>

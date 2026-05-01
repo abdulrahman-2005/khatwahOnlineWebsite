@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabaseClient";
+import { safeQuery, safeMutation } from "../../lib/safeQuery";
 import { X, Shield, Plus, Trash2, Loader2, Save } from "lucide-react";
 
 export default function SuperAdminSettingsModal({ onClose }) {
@@ -17,11 +18,13 @@ export default function SuperAdminSettingsModal({ onClose }) {
 
   async function fetchEmails() {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("app_settings")
-      .select("value")
-      .eq("key", "super_admin_emails")
-      .single();
+    const { data, error } = await safeQuery(() =>
+      supabase
+        .from("app_settings")
+        .select("value")
+        .eq("key", "super_admin_emails")
+        .single()
+    );
 
     if (error && error.code !== "PGRST116") {
       setError(error.message);
@@ -36,12 +39,14 @@ export default function SuperAdminSettingsModal({ onClose }) {
     setError(null);
     const value = updatedEmails.join(",");
 
-    const { error } = await supabase
-      .from("app_settings")
-      .upsert({ key: "super_admin_emails", value });
+    const { ok, error: mutErr } = await safeMutation(
+      () => supabase
+        .from("app_settings")
+        .upsert({ key: "super_admin_emails", value })
+    );
 
-    if (error) {
-      setError(error.message);
+    if (!ok) {
+      setError(mutErr?.message || "Failed to save.");
     } else {
       setEmails(updatedEmails);
     }

@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { supabase } from "../../../lib/supabaseClient";
+import { safeQuery, safeMutation } from "../../../lib/safeQuery";
+import { createManagedChannel } from "../../../lib/realtimeManager";
 import {
   Phone, MapPin, Truck, ClipboardList, Check, XCircle, Clock,
   TrendingUp, DollarSign, ShoppingBag, Target, ArrowUpRight, Filter,
@@ -55,16 +57,16 @@ export default function OrdersTab({ restaurantId, themeColor }) {
   useEffect(() => { soundEnabledRef.current = soundEnabled; }, [soundEnabled]);
   useEffect(() => { notifEnabledRef.current = notifEnabled; }, [notifEnabled]);
 
-  // ── Initial Fetch ──
+  // ── Initial Fetch (error-aware) ──
   const fetchOrders = useCallback(async () => {
-    try {
+    const now = new Date();
+    const { data, error } = await safeQuery(() => {
       let query = supabase
         .from("orders")
         .select("*, delivery_zones(region_name, fee)")
         .eq("restaurant_id", restaurantId)
         .order("created_at", { ascending: false });
 
-      const now = new Date();
       if (dateRange === "today") {
         query = query.gte("created_at", new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString());
       } else if (dateRange === "week") {
@@ -73,57 +75,60 @@ export default function OrdersTab({ restaurantId, themeColor }) {
         query = query.gte("created_at", new Date(Date.now() - 30 * 86400000).toISOString());
       }
 
-      const { data, error } = await query;
-      if (error) throw error;
-      
+      return query;
+    });
+
+    if (!error) {
       const fetched = data || [];
       setOrders(fetched);
       orderIdsRef.current = new Set(fetched.map(o => o.id));
-    } catch (err) {
-      console.error("Error fetching orders:", err);
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
   }, [restaurantId, dateRange]);
 
   useEffect(() => { setLoading(true); fetchOrders(); }, [fetchOrders]);
 
-  // ── Supabase Realtime ──
+  // ── Supabase Realtime (self-healing managed channel) ──
   useEffect(() => {
     if (!restaurantId) return;
 
-    const channel = supabase
-      .channel(`oms-orders-${restaurantId}`)
-      .on("postgres_changes", {
-        event: "INSERT", schema: "public", table: "orders",
-        filter: `restaurant_id=eq.${restaurantId}`
-      }, (payload) => {
-        const newOrder = payload.new;
-        if (!orderIdsRef.current.has(newOrder.id)) {
-          // Fetch with joined delivery zone data
-          supabase.from("orders").select("*, delivery_zones(region_name, fee)")
-            .eq("id", newOrder.id).single().then(({ data }) => {
-              if (data) {
-                setOrders(prev => [data, ...prev]);
-                orderIdsRef.current.add(data.id);
-                if (soundEnabledRef.current) playOrderSound();
-                if (notifEnabledRef.current) showOrderNotification(data);
-                setViewMode("active");
-              }
-            });
-        }
-      })
-      .on("postgres_changes", {
-        event: "UPDATE", schema: "public", table: "orders",
-        filter: `restaurant_id=eq.${restaurantId}`
-      }, (payload) => {
-        setOrders(prev => prev.map(o => o.id === payload.new.id ? { ...o, ...payload.new } : o));
-      })
-      .subscribe((status) => {
-        setRealtimeConnected(status === "SUBSCRIBED");
-      });
+    const { unsubscribe } = createManagedChannel(
+      `oms-orders-${restaurantId}`,
+      (channel) => {
+        channel
+          .on("postgres_changes", {
+            event: "INSERT", schema: "public", table: "orders",
+            filter: `restaurant_id=eq.${restaurantId}`
+          }, (payload) => {
+            const newOrder = payload.new;
+            if (!orderIdsRef.current.has(newOrder.id)) {
+              supabase.from("orders").select("*, delivery_zones(region_name, fee)")
+                .eq("id", newOrder.id).single().then(({ data }) => {
+                  if (data) {
+                    setOrders(prev => [data, ...prev]);
+                    orderIdsRef.current.add(data.id);
+                    if (soundEnabledRef.current) playOrderSound();
+                    if (notifEnabledRef.current) showOrderNotification(data);
+                    setViewMode("active");
+                  }
+                });
+            }
+          })
+          .on("postgres_changes", {
+            event: "UPDATE", schema: "public", table: "orders",
+            filter: `restaurant_id=eq.${restaurantId}`
+          }, (payload) => {
+            setOrders(prev => prev.map(o => o.id === payload.new.id ? { ...o, ...payload.new } : o));
+          });
+      },
+      {
+        onStatusChange: (status) => {
+          setRealtimeConnected(status === "SUBSCRIBED");
+        },
+      }
+    );
 
-    return () => { supabase.removeChannel(channel); };
+    return () => { unsubscribe(); };
   }, [restaurantId]);
 
   // ── Request notifications ──
@@ -131,10 +136,23 @@ export default function OrdersTab({ restaurantId, themeColor }) {
     requestNotificationPermission().then(granted => setNotifEnabled(granted));
   }, []);
 
-  // ── Status Update ──
+  // ── Status Update (optimistic with rollback) ──
   const updateStatus = async (orderId, newStatus) => {
-    await supabase.from("orders").update({ status: newStatus }).eq("id", orderId);
-    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
+    const previousOrders = [...orders];
+    await safeMutation(
+      () => supabase.from("orders").update({ status: newStatus }).eq("id", orderId),
+      {
+        optimisticUpdate: () => {
+          setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
+        },
+        rollback: () => {
+          setOrders(previousOrders);
+        },
+        onError: (err) => {
+          console.error("Failed to update order status:", err);
+        },
+      }
+    );
   };
 
   // ── Stats ──

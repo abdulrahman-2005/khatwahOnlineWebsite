@@ -1,22 +1,6 @@
 {
   "ar": [
-    {
-      "id": "phone-story",
-      "slug": "phone-story",
-      "title": "PhoneStory",
-      "subtitle": "صانع صور الحالات للهواتف المستعملة",
-      "description": "اصنع صور احترافية لحالات الواتساب والإنستجرام للهواتف المستعملة في ٣٠ ثانية. مثالي لتجار الموبايلات.",
-      "icon": "📱",
-      "category": "أدوات",
-      "features": [
-        "إضافة حتى ٤ هواتف في صورة واحدة",
-        "قوالب جاهزة للبدء السريع",
-        "تصدير بجودة عالية (1080×1920)",
-        "معاينة مباشرة أثناء التعديل",
-        "واجهة عربية سهلة"
-      ],
-      "tags": ["مجاني", "بدون تسجيل", "تصدير فوري"]
-    },
+    
     {
       "id": "alakeifak",
       "slug": "alakeifak",
@@ -34,26 +18,26 @@
         "حالة المحل (مفتوح/مغلق) لحظيًا"
       ],
       "tags": ["مجاني", "عربي", "طلبات واتساب"]
-    }
-  ],
-  "en": [
+    },
     {
       "id": "phone-story",
       "slug": "phone-story",
       "title": "PhoneStory",
-      "subtitle": "Story Card Generator for Used Phones",
-      "description": "Create professional story cards for used phones in 30 seconds. Perfect for phone sellers on WhatsApp and Instagram.",
+      "subtitle": "صانع صور الحالات للهواتف المستعملة",
+      "description": "اصنع صور احترافية لحالات الواتساب والإنستجرام للهواتف المستعملة في ٣٠ ثانية. مثالي لتجار الموبايلات.",
       "icon": "📱",
-      "category": "Tools",
+      "category": "أدوات",
       "features": [
-        "Add up to 4 phones in one card",
-        "Ready templates for quick start",
-        "High-quality export (1080×1920)",
-        "Live preview while editing",
-        "English interface"
+        "إضافة حتى ٤ هواتف في صورة واحدة",
+        "قوالب جاهزة للبدء السريع",
+        "تصدير بجودة عالية (1080×1920)",
+        "معاينة مباشرة أثناء التعديل",
+        "واجهة عربية سهلة"
       ],
-      "tags": ["Free", "No signup", "Instant export"]
-    },
+      "tags": ["مجاني", "بدون تسجيل", "تصدير فوري"]
+    }
+  ],
+  "en": [
     {
       "id": "alakeifak",
       "slug": "alakeifak",
@@ -71,6 +55,23 @@
         "Real-time open/closed status"
       ],
       "tags": ["Free", "Arabic", "WhatsApp Orders"]
+    },
+    {
+      "id": "phone-story",
+      "slug": "phone-story",
+      "title": "PhoneStory",
+      "subtitle": "Story Card Generator for Used Phones",
+      "description": "Create professional story cards for used phones in 30 seconds. Perfect for phone sellers on WhatsApp and Instagram.",
+      "icon": "📱",
+      "category": "Tools",
+      "features": [
+        "Add up to 4 phones in one card",
+        "Ready templates for quick start",
+        "High-quality export (1080×1920)",
+        "Live preview while editing",
+        "English interface"
+      ],
+      "tags": ["Free", "No signup", "Instant export"]
     }
   ]
 }

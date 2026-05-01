@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "../../lib/supabaseClient";
+import { safeQuery } from "../../lib/safeQuery";
 import {
   DollarSign,
   TrendingUp,
@@ -26,14 +27,15 @@ export default function FinancialsDashboard() {
 
   async function fetchPayments() {
     setLoading(true);
-    // Fetch payments and join with restaurants
-    const { data, error } = await supabase
-      .from("restaurant_payments")
-      .select(`
-        *,
-        restaurants(name, slug)
-      `)
-      .order("payment_date", { ascending: false });
+    const { data, error } = await safeQuery(() =>
+      supabase
+        .from("restaurant_payments")
+        .select(`
+          *,
+          restaurants(name, slug)
+        `)
+        .order("payment_date", { ascending: false })
+    );
 
     if (!error && data) {
       setPayments(data);

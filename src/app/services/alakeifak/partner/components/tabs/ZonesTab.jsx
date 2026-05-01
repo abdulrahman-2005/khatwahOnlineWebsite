@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../../../lib/supabaseClient";
+import { safeQuery, safeMutation } from "../../../lib/safeQuery";
 import { Truck, Trash2, Plus } from "lucide-react";
 import { LoadingSpinner, EmptyState, InputField, PrimaryBtn, NeoRow, IconButton } from "../ui/PartnerUI";
 
@@ -12,7 +13,9 @@ export default function ZonesTab({ restaurantId }) {
   const [newFee, setNewFee] = useState("");
 
   const fetchZones = useCallback(async () => {
-    const { data } = await supabase.from("delivery_zones").select("*").eq("restaurant_id", restaurantId).order("region_name");
+    const { data } = await safeQuery(() =>
+      supabase.from("delivery_zones").select("*").eq("restaurant_id", restaurantId).order("region_name")
+    );
     setZones(data || []); setLoading(false);
   }, [restaurantId]);
 
@@ -20,14 +23,18 @@ export default function ZonesTab({ restaurantId }) {
 
   const addZone = async () => {
     if (!newName.trim() || !newFee) return;
-    await supabase.from("delivery_zones").insert({ restaurant_id: restaurantId, region_name: newName.trim(), fee: Number(newFee) });
-    setNewName(""); setNewFee(""); fetchZones();
+    await safeMutation(
+      () => supabase.from("delivery_zones").insert({ restaurant_id: restaurantId, region_name: newName.trim(), fee: Number(newFee) }),
+      { onSuccess: () => { setNewName(""); setNewFee(""); fetchZones(); } }
+    );
   };
 
   const deleteZone = async (id) => {
     if(!confirm("حذف منطقة التوصيل؟")) return;
-    await supabase.from("delivery_zones").delete().eq("id", id);
-    fetchZones();
+    await safeMutation(
+      () => supabase.from("delivery_zones").delete().eq("id", id),
+      { onSuccess: fetchZones }
+    );
   };
 
   if (loading) return <LoadingSpinner />;

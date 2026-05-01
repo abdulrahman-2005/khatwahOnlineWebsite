@@ -3,6 +3,20 @@
  * Generates URL-encoded WhatsApp messages from cart data
  */
 
+export function formatEgyptianPhone(phone) {
+  if (!phone) return "";
+  let p = String(phone).trim().replace(/[\s\-\(\)]/g, "");
+  if (p.startsWith("01")) p = "+20" + p.substring(1);
+  else if (p.startsWith("10") || p.startsWith("11") || p.startsWith("12") || p.startsWith("15")) p = "+20" + p;
+  else if (p.startsWith("201")) p = "+" + p;
+  return p;
+}
+
+export function isValidEgyptianPhone(phone) {
+  const p = formatEgyptianPhone(phone);
+  return /^\+201[0125][0-9]{8}$/.test(p);
+}
+
 /**
  * Format cart items into a structured Arabic WhatsApp message
  * 
@@ -19,7 +33,6 @@
  * @returns {string} Formatted message string
  */
 export function formatOrderMessage({
-  trackingId,
   items,
   deliveryZone,
   subtotal,
@@ -29,18 +42,14 @@ export function formatOrderMessage({
   deliveryAddress,
   restaurantName,
   orderType,
-  tableNumber,
 }) {
   const lines = [];
   
   const typeLabels = { delivery: '🚚 توصيل', pickup: '🥡 استلام من المحل', in_house: '🍽️ طلب داخلي' };
   
   lines.push(`🧾 طلب جديد — ${restaurantName}`);
-  lines.push(`📋 رقم التتبع: ${trackingId}`);
   lines.push(`📦 النوع: ${typeLabels[orderType] || typeLabels.delivery}`);
-  if (orderType === 'in_house' && tableNumber) {
-    lines.push(`🪑 طاولة رقم: ${tableNumber}`);
-  }
+
   lines.push('─'.repeat(20));
   lines.push('');
   
@@ -85,8 +94,6 @@ export function formatOrderMessage({
   
   lines.push('');
   lines.push('─'.repeat(20));
-  lines.push('💳 الدفع عند الاستلام');
-  lines.push('');
   lines.push('_طلب عبر khatwah.online/services/alakeifak_');
   
   return lines.join('\n');

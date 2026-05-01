@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../../lib/supabaseClient";
+import { safeQuery, safeMutation } from "../../lib/safeQuery";
 import {
   X,
   Users,
@@ -38,11 +39,13 @@ export default function MembersModal({ restaurant, onClose }) {
 
   const fetchMembers = useCallback(async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("restaurant_members")
-      .select("*")
-      .eq("restaurant_id", restaurant.id)
-      .order("created_at", { ascending: true });
+    const { data, error } = await safeQuery(() =>
+      supabase
+        .from("restaurant_members")
+        .select("*")
+        .eq("restaurant_id", restaurant.id)
+        .order("created_at", { ascending: true })
+    );
 
     if (!error) setMembers(data || []);
     setLoading(false);

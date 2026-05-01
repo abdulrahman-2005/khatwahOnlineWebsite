@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabaseClient";
+import { safeQuery } from "../lib/safeQuery";
 import Link from "next/link";
 import {
   Shield,
@@ -45,7 +46,7 @@ export default function AdminLayout({ children }) {
       
       if (u) {
         // Check DB for super admin status
-        const { data: isSuperAdmin } = await supabase.rpc('is_super_admin');
+        const { data: isSuperAdmin } = await safeQuery(() => supabase.rpc('is_super_admin'));
         setAuthorized(!!isSuperAdmin);
       } else {
         setAuthorized(false);
@@ -168,40 +169,40 @@ export default function AdminLayout({ children }) {
 
       {/* Top Bar */}
       <div className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/95 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-          <div className="flex items-center gap-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-3 sm:px-6 py-2 sm:py-3">
+          <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0 pr-2">
             <Link
               href="/services/alakeifak"
-              className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-800 text-zinc-500 hover:text-orange-400 hover:bg-zinc-700 transition-all border border-zinc-700"
+              className="flex shrink-0 h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg bg-zinc-800 text-zinc-500 hover:text-orange-400 hover:bg-zinc-700 transition-all border border-zinc-700"
             >
-              <ArrowRight size={16} />
+              <ArrowRight size={14} className="sm:w-4 sm:h-4" />
             </Link>
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500/10 border border-orange-500/20">
-                <Shield size={14} className="text-orange-400" />
+            <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+              <div className="flex shrink-0 h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-orange-500/10 border border-orange-500/20">
+                <Shield size={12} className="text-orange-400 sm:w-[14px] sm:h-[14px]" />
               </div>
-              <div>
-                <h1 className="text-sm font-black text-white leading-none tracking-tight">
+              <div className="min-w-0 flex flex-col justify-center">
+                <h1 className="text-xs sm:text-sm font-black text-white leading-none tracking-tight truncate">
                   Alakeifak Admin
                 </h1>
-                <p className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">
+                <p className="text-[9px] sm:text-[10px] font-bold text-zinc-600 uppercase tracking-widest truncate mt-0.5 sm:mt-1">
                   God View • Internal
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 rounded-lg bg-zinc-800/50 px-3 py-1.5 border border-zinc-700/50">
-              <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[11px] font-mono text-zinc-500">{user.email}</span>
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <div className="hidden lg:flex items-center gap-2 rounded-lg bg-zinc-800/50 px-3 py-1.5 border border-zinc-700/50">
+              <div className="shrink-0 h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[11px] font-mono text-zinc-500 truncate max-w-[150px] xl:max-w-none">{user.email}</span>
             </div>
             <button
               onClick={handleLogout}
-              className="flex h-9 items-center gap-2 rounded-lg bg-zinc-800 px-4 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-700 transition-all border border-zinc-700"
+              className="flex h-8 sm:h-9 items-center gap-1.5 sm:gap-2 rounded-lg bg-zinc-800 px-3 sm:px-4 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-700 transition-all border border-zinc-700 active:scale-95"
             >
               <LogOut size={14} />
-              <span className="hidden sm:inline">Logout</span>
+              <span className="hidden md:inline">Logout</span>
             </button>
           </div>
         </div>
