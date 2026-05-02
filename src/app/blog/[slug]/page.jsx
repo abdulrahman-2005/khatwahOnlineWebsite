@@ -94,14 +94,15 @@ export default async function BlogPost({ params }) {
     // Structured data for article (BlogPosting schema)
     const structuredData = {
       '@context': 'https://schema.org',
-      '@type': 'BlogPosting',
+      '@type': 'Article',
       headline: post.title,
       description: post.excerpt || post.title,
       datePublished: post._createdAt,
       dateModified: post._updatedAt || post._createdAt,
       author: post.author ? {
         '@type': 'Person',
-        name: post.author.name
+        name: post.author.name,
+        url: post.author.url || `${seoConfig.baseUrl}/about`
       } : {
         '@type': 'Organization',
         name: 'Khatwah Online',

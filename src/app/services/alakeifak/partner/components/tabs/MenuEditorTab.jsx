@@ -7,7 +7,7 @@ import { compressImage, uploadImage, fileToDataUrl } from "../../../lib/imageUti
 import PrintableMenu from "../../PrintableMenu";
 import { 
   X, Loader2, UploadCloud, Trash2, ToggleRight, ToggleLeft, 
-  Save, QrCode, Printer, Copy, Plus, Edit3, Pizza 
+  Save, QrCode, Printer, Copy, Plus, Edit3, Pizza, ArrowUp, ArrowDown
 } from "lucide-react";
 import { IconButton, InputField, PrimaryBtn, LoadingSpinner, EmptyState } from "../ui/PartnerUI";
 
@@ -90,6 +90,23 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
       () => supabase.from("categories").delete().eq("id", id),
       { onSuccess: fetchData }
     );
+  };
+
+  const moveCategory = async (idx, direction) => {
+    const newCats = [...categories];
+    const targetIdx = idx + direction;
+    if (targetIdx < 0 || targetIdx >= newCats.length) return;
+    
+    const temp = newCats[idx];
+    newCats[idx] = newCats[targetIdx];
+    newCats[targetIdx] = temp;
+    
+    const ordered = newCats.map((c, i) => ({ ...c, sort_order: i }));
+    setCategories(ordered);
+    
+    await safeMutation(() => Promise.all(
+      ordered.map(c => supabase.from('categories').update({ sort_order: c.sort_order }).eq('id', c.id))
+    ));
   };
 
   // ── Subcategory CRUD ──
@@ -325,7 +342,7 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
 
       {/* ═══ Menu Tree ═══ */}
       <div className="space-y-8">
-        {categories.map((cat) => {
+        {categories.map((cat, catIdx) => {
           const catSubs = subcategories.filter(s => s.category_id === cat.id);
           return (
             <div key={cat.id} className="rounded-[28px] overflow-hidden border border-gray-200 shadow-[0_4px_20px_-8px_rgba(0,0,0,0.06)]">
@@ -351,6 +368,12 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
                     </div>
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0">
+                    <button onClick={() => moveCategory(catIdx, -1)} disabled={catIdx === 0} className="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-gray-200 text-gray-400 shadow-sm hover:bg-gray-50 disabled:opacity-30 disabled:pointer-events-none transition-all" title="أعلى">
+                      <ArrowUp size={13} />
+                    </button>
+                    <button onClick={() => moveCategory(catIdx, 1)} disabled={catIdx === categories.length - 1} className="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-gray-200 text-gray-400 shadow-sm hover:bg-gray-50 disabled:opacity-30 disabled:pointer-events-none transition-all" title="أسفل">
+                      <ArrowDown size={13} />
+                    </button>
                     <button onClick={() => { setEditingCat(cat.id); setEditCatName(cat.name); setEditCatIcon(cat.icon || "🔥"); }} className="flex h-8 sm:h-9 items-center gap-1.5 rounded-full bg-white px-2.5 sm:px-3 text-[11px] sm:text-[12px] font-bold text-gray-500 border border-gray-200 shadow-sm hover:bg-gray-50 transition-all">
                       <Edit3 size={12} className="sm:w-[13px]" /> <span className="hidden xs:inline">تعديل</span>
                     </button>

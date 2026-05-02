@@ -62,8 +62,7 @@ export async function safeQuery(queryFn, { retries = 1 } = {}) {
     return { data, error, isAuthError: false };
   } catch (err) {
     if (err?.message?.includes('timed out')) {
-      if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('supabase:session-expired'));
-      return { data: null, error: err, isAuthError: true };
+      return { data: null, error: err, isAuthError: false };
     }
     return { data: null, error: err, isAuthError: false };
   }
@@ -121,8 +120,7 @@ export async function safeMutation(mutationFn, {
       try { rollback(); } catch { /* ignore */ }
     }
     if (err?.message?.includes('timed out')) {
-      if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('supabase:session-expired'));
-      if (onAuthError) onAuthError(err);
+      // Don't treat timeout as auth error
     } else {
       if (onError) onError(err);
     }

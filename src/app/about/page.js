@@ -3,7 +3,7 @@ import { generateAboutMetadata } from "@/lib/seo";
 export const metadata = generateAboutMetadata("ar");
 
 import AboutContent from "./AboutContent";
-import { BreadcrumbSchema, LocalBusinessSchema } from "@/components/seo/StructuredData";
+import { BreadcrumbSchema, LocalBusinessSchema, AboutPageSchema } from "@/components/seo/StructuredData";
 
 export default function Page() {
   const breadcrumbs = [
@@ -15,6 +15,7 @@ export default function Page() {
     <>
       <BreadcrumbSchema items={breadcrumbs} />
       <LocalBusinessSchema />
+      <AboutPageSchema />
       <AboutContent />
     </>
   );

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import productsData from "../../../../data/products.json";
 import { seoConfig } from "@/lib/seo";
+import { ProductSchema } from "@/components/seo/StructuredData";
 import ProductDetailClient from "./ProductDetailClient";
 
 // Generate static params for all products
@@ -93,5 +94,10 @@ export default async function ProductDetailPage({ params }) {
     notFound();
   }
 
-  return <ProductDetailClient productAr={productAr} productEn={productEn} slug={slug} />;
+  return (
+    <>
+      <ProductSchema product={productAr} />
+      <ProductDetailClient productAr={productAr} productEn={productEn} slug={slug} />
+    </>
+  );
 }

@@ -16,9 +16,10 @@ export async function generateMetadata({ params }) {
     .eq("slug", slug)
     .single();
 
-  if (!restaurant) return {};
-
-  return generateRestaurantMetadata(restaurant);
+  return {
+    ...generateRestaurantMetadata(restaurant),
+    manifest: `/api/alakeifak/manifest?slug=${slug}`
+  };
 }
 
 export default async function RestaurantMenuPage({ params }) {

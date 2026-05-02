@@ -62,7 +62,8 @@ export function generatePageMetadata({
   path = "/",
   locale = "ar",
   images = [],
-  type = "website"
+  type = "website",
+  icons
 }) {
   const baseKeywords = seoConfig.coreKeywords[locale] || seoConfig.coreKeywords.ar;
   const allKeywords = [...baseKeywords, ...keywords];
@@ -70,7 +71,7 @@ export function generatePageMetadata({
 
   // Default image
   const defaultImage = {
-    url: `${seoConfig.baseUrl}/og-image.png`,
+    url: `${seoConfig.baseUrl}/fvgen/opengraph-image.png?v=2`,
     width: 1200,
     height: 630,
     alt: locale === 'ar' ? 'خطوة اونلاين — Khatwah Online' : 'Khatwah Online'
@@ -114,6 +115,16 @@ export function generatePageMetadata({
       description,
       images: ogImages.map(img => img.url)
     },
+    icons: {
+      icon: [
+        { url: '/fvgen/favicon.ico?v=2', sizes: '48x48' },
+        { url: '/fvgen/icon.svg?v=2', type: 'image/svg+xml' }
+      ],
+      apple: [
+        { url: '/fvgen/apple-icon.png?v=2', sizes: '180x180', type: 'image/png' }
+      ]
+    },
+    manifest: '/site.webmanifest?v=2',
     robots: {
       index: true,
       follow: true,

@@ -43,20 +43,6 @@ export const metadata = {
   authors: [{ name: "خطوة اونلاين", url: seoConfig.baseUrl }],
   creator: "خطوة اونلاين",
   publisher: "خطوة اونلاين",
-  manifest: "/site.webmanifest",
-  icons: {
-    icon: [
-      { url: '/favicon.ico' },
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/favicon-48x48.png', sizes: '48x48', type: 'image/png' },
-      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-    ],
-    apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
-  },
   openGraph: {
     type: "website",
     locale: "ar_EG",
@@ -67,7 +53,7 @@ export const metadata = {
       "شركة برمجة مصرية متخصصة في تصميم وتطوير المواقع الإلكترونية وبرمجة تطبيقات الجوال. نقدم حلول برمجية مخصصة للتجارة المحلية في مصر.",
     images: [
       {
-        url: '/og-image.png',
+        url: '/fvgen/opengraph-image.png?v=2',
         width: 1200,
         height: 630,
         alt: 'خطوة اونلاين — Khatwah Online',
@@ -81,8 +67,18 @@ export const metadata = {
     title: "خطوة اونلاين — شركة برمجة مصرية | أفضل شركة تصميم مواقع في مصر",
     description:
       "شركة برمجة مصرية متخصصة في تصميم وتطوير المواقع الإلكترونية وبرمجة تطبيقات الجوال. نقدم حلول برمجية مخصصة للتجارة المحلية في مصر.",
-    images: ['/og-image.png'],
+    images: ['/fvgen/twitter-image.png?v=2'],
   },
+  icons: {
+    icon: [
+      { url: '/fvgen/favicon.ico?v=2', sizes: '48x48' },
+      { url: '/fvgen/icon.svg?v=2', type: 'image/svg+xml' }
+    ],
+    apple: [
+      { url: '/fvgen/apple-icon.png?v=2', sizes: '180x180', type: 'image/png' }
+    ]
+  },
+  manifest: '/site.webmanifest?v=2',
   robots: {
     index: true,
     follow: true,
@@ -128,16 +124,6 @@ export default function RootLayout({ children }) {
                   } else {
                     document.documentElement.setAttribute('data-theme', 'light');
                   }
-
-                  var savedLocale = localStorage.getItem('khatwah-locale');
-                  var browserLang = navigator.language;
-                  if (savedLocale === 'en' || (!savedLocale && browserLang && !browserLang.startsWith('ar'))) {
-                    document.documentElement.dir = 'ltr';
-                    document.documentElement.lang = 'en';
-                  } else {
-                    document.documentElement.dir = 'rtl';
-                    document.documentElement.lang = 'ar';
-                  }
                 } catch (e) {}
               })();
             `,
@@ -161,7 +147,7 @@ export default function RootLayout({ children }) {
         <WebsiteSchema />
         <LocalBusinessSchema />
       </head>
-      <body className="min-h-screen antialiased">
+      <body className="min-h-screen antialiased" suppressHydrationWarning>
         <GoogleTagManager gtmId="G-2G26Q35GPF" />
 
         <ThemeProvider>

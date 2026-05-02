@@ -28,13 +28,6 @@ export function OrganizationSchema() {
       telephone: contact.phones[0].number,
       availableLanguage: ["Arabic", "English"],
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: "127",
-      bestRating: "5",
-      worstRating: "1",
-    },
     sameAs: [
       contact.social.instagram.url,
       contact.social.tiktok.url,
@@ -117,13 +110,6 @@ export function ProjectSchema({ project }) {
     ].join(", "),
     inLanguage: "ar_EG",
     datePublished: "2024-01-01",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: "127",
-      bestRating: "5",
-      worstRating: "1",
-    },
   };
 
   if (project.url) {
@@ -167,13 +153,6 @@ export function LocalBusinessSchema() {
       opens: "09:00",
       closes: "21:00",
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: "127",
-      bestRating: "5",
-      worstRating: "1",
-    },
     sameAs: [
       contact.social.instagram.url,
       contact.social.tiktok.url,
@@ -203,6 +182,114 @@ export function FAQSchema({ faqs }) {
         text: faq.answer,
       },
     })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function ProductSchema({ product, url }) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.titleAr || product.title,
+    description: product.descriptionAr || product.description,
+    url: url || `${seoConfig.baseUrl}/products/${product.slug}`,
+    image: product.headerImages?.[0] ? `${seoConfig.baseUrl}${product.basePath}/${product.headerImages[0]}` : `${seoConfig.baseUrl}/og-image.png`,
+    brand: {
+      "@type": "Organization",
+      name: "خطوة اونلاين | Khatwah Online"
+    },
+    offers: {
+      "@type": "Offer",
+      price: product.price || "0",
+      priceCurrency: "EGP",
+      availability: "https://schema.org/InStock",
+      url: url || `${seoConfig.baseUrl}/products/${product.slug}`
+    }
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function SoftwareApplicationSchema({ appName, description, url }) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: appName,
+    description: description,
+    url: url,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "WebBrowser",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "EGP"
+    }
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function ArticleSchema({ article, url }) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    image: article.mainImage ? `${seoConfig.baseUrl}${article.mainImage}` : `${seoConfig.baseUrl}/og-image.png`,
+    datePublished: article.publishedAt,
+    dateModified: article.updatedAt || article.publishedAt,
+    author: {
+      "@type": "Person",
+      name: article.authorName || "خطوة اونلاين",
+      url: article.authorUrl || `${seoConfig.baseUrl}/about`
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "خطوة اونلاين | Khatwah Online",
+      logo: {
+        "@type": "ImageObject",
+        url: `${seoConfig.baseUrl}/schema-logo.png`
+      }
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": url || `${seoConfig.baseUrl}/blog/${article.slug}`
+    }
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function AboutPageSchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    mainEntity: {
+      "@type": "Organization",
+      name: "خطوة اونلاين | Khatwah Online",
+      url: seoConfig.baseUrl,
+      foundingDate: "2020-01-01"
+    }
   };
 
   return (

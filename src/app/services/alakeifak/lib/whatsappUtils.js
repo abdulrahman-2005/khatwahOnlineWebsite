@@ -43,60 +43,34 @@ export function formatOrderMessage({
   restaurantName,
   orderType,
 }) {
-  const lines = [];
+  const typeLabels = { delivery: '🚚 توصيل', pickup: '🥡 استلام', in_house: '🍽️ داخلي' };
   
-  const typeLabels = { delivery: '🚚 توصيل', pickup: '🥡 استلام من المحل', in_house: '🍽️ طلب داخلي' };
+  let msg = `🧾 طلب من ${restaurantName}\n`;
+  msg += `📦 ${typeLabels[orderType] || typeLabels.delivery}\n\n`;
   
-  lines.push(`🧾 طلب جديد — ${restaurantName}`);
-  lines.push(`📦 النوع: ${typeLabels[orderType] || typeLabels.delivery}`);
-
-  lines.push('─'.repeat(20));
-  lines.push('');
-  
-  // Cart items
-  lines.push('🛒 *تفاصيل الطلب:*');
-  lines.push('');
-  
+  msg += `🛒 *الطلب:*\n`;
   items.forEach((item, idx) => {
-    lines.push(`${idx + 1}. *${item.itemName}*`);
-    lines.push(`   الحجم: ${item.size.name} — ${item.size.price} جنيه`);
-    
+    let itemLine = `${item.quantity}x ${item.itemName} (${item.size.name})`;
     if (item.extras.length > 0) {
-      const extrasText = item.extras.map(e => `${e.name} (+${e.price})`).join('، ');
-      lines.push(`   إضافات: ${extrasText}`);
+      itemLine += ` + ${item.extras.map(e => e.name).join(',')}`;
     }
-    
-    lines.push(`   الكمية: ${item.quantity}`);
-    
     const itemTotal = (item.size.price + item.extras.reduce((s, e) => s + e.price, 0)) * item.quantity;
-    lines.push(`   المجموع: ${itemTotal.toFixed(2)} جنيه`);
-    lines.push('');
+    msg += `${itemLine} = ${itemTotal.toFixed(0)}ج\n`;
   });
   
-  lines.push('─'.repeat(20));
-  lines.push(`💰 المجموع الفرعي: ${subtotal.toFixed(2)} جنيه`);
-  
+  msg += `\n💰 *الحساب:*\n`;
+  msg += `الطلب: ${subtotal.toFixed(0)}ج\n`;
   if (orderType === 'delivery' && deliveryZone) {
-    lines.push(`🚚 التوصيل (${deliveryZone.region_name}): ${deliveryZone.fee.toFixed(2)} جنيه`);
+    msg += `توصيل (${deliveryZone.region_name}): ${deliveryZone.fee.toFixed(0)}ج\n`;
   }
+  msg += `*الإجمالي: ${total.toFixed(0)} جنيه*\n\n`;
   
-  lines.push(`💵 *الإجمالي: ${total.toFixed(2)} جنيه*`);
-  lines.push('');
-  lines.push('─'.repeat(20));
-  lines.push('');
-  lines.push('👤 *بيانات العميل:*');
-  lines.push(`الاسم: ${customerName}`);
-  lines.push(`الهاتف: ${customerPhone}`);
-  
+  msg += `👤 *العميل:*\n${customerName} - ${customerPhone}\n`;
   if (orderType === 'delivery' && deliveryAddress) {
-    lines.push(`العنوان: ${deliveryAddress}`);
+    msg += `${deliveryAddress}\n`;
   }
   
-  lines.push('');
-  lines.push('─'.repeat(20));
-  lines.push('_طلب عبر khatwah.online/services/alakeifak_');
-  
-  return lines.join('\n');
+  return msg;
 }
 
 /**

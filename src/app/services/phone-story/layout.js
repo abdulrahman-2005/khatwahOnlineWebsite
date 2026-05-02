@@ -93,13 +93,6 @@ export default function PhoneStoryLayout({ children }) {
             },
             "url": `${seoConfig.baseUrl}/services/phone-story`,
             "screenshot": `${seoConfig.baseUrl}/images/services/phone-story-screenshot.jpg`,
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.8",
-              "reviewCount": "127",
-              "bestRating": "5",
-              "worstRating": "1"
-            },
             "author": {
               "@type": "Organization",
               "name": "خطوة اونلاين | Khatwah Online"

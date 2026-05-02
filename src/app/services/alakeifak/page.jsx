@@ -20,6 +20,7 @@ import {
   Star,
   TrendingUp
 } from "lucide-react";
+import { seoConfig } from "@/lib/seo";
 
 export default function AlakeifakPage() {
   const [restaurants, setRestaurants] = useState([]);
@@ -50,7 +51,6 @@ export default function AlakeifakPage() {
 
   return (
     <main className="min-h-screen bg-white text-gray-900 selection:bg-orange-500/30 font-sans" dir="rtl">
-      
       {/* ═══════════════════ RESTRUCTURED HERO ═══════════════════ */}
       <section className="relative overflow-hidden pt-32 pb-24 sm:pt-40 sm:pb-32 px-4">
         {/* Dynamic Abstract Background */}

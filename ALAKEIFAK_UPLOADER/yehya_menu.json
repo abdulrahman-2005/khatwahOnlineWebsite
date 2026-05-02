@@ -1,0 +1,126 @@
+{
+  "restaurant": {
+    "categories": [
+      {
+        "name": "المأكولات الشعبية",
+        "icon": "🥙",
+        "sort_order": 1,
+        "subcategories": [
+          {
+            "name": "ساندوتشات الفول",
+            "sort_order": 1,
+            "items": [
+              {"name": "ساندوتش فول", "image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&uid=1", "item_sizes": [{"name": "عادي", "price": 10}]},
+              {"name": "ساندوتش فول زيت حار", "image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&uid=2", "item_sizes": [{"name": "عادي", "price": 12}]},
+              {"name": "ساندوتش فول سمنة بلدي", "image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&uid=3", "item_sizes": [{"name": "عادي", "price": 14}]},
+              {"name": "ساندوتش فول ليمون معصفر", "image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&uid=4", "item_sizes": [{"name": "عادي", "price": 12}]},
+              {"name": "ساندوتش فول نعناع", "image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&uid=5", "item_sizes": [{"name": "عادي", "price": 12}]},
+              {"name": "ساندوتش فول اسكندراني", "image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&uid=6", "item_sizes": [{"name": "عادي", "price": 13}]},
+              {"name": "ساندوتش فول قشطة بلدي", "image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&uid=7", "item_sizes": [{"name": "عادي", "price": 18}]},
+              {"name": "ساندوتش فول سلطة", "image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&uid=8", "item_sizes": [{"name": "عادي", "price": 12}]},
+              {"name": "ساندوتش فول زيت زيتون", "image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&uid=9", "item_sizes": [{"name": "عادي", "price": 15}]},
+              {"name": "ساندوتش فول صلصة", "image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&uid=10", "item_sizes": [{"name": "عادي", "price": 12}]},
+              {"name": "ساندوتش فول سجق", "image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&uid=11", "item_sizes": [{"name": "عادي", "price": 23}]},
+              {"name": "ساندوتش مكس فول وطعمية", "image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&uid=12", "item_sizes": [{"name": "عادي", "price": 14}]},
+              {"name": "ساندوتش فول حمص", "image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&uid=13", "item_sizes": [{"name": "عادي", "price": 15}]},
+              {"name": "ساندوتش فول سوسيس اسكندراني", "image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&uid=14", "item_sizes": [{"name": "عادي", "price": 20}]},
+              {"name": "ساندوتش فول بيض مسلوق", "image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&uid=15", "item_sizes": [{"name": "عادي", "price": 17}]},
+              {"name": "ساندوتش فول اومليت", "image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&uid=16", "item_sizes": [{"name": "عادي", "price": 18}]},
+              {"name": "ساندوتش فول بابا غنوج", "image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&uid=17", "item_sizes": [{"name": "عادي", "price": 14}]},
+              {"name": "ساندوتش حمص", "image_url": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&uid=18", "item_sizes": [{"name": "عادي", "price": 12}]}
+            ]
+          },
+          {
+            "name": "ساندوتشات الطعمية",
+            "sort_order": 2,
+            "items": [
+              {"name": "ساندوتش طعمية سلطة وطحينة", "image_url": "https://images.pexels.com/photos/2955819/pexels-photo-2955819.jpeg?auto=compress&cs=tinysrgb&w=600&uid=19", "item_sizes": [{"name": "عادي", "price": 10}]},
+              {"name": "ساندوتش طعمية سبيشيال قرص", "image_url": "https://images.pexels.com/photos/2955819/pexels-photo-2955819.jpeg?auto=compress&cs=tinysrgb&w=600&uid=20", "item_sizes": [{"name": "عادي", "price": 10}]},
+              {"name": "ساندوتش طعمية سبايسي", "image_url": "https://images.pexels.com/photos/2955819/pexels-photo-2955819.jpeg?auto=compress&cs=tinysrgb&w=600&uid=21", "item_sizes": [{"name": "عادي", "price": 12}]},
+              {"name": "ساندوتش طعمية ليمون معصفر", "image_url": "https://images.pexels.com/photos/2955819/pexels-photo-2955819.jpeg?auto=compress&cs=tinysrgb&w=600&uid=22", "item_sizes": [{"name": "عادي", "price": 12}]},
+              {"name": "ساندوتش طعمية نعناع", "image_url": "https://images.pexels.com/photos/2955819/pexels-photo-2955819.jpeg?auto=compress&cs=tinysrgb&w=600&uid=23", "item_sizes": [{"name": "عادي", "price": 12}]},
+              {"name": "ساندوتش طعمية كيري", "image_url": "https://images.pexels.com/photos/2955819/pexels-photo-2955819.jpeg?auto=compress&cs=tinysrgb&w=600&uid=24", "item_sizes": [{"name": "عادي", "price": 18}]},
+              {"name": "ساندوتش طعمية مثلثات", "image_url": "https://images.pexels.com/photos/2955819/pexels-photo-2955819.jpeg?auto=compress&cs=tinysrgb&w=600&uid=25", "item_sizes": [{"name": "عادي", "price": 15}]},
+              {"name": "ساندوتش F16", "description": "طعمية وبطاطس وباذنجان", "image_url": "https://images.pexels.com/photos/2955819/pexels-photo-2955819.jpeg?auto=compress&cs=tinysrgb&w=600&uid=26", "item_sizes": [{"name": "عادي", "price": 20}]},
+              {"name": "ساندوتش الصاروخ", "image_url": "https://images.pexels.com/photos/2955819/pexels-photo-2955819.jpeg?auto=compress&cs=tinysrgb&w=600&uid=27", "item_sizes": [{"name": "عادي", "price": 25}]},
+              {"name": "ساندوتش ديناميت", "image_url": "https://images.pexels.com/photos/2955819/pexels-photo-2955819.jpeg?auto=compress&cs=tinysrgb&w=600&uid=28", "item_sizes": [{"name": "عادي", "price": 30}]},
+              {"name": "ساندوتش طعمية بيض مسلوق", "image_url": "https://images.pexels.com/photos/2955819/pexels-photo-2955819.jpeg?auto=compress&cs=tinysrgb&w=600&uid=29", "item_sizes": [{"name": "عادي", "price": 17}]},
+              {"name": "ساندوتش طعمية اومليت", "image_url": "https://images.pexels.com/photos/2955819/pexels-photo-2955819.jpeg?auto=compress&cs=tinysrgb&w=600&uid=30", "item_sizes": [{"name": "عادي", "price": 18}]},
+              {"name": "ساندوتش طعمية فارم", "description": "بطاطس", "image_url": "https://images.pexels.com/photos/2955819/pexels-photo-2955819.jpeg?auto=compress&cs=tinysrgb&w=600&uid=31", "item_sizes": [{"name": "عادي", "price": 18}]},
+              {"name": "ساندوتش طعمية باذنجان مقلي", "image_url": "https://images.pexels.com/photos/2955819/pexels-photo-2955819.jpeg?auto=compress&cs=tinysrgb&w=600&uid=32", "item_sizes": [{"name": "عادي", "price": 15}]},
+              {"name": "ساندوتش طعمية حمص", "image_url": "https://images.pexels.com/photos/2955819/pexels-photo-2955819.jpeg?auto=compress&cs=tinysrgb&w=600&uid=33", "item_sizes": [{"name": "عادي", "price": 15}]},
+              {"name": "ساندوتش طعمية جبنه حادقة قديمة", "image_url": "https://images.pexels.com/photos/2955819/pexels-photo-2955819.jpeg?auto=compress&cs=tinysrgb&w=600&uid=34", "item_sizes": [{"name": "عادي", "price": 15}]},
+              {"name": "ساندوتش طعمية رومي", "image_url": "https://images.pexels.com/photos/2955819/pexels-photo-2955819.jpeg?auto=compress&cs=tinysrgb&w=600&uid=35", "item_sizes": [{"name": "عادي", "price": 20}]},
+              {"name": "ساندوتش طعمية بابا غنوج", "image_url": "https://images.pexels.com/photos/2955819/pexels-photo-2955819.jpeg?auto=compress&cs=tinysrgb&w=600&uid=36", "item_sizes": [{"name": "عادي", "price": 15}]}
+            ]
+          },
+          {
+            "name": "ساندوتشات الفارم (بطاطس)",
+            "sort_order": 3,
+            "items": [
+              {"name": "ساندوتش فارم توبل", "image_url": "https://images.pexels.com/photos/1153655/pexels-photo-1153655.jpeg?auto=compress&cs=tinysrgb&w=600&uid=37", "item_sizes": [{"name": "عادي", "price": 19}]},
+              {"name": "ساندوتش فارم سلطة وطحينة", "image_url": "https://images.pexels.com/photos/1153655/pexels-photo-1153655.jpeg?auto=compress&cs=tinysrgb&w=600&uid=38", "item_sizes": [{"name": "عادي", "price": 20}]},
+              {"name": "ساندوتش فارم كاتشب ومايونيز", "image_url": "https://images.pexels.com/photos/1153655/pexels-photo-1153655.jpeg?auto=compress&cs=tinysrgb&w=600&uid=39", "item_sizes": [{"name": "عادي", "price": 20}]},
+              {"name": "ساندوتش فارم رومي", "image_url": "https://images.pexels.com/photos/1153655/pexels-photo-1153655.jpeg?auto=compress&cs=tinysrgb&w=600&uid=40", "item_sizes": [{"name": "عادي", "price": 30}]},
+              {"name": "ساندوتش فارم حمص", "image_url": "https://images.pexels.com/photos/1153655/pexels-photo-1153655.jpeg?auto=compress&cs=tinysrgb&w=600&uid=41", "item_sizes": [{"name": "عادي", "price": 25}]},
+              {"name": "ساندوتش فارم حمص رومي", "image_url": "https://images.pexels.com/photos/1153655/pexels-photo-1153655.jpeg?auto=compress&cs=tinysrgb&w=600&uid=42", "item_sizes": [{"name": "عادي", "price": 33}]},
+              {"name": "ساندوتش فارم اومليت", "image_url": "https://images.pexels.com/photos/1153655/pexels-photo-1153655.jpeg?auto=compress&cs=tinysrgb&w=600&uid=43", "item_sizes": [{"name": "عادي", "price": 25}]},
+              {"name": "ساندوتش فارم بيض مسلوق", "image_url": "https://images.pexels.com/photos/1153655/pexels-photo-1153655.jpeg?auto=compress&cs=tinysrgb&w=600&uid=44", "item_sizes": [{"name": "عادي", "price": 25}]},
+              {"name": "ساندوتش فارم حمص بيض مسلوق", "image_url": "https://images.pexels.com/photos/1153655/pexels-photo-1153655.jpeg?auto=compress&cs=tinysrgb&w=600&uid=45", "item_sizes": [{"name": "عادي", "price": 30}]},
+              {"name": "ساندوتش فارم ماكس جبن", "image_url": "https://images.pexels.com/photos/1153655/pexels-photo-1153655.jpeg?auto=compress&cs=tinysrgb&w=600&uid=46", "item_sizes": [{"name": "عادي", "price": 30}]},
+              {"name": "ساندوتش فارم جبنة مقلية", "image_url": "https://images.pexels.com/photos/1153655/pexels-photo-1153655.jpeg?auto=compress&cs=tinysrgb&w=600&uid=47", "item_sizes": [{"name": "عادي", "price": 33}]},
+              {"name": "ساندوتش فارم كولسلو", "image_url": "https://images.pexels.com/photos/1153655/pexels-photo-1153655.jpeg?auto=compress&cs=tinysrgb&w=600&uid=48", "item_sizes": [{"name": "عادي", "price": 25}]},
+              {"name": "ساندوتش فارم جبنة حادقة", "image_url": "https://images.pexels.com/photos/1153655/pexels-photo-1153655.jpeg?auto=compress&cs=tinysrgb&w=600&uid=49", "item_sizes": [{"name": "عادي", "price": 25}]},
+              {"name": "ساندوتش فارم باذنجان", "image_url": "https://images.pexels.com/photos/1153655/pexels-photo-1153655.jpeg?auto=compress&cs=tinysrgb&w=600&uid=50", "item_sizes": [{"name": "عادي", "price": 22}]},
+              {"name": "ساندوتش فارم طعمية رومي", "image_url": "https://images.pexels.com/photos/1153655/pexels-photo-1153655.jpeg?auto=compress&cs=tinysrgb&w=600&uid=51", "item_sizes": [{"name": "عادي", "price": 30}]}
+            ]
+          },
+          {
+            "name": "ساندوتشات المهروسة",
+            "sort_order": 4,
+            "items": [
+              {"name": "ساندوتش بطاطس مهروسة", "image_url": "https://images.pexels.com/photos/1633525/pexels-photo-1633525.jpeg?auto=compress&cs=tinysrgb&w=600&uid=52", "item_sizes": [{"name": "عادي", "price": 13}]},
+              {"name": "ساندوتش بطاطس مهروسة بيض مسلوق", "image_url": "https://images.pexels.com/photos/1633525/pexels-photo-1633525.jpeg?auto=compress&cs=tinysrgb&w=600&uid=53", "item_sizes": [{"name": "عادي", "price": 18}]},
+              {"name": "ساندوتش بطاطس مهروسة اومليت", "image_url": "https://images.pexels.com/photos/1633525/pexels-photo-1633525.jpeg?auto=compress&cs=tinysrgb&w=600&uid=54", "item_sizes": [{"name": "عادي", "price": 18}]}
+            ]
+          },
+          {
+            "name": "ساندوتشات الجبن",
+            "sort_order": 5,
+            "items": [
+              {"name": "ساندوتش جبنة بالطماطم", "image_url": "https://images.pexels.com/photos/1435184/pexels-photo-1435184.jpeg?auto=compress&cs=tinysrgb&w=600&uid=55", "item_sizes": [{"name": "عادي", "price": 14}]},
+              {"name": "ساندوتش جبنة زعتر وزيت زيتون", "image_url": "https://images.pexels.com/photos/1435184/pexels-photo-1435184.jpeg?auto=compress&cs=tinysrgb&w=600&uid=56", "item_sizes": [{"name": "عادي", "price": 15}]},
+              {"name": "ساندوتش جبنة حادقة", "image_url": "https://images.pexels.com/photos/1435184/pexels-photo-1435184.jpeg?auto=compress&cs=tinysrgb&w=600&uid=57", "item_sizes": [{"name": "عادي", "price": 15}]},
+              {"name": "ساندوتش جبنة مقلية", "image_url": "https://images.pexels.com/photos/1435184/pexels-photo-1435184.jpeg?auto=compress&cs=tinysrgb&w=600&uid=58", "item_sizes": [{"name": "عادي", "price": 30}]},
+              {"name": "ساندوتش رومي سخن", "image_url": "https://images.pexels.com/photos/1435184/pexels-photo-1435184.jpeg?auto=compress&cs=tinysrgb&w=600&uid=59", "item_sizes": [{"name": "عادي", "price": 25}]},
+              {"name": "ساندوتش مكس جبن", "image_url": "https://images.pexels.com/photos/1435184/pexels-photo-1435184.jpeg?auto=compress&cs=tinysrgb&w=600&uid=60", "item_sizes": [{"name": "عادي", "price": 30}]},
+              {"name": "ساندوتش رومي بسطرمة", "image_url": "https://images.pexels.com/photos/1435184/pexels-photo-1435184.jpeg?auto=compress&cs=tinysrgb&w=600&uid=61", "item_sizes": [{"name": "عادي", "price": 40}]}
+            ]
+          },
+          {
+            "name": "ساندوتشات الباذنجان",
+            "sort_order": 6,
+            "items": [
+              {"name": "ساندوتش باذنجان مقلي", "image_url": "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&w=600&uid=62", "item_sizes": [{"name": "عادي", "price": 10}]},
+              {"name": "ساندوتش مسقعه", "image_url": "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&w=600&uid=63", "item_sizes": [{"name": "عادي", "price": 12}]},
+              {"name": "ساندوتش بابا غنوج", "image_url": "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&w=600&uid=64", "item_sizes": [{"name": "عادي", "price": 15}]}
+            ]
+          },
+          {
+            "name": "ساندوتشات البيض",
+            "sort_order": 7,
+            "items": [
+              {"name": "ساندوتش بيض مسلوق", "image_url": "https://images.pexels.com/photos/1407346/pexels-photo-1407346.jpeg?auto=compress&cs=tinysrgb&w=600&uid=65", "item_sizes": [{"name": "عادي", "price": 16}]},
+              {"name": "ساندوتش بيض اومليت", "image_url": "https://images.pexels.com/photos/1407346/pexels-photo-1407346.jpeg?auto=compress&cs=tinysrgb&w=600&uid=66", "item_sizes": [{"name": "عادي", "price": 16}]},
+              {"name": "ساندوتش اومليت فلفل وطماطم", "image_url": "https://images.pexels.com/photos/1407346/pexels-photo-1407346.jpeg?auto=compress&cs=tinysrgb&w=600&uid=67", "item_sizes": [{"name": "عادي", "price": 18}]},
+              {"name": "ساندوتش بيض حمص", "image_url": "https://images.pexels.com/photos/1407346/pexels-photo-1407346.jpeg?auto=compress&cs=tinysrgb&w=600&uid=68", "item_sizes": [{"name": "عادي", "price": 20}]},
+              {"name": "ساندوتش بيض مكس جبن", "image_url": "https://images.pexels.com/photos/1407346/pexels-photo-1407346.jpeg?auto=compress&cs=tinysrgb&w=600&uid=69", "item_sizes": [{"name": "عادي", "price": 25}]},
+              {"name": "ساندوتش بيض رومي", "image_url": "https://images.pexels.com/photos/1407346/pexels-photo-1407346.jpeg?auto=compress&cs=tinysrgb&w=600&uid=70", "item_sizes": [{"name": "عادي", "price": 25}]},
+              {"name": "ساندوتش بيض بالبسطرمة", "image_url": "https://images.pexels.com/photos/1407346/pexels-photo-1407346.jpeg?auto=compress&cs=tinysrgb&w=600&uid=71", "item_sizes": [{"name": "عادي", "price": 25}]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -14,6 +14,7 @@ export const metadata = {
     "khatwah.online",
     "خطوة اونلاين",
   ].join(', '),
+  manifest: "/api/alakeifak/manifest?slug=main",
   openGraph: {
     title: "على كيفك — قوائم مطاعم العريش الرقمية | khatwah.online",
     description: "اطلب من مطعمك المفضل في العريش عبر منصة على كيفك من خطوة اونلاين. تصفح المنيو الرقمي واطلب عبر واتساب.",

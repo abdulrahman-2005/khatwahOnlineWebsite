@@ -44,11 +44,6 @@ const servicesData = {
           valueAddedTaxIncluded: "false"
         }
       },
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: "5",
-        reviewCount: "12"
-      },
       provider: {
         "@type": "Organization",
         name: "خطوة اونلاين",
@@ -84,11 +79,6 @@ const servicesData = {
           valueAddedTaxIncluded: "false"
         }
       },
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: "5",
-        reviewCount: "18"
-      },
       provider: {
         "@type": "Organization",
         name: "خطوة اونلاين",
@@ -123,11 +113,6 @@ const servicesData = {
           price: "0",
           valueAddedTaxIncluded: "false"
         }
-      },
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: "5",
-        reviewCount: "25"
       },
       provider: {
         "@type": "Organization",

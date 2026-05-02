@@ -1,4 +1,6 @@
-﻿export const metadata = {
+import { seoConfig } from '@/lib/seo';
+
+export const metadata = {
   title: "Free Business Tools & Services | خطوة اونلاين",
   description: "Professional-grade free tools designed to streamline your business operations. Create phone story cards, manage inventory, and more. No signup required.",
   keywords: [
@@ -15,7 +17,7 @@
   openGraph: {
     title: "Free Business Tools & Services",
     description: "Professional-grade free tools designed to streamline your business operations. No signup required.",
-    url: "https://www.khatwah.online/services",
+    url: `${seoConfig.baseUrl}/services`,
     siteName: "خطوة اونلاين | Khatwah Online",
     type: "website",
     locale: "en_US",
@@ -27,7 +29,7 @@
     description: "Professional-grade free tools designed to streamline your business operations. No signup required.",
   },
   alternates: {
-    canonical: "https://www.khatwah.online/services",
+    canonical: `${seoConfig.baseUrl}/services`,
   },
   robots: {
     index: true,
@@ -57,19 +59,19 @@ export default function ServicesLayout({ children }) {
                 "@type": "ListItem",
                 "position": 1,
                 "name": "Home",
-                "item": "https://www.khatwah.online"
+                "item": seoConfig.baseUrl
               },
               {
                 "@type": "ListItem",
                 "position": 2,
                 "name": "Services",
-                "item": "https://www.khatwah.online/services"
+                "item": `${seoConfig.baseUrl}/services`
               }
             ]
           })
         }}
       />
-      
+
       {/* CollectionPage Structured Data */}
       <script
         type="application/ld+json"
@@ -79,30 +81,30 @@ export default function ServicesLayout({ children }) {
             "@type": "CollectionPage",
             "name": "Free Business Tools & Services",
             "description": "Professional-grade free tools designed to streamline your business operations",
-            "url": "https://www.khatwah.online/services",
+            "url": `${seoConfig.baseUrl}/services`,
             "provider": {
               "@type": "Organization",
               "name": "خطوة اونلاين | Khatwah Online",
-              "url": "https://www.khatwah.online"
+              "url": seoConfig.baseUrl
             },
             "hasPart": [
               {
                 "@type": "SoftwareApplication",
                 "name": "PhoneStory",
                 "description": "Create professional story cards for used phones in 30 seconds",
-                "url": "https://www.khatwah.online/services/phone-story",
+                "url": `${seoConfig.baseUrl}/services/phone-story`,
                 "applicationCategory": "WebApplication",
                 "offers": {
                   "@type": "Offer",
                   "price": "0",
-                  "priceCurrency": "USD"
+                  "priceCurrency": "EGP"
                 }
               },
               {
                 "@type": "WebApplication",
                 "name": "على كيفك — alakeifak",
                 "description": "Free interactive digital menus for restaurants in Arish with WhatsApp ordering",
-                "url": "https://www.khatwah.online/services/alakeifak",
+                "url": `${seoConfig.baseUrl}/services/alakeifak`,
                 "applicationCategory": "FoodOrderingApplication",
                 "offers": {
                   "@type": "Offer",
@@ -114,7 +116,7 @@ export default function ServicesLayout({ children }) {
           })
         }}
       />
-      
+
       {children}
     </>
   );

@@ -187,14 +187,33 @@ export default function SetupWizard({ userId, userEmail, onComplete }) {
     }
   };
 
-  const goNext = () => {
+  const goNext = async () => {
     setError("");
     if (step === 1) {
       if (!name.trim()) return setError("اسم المطعم مطلوب للإستمرار");
       if (!slug.trim()) return setError("رابط المنيو الفريد مطلوب");
+      if (slug === "partner" || slug === "migrations" || slug === "admin") {
+        return setError("عنوان الصفحة محجوز، يرجى اختيار رابط مختلف.");
+      }
+      
+      setSubmitting(true);
+      const { data: existing } = await supabase
+        .from("restaurants")
+        .select("id")
+        .eq("slug", slug)
+        .maybeSingle();
+      setSubmitting(false);
+
+      if (existing) {
+        return setError("عنوان الصفحة مأخوذ مسبقاً، جرب إضافة رقم مميز له.");
+      }
     }
     if (step === 2) {
       if (!whatsappNumber || whatsappNumber.length < 8) return setError("رقم موبايل حقيقي مطلوب");
+      const formattedPhone = formatEgyptianPhone(whatsappNumber);
+      if (!isValidEgyptianPhone(formattedPhone)) {
+        return setError("يرجى إدخال رقم هاتف مصري صحيح (مثال: 01012345678 أو +201...)");
+      }
     }
     setStep(step + 1);
   };

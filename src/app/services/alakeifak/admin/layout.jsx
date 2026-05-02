@@ -46,8 +46,12 @@ export default function AdminLayout({ children }) {
       
       if (u) {
         // Check DB for super admin status
-        const { data: isSuperAdmin } = await safeQuery(() => supabase.rpc('is_super_admin'));
-        setAuthorized(!!isSuperAdmin);
+        const { data: isSuperAdmin, error } = await safeQuery(() => supabase.rpc('is_super_admin'));
+        // Only set authorized to false if the query succeeded AND returned false.
+        // If it failed due to network, we leave it as true if it was already true, or false if it was already false.
+        if (!error && isSuperAdmin !== null) {
+          setAuthorized(!!isSuperAdmin);
+        }
       } else {
         setAuthorized(false);
       }
