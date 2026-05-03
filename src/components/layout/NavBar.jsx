@@ -90,8 +90,9 @@ export default function NavBar() {
   const altLang = locale === "ar" ? "en" : "ar";
   const altLangLabel = locale === "ar" ? t.lang_en : t.lang_ar;
 
-  // ── UX Improvement: Reordered Links & Removed "Home" ──
+  // ── Main Links ──
   const mainLinks = [
+    { label: t.home, href: "/" },
     { label: t.products, href: "/products" },
     { label: t.services, href: "/services" },
     { label: t.projects, href: "/projects" },

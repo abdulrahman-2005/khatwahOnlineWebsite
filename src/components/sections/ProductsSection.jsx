@@ -182,7 +182,7 @@ export default function ProductsSection() {
                 color: "var(--color-gold)",
               }}
             >
-              {locale === 'ar' ? 'عرض كل الحلول' : 'View All Solutions'}
+              {locale === 'ar' ? 'عرض كل الخدمات' : 'View All Solutions'}
               <svg 
                 className={`h-6 w-6 transition-transform duration-300 ${locale === 'ar' ? 'rotate-180 group-hover:-translate-x-2' : 'group-hover:translate-x-2'}`} 
                 fill="none" 

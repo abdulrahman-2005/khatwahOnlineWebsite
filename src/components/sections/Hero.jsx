@@ -1,6 +1,7 @@
-﻿"use client";
+"use client";
 
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { Reveal } from "@/components/ui/Reveal";
 import { useLocale } from "@/contexts/LocaleContext";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -81,31 +82,34 @@ export default function Hero() {
         {/* Mobile/Tablet: Single Column */}
         <div className="w-full max-w-7xl mx-auto lg:hidden flex flex-col items-center text-center space-y-8">
           
-          {/* Brand Name - Mobile */}
+          {/* Brand Image - Mobile */}
           <Reveal direction="up" distance={30} duration={800}>
-            <div className="flex flex-col items-center gap-4">
-              <div 
-                className={`font-black uppercase transition-all duration-700 ${
-                  locale === 'ar' 
-                    ? 'text-[32vw] sm:text-[18vw] leading-[0.85]' 
-                    : 'text-[18vw] sm:text-[14vw] leading-[0.8] tracking-tighter'
-                }`}
-                style={{
-                  fontFamily: "var(--font-display)",
-                  color: "var(--color-text)"
-                }}
-              >
-                {brandName}
+            <div className="flex flex-col items-center gap-1 w-full">
+              {/* Theme-aware hero wordmark */}
+              <div className="relative w-[95vw] sm:w-[70vw] max-w-lg">
+                <Image
+                  src={isLight ? "/lightmode-khatwah-hero.png" : "/darkmode-khatwah-hero.png"}
+                  alt="خطوة Khatwah"
+                  width={800}
+                  height={400}
+                  priority
+                  className="w-full h-auto object-contain drop-shadow-2xl transition-opacity duration-500"
+                  style={{
+                    filter: isLight
+                      ? 'drop-shadow(0 8px 24px rgba(0,0,0,0.18))'
+                      : 'drop-shadow(0 8px 32px rgba(238,147,12,0.22))'
+                  }}
+                />
               </div>
               <div className="flex items-center gap-3 sm:gap-4">
-                <span className={`h-px w-10 sm:w-16 bg-gold `} />
+                <span className="h-px w-10 sm:w-16 bg-gold" />
                 <span 
-                  className={`text-2xl sm:text-3xl font-black tracking-[0.25em] uppercase text-gold `} 
+                  className="text-2xl sm:text-3xl font-black tracking-[0.25em] uppercase text-gold" 
                   style={{ fontFamily: "var(--font-display)" }}
                 >
                   {brandSubtitle}
                 </span>
-                <span className={`h-px w-10 sm:w-16 bg-gold`} />
+                <span className="h-px w-10 sm:w-16 bg-gold" />
               </div>
             </div>
           </Reveal>
@@ -164,23 +168,25 @@ export default function Hero() {
         {/* Desktop: Two Column Layout */}
         <div className="hidden lg:grid w-full max-w-7xl mx-auto grid-cols-2 gap-16 xl:gap-[5rem] items-center">
           
-          {/* LEFT COLUMN - Brand Name */}
+          {/* LEFT COLUMN - Brand Image */}
           <div className="flex flex-col items-start justify-center">
             <Reveal direction="up" distance={40} duration={900}>
-              <div className="flex flex-col items-start gap-6">
-                <div 
-                  className={`font-black uppercase transition-all duration-700 ${
-                    locale === 'ar' 
-                      ? 'text-[240px] xl:text-[280px] leading-[0.85]' 
-                      : 'text-[110px] xl:text-[140px] leading-[0.75] tracking-tighter'
-                  }`}
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    color: "var(--color-text)",
-                    textShadow: isLight ? 'none' : '0 8px 32px rgba(0,0,0,0.4)'
-                  }}
-                >
-                  {brandName}
+              <div className="flex flex-col items-start gap-1">
+                {/* Theme-aware hero wordmark */}
+                <div className="relative w-full">
+                  <Image
+                    src={isLight ? "/lightmode-khatwah-hero.png" : "/darkmode-khatwah-hero.png"}
+                    alt="خطوة Khatwah"
+                    width={900}
+                    height={450}
+                    priority
+                    className="w-full h-auto object-contain transition-all duration-700"
+                    style={{
+                      filter: isLight
+                        ? 'drop-shadow(0 12px 32px rgba(0,0,0,0.14))'
+                        : 'drop-shadow(0 12px 48px rgba(238,147,12,0.28)) drop-shadow(0 4px 16px rgba(0,0,0,0.5))'
+                    }}
+                  />
                 </div>
                 <div className="flex items-center gap-6 w-full">
                   <span className={`h-[2px] w-16 bg-gold ${isLight ? 'opacity-60' : 'opacity-50'}`} />

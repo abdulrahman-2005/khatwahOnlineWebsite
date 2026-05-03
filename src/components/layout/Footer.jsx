@@ -10,7 +10,7 @@ export default function Footer() {
 
   const navLinks = [
     { label: i18n[locale].nav.products, href: "/#products" },
-    { label: locale === 'ar' ? 'خدماتنا' : 'Services', href: "/services" },
+    { label: i18n[locale].nav.services, href: "/services" },
     { label: i18n[locale].nav.projects, href: "/projects" },
     { label: i18n[locale].nav.about, href: "/about" },
     { label: i18n[locale].nav.contact, href: "/contact" },

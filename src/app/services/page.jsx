@@ -127,9 +127,6 @@ function ServiceSection({ service, index, t }) {
                       {tag}
                     </span>
                   ))}
-                  <span className="rounded-full px-4 py-1.5 text-[11px] font-black tracking-wider bg-[var(--color-gold)]/10 text-[var(--color-gold)] border border-[var(--color-gold)]/20">
-                    {t.free_forever}
-                  </span>
                 </div>
               </Reveal>
 

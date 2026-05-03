@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { useLocale } from "@/contexts/LocaleContext";
@@ -61,7 +61,7 @@ export default function ProjectsTeaser() {
                   <HorizontalMarquee images={project.headerImages} basePath={project.basePath} speed={3.6} />
                   
                   {/* Content */}
-                  <div className="absolute inset-0 p-6 sm:p-8 lg:p-10 flex flex-col transition-all duration-500 justify-end hover:bg-gold">
+                  <div className="absolute inset-0 p-6 sm:p-8 lg:p-10 flex flex-col transition-all duration-500 justify-end hover:bg-gold/80">
                     <h3 className="mb-1 text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-black leading-tight tracking-tight text-white transition-transform duration-500 group-hover:-translate-y-2 mix-blend-difference" style={{ fontFamily: "var(--font-heading)" }}>
                       {currentTitle}
                     </h3>
