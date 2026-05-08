@@ -1,69 +1,47 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo, useRef, memo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { supabase } from "../../../lib/supabaseClient";
-import { safeQuery, safeMutation } from "../../../lib/safeQuery";
+import { safeQuery } from "../../../lib/safeQuery";
 import { createManagedChannel } from "../../../lib/realtimeManager";
 import {
-  Phone, MapPin, Truck, ClipboardList, Check, XCircle, Clock,
-  TrendingUp, DollarSign, ShoppingBag, Target, ArrowUpRight, Filter,
-  ChefHat, PackageCheck, CheckCircle2, MessageCircle, Printer,
-  Bell, BellOff, Volume2, VolumeX, Hash, UtensilsCrossed,
-  TrendingDown, AlertTriangle, BarChart3, Eye
+  Truck, ClipboardList, XCircle, ShoppingBag, Target,
+  ChefHat, Bell, BellOff, Volume2, VolumeX,
+  TrendingDown, AlertTriangle, BarChart3, Search,
+  Users, Flame, Activity
 } from "lucide-react";
 import { LoadingSpinner, EmptyState } from "../ui/PartnerUI";
-import { playOrderSound, requestNotificationPermission, showOrderNotification, getRelativeTime } from "../../../lib/notificationUtils";
+import { playOrderSound, requestNotificationPermission, showOrderNotification } from "../../../lib/notificationUtils";
 import OrderReceipt from "../OrderReceipt";
 import DateRangePicker from "../DateRangePicker";
+import OrderRow, { ACTIVE_STATUSES, ARCHIVED_STATUSES, LOSS_STATUSES } from "../OrderRow";
 
 // ── Helper Components ──
 
-function StatCard({ label, value, unit, icon: Icon, color, trend, isLoss }) {
+function StatCard({ label, value, unit, icon: Icon, color, trend, isLoss, accent }) {
   return (
-    <div className={`rounded-[28px] bg-white p-5 border border-gray-100 shadow-sm transition-all hover:shadow-md group relative overflow-hidden ${isLoss ? 'border-red-100' : ''}`}>
-      {isLoss && <div className="absolute top-0 right-0 w-24 h-24 bg-red-500/5 rounded-full -translate-y-1/2 translate-x-1/2" />}
-      <div className="flex items-center justify-between mb-4">
-        <div className="p-2.5 rounded-2xl" style={{ backgroundColor: `${color}15` }}>
-          <Icon size={18} style={{ color }} />
+    <div className={`group relative rounded-2xl p-4 border transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 overflow-hidden ${isLoss ? 'bg-red-50/80 border-red-200' : 'bg-white border-gray-200/80'}`}>
+      <div className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl opacity-80" style={{ background: `linear-gradient(90deg, ${color}, ${color}88)` }} />
+      <div className="flex items-center justify-between mb-3">
+        <div className="p-2 rounded-xl transition-transform duration-300 group-hover:scale-110" style={{ backgroundColor: `${color}15` }}>
+          <Icon size={16} style={{ color }} />
         </div>
         {trend && (
-          <span className={`text-[10px] font-black uppercase tracking-tight px-2 py-0.5 rounded-lg ${isLoss ? 'bg-red-50 text-red-600' : 'bg-gray-50 text-gray-400'}`}>
+          <span className={`text-[10px] font-black px-2 py-0.5 rounded-lg ${isLoss ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-500'}`}>
             {trend}
           </span>
         )}
       </div>
-      <div className="space-y-0.5">
-        <p className="text-[11px] font-black text-gray-400 uppercase tracking-wider">{label}</p>
-        <div className="flex items-baseline gap-1">
-          <span className={`text-[22px] font-black tracking-tight ${isLoss ? 'text-red-600' : 'text-gray-900'}`} style={{ fontFamily: "var(--font-display)" }}>
-            {value}
-          </span>
-          {unit && <span className="text-[12px] font-bold text-gray-400">{unit}</span>}
-        </div>
+      <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-0.5">{label}</p>
+      <div className="flex items-baseline gap-1">
+        <span className={`text-[20px] font-black tracking-tight ${isLoss ? 'text-red-600' : 'text-gray-900'}`}>
+          {value}
+        </span>
+        {unit && <span className="text-[11px] font-bold text-gray-400">{unit}</span>}
       </div>
     </div>
   );
 }
-
-// ── New OMS Status Map ──
-const STATUS_MAP = {
-  pending:   { label: "جديد", color: "bg-amber-50 text-amber-700 border-amber-200", icon: Clock, actions: ["accept","cancel"] },
-  preparing: { label: "قيد التجهيز", color: "bg-blue-50 text-blue-700 border-blue-200", icon: ChefHat, actions: ["ready"] },
-  ready:     { label: "جاهز", color: "bg-emerald-50 text-emerald-700 border-emerald-200", icon: PackageCheck, actions: ["complete"] },
-  completed: { label: "مكتمل", color: "bg-green-50 text-green-700 border-green-200", icon: CheckCircle2, actions: [] },
-  confirmed: { label: "مؤكد", color: "bg-blue-50 text-blue-700 border-blue-200", icon: Check, actions: ["delivered"] },
-  delivered: { label: "تم التوصيل", color: "bg-green-50 text-green-700 border-green-200", icon: Check, actions: [] },
-  cancelled: { label: "ملغي", color: "bg-red-50 text-red-600 border-red-200", icon: XCircle, actions: [] },
-};
-
-const ORDER_TYPE_ICONS = { delivery: Truck, pickup: ShoppingBag, in_house: UtensilsCrossed };
-const ORDER_TYPE_LABELS = { delivery: "توصيل", pickup: "استلام", in_house: "داخلي" };
-
-// Loss-state statuses: cancelling at these stages = food was made = financial loss
-const LOSS_STATUSES = ["ready", "confirmed"];
-
-const ACTIVE_STATUSES = ["pending", "preparing", "ready", "confirmed"];
-const ARCHIVED_STATUSES = ["completed", "delivered", "cancelled"];
 
 export default function OrdersTab({ restaurantId, themeColor }) {
   const [orders, setOrders] = useState([]);
@@ -322,84 +300,87 @@ export default function OrdersTab({ restaurantId, themeColor }) {
   return (
     <div className="flex flex-col min-h-[calc(100vh-160px)] animate-in fade-in slide-in-from-bottom-4 duration-700">
       
-      {/* ── Universal Control Bar ── */}
-      <div className="shrink-0 flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-white border border-gray-100 rounded-2xl p-3 sm:px-5 sm:py-4 shadow-sm mb-6">
-        
-        {/* Left: View Toggle & Realtime Status */}
-        <div className="flex items-center gap-4 sm:gap-6">
-          <div className="flex p-1 bg-gray-50 border border-gray-100 rounded-xl shadow-sm">
-            <button onClick={() => setViewMode("active")}
-              className={`px-4 sm:px-6 py-2 rounded-lg text-[12px] font-black transition-all flex items-center gap-2 ${viewMode === "active" ? "text-white shadow-md" : "text-gray-400 hover:text-gray-600"}`}
-              style={viewMode === "active" ? { backgroundColor: themeColor } : undefined}>
-              <ChefHat size={14} />
-              طلبات المطبخ ({activeCount})
-            </button>
-            <button onClick={() => setViewMode("history")}
-              className={`px-4 sm:px-6 py-2 rounded-lg text-[12px] font-black transition-all flex items-center gap-2 ${viewMode === "history" ? "text-white shadow-md" : "text-gray-400 hover:text-gray-600"}`}
-              style={viewMode === "history" ? { backgroundColor: themeColor } : undefined}>
-              <CheckCircle2 size={14} />
-              السجل والإحصائيات
-            </button>
+      {/* ── Command Center Header ── */}
+      <div className="shrink-0 rounded-2xl overflow-hidden mb-6 shadow-md border border-gray-200">
+        {/* Top bar - dark */}
+        <div className="bg-gray-900 px-4 sm:px-6 py-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+          <div className="flex items-center gap-4 sm:gap-5">
+            {/* View Toggle */}
+            <div className="flex p-1 bg-gray-800 rounded-xl border border-gray-700">
+              <button onClick={() => setViewMode("active")}
+                className={`px-4 sm:px-5 py-2 rounded-lg text-[12px] font-black transition-all flex items-center gap-2 ${viewMode === "active" ? "text-white shadow-lg" : "text-gray-500 hover:text-gray-300"}`}
+                style={viewMode === "active" ? { backgroundColor: themeColor } : undefined}>
+                <Flame size={14} />
+                المطبخ ({activeCount})
+              </button>
+              <button onClick={() => setViewMode("history")}
+                className={`px-4 sm:px-5 py-2 rounded-lg text-[12px] font-black transition-all flex items-center gap-2 ${viewMode === "history" ? "text-white shadow-lg" : "text-gray-500 hover:text-gray-300"}`}
+                style={viewMode === "history" ? { backgroundColor: themeColor } : undefined}>
+                <BarChart3 size={14} />
+                السجل والتحليلات
+              </button>
+            </div>
+            {/* Realtime dot */}
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-800 border border-gray-700">
+              <div className={`h-2 w-2 rounded-full ${realtimeConnected ? "bg-emerald-400 animate-pulse shadow-[0_0_6px_rgba(52,211,153,0.5)]" : "bg-red-400"}`} />
+              <span className="text-[11px] font-bold text-gray-400">
+                {realtimeConnected ? "مباشر" : "غير متصل"}
+              </span>
+            </div>
           </div>
-          
-          <div className="hidden sm:flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-gray-50 border border-gray-100">
-            <div className={`h-2.5 w-2.5 rounded-full ${realtimeConnected ? "bg-emerald-500 animate-pulse" : "bg-red-400"}`} />
-            <span className="text-[11px] font-black text-gray-500">
-              {realtimeConnected ? "متصل" : "غير متصل"}
-            </span>
+
+          {/* Search + Controls */}
+          <div className="flex items-center gap-2 w-full xl:w-auto">
+            <div className="relative flex-1 xl:w-80">
+              <input type="text" placeholder="ابحث بالاسم، رقم الطلب، أو الهاتف..."
+                value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full rounded-xl bg-gray-800 border border-gray-700 pl-4 pr-10 py-2.5 text-[13px] font-bold text-white placeholder-gray-500 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/30 transition-all" />
+              <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
+            </div>
+            <button onClick={() => setSoundEnabled(!soundEnabled)}
+              className={`flex shrink-0 h-10 w-10 items-center justify-center rounded-xl border transition-all ${soundEnabled ? "bg-emerald-900/40 border-emerald-700 text-emerald-400" : "bg-gray-800 border-gray-700 text-gray-500 hover:text-gray-300"}`}
+              title={soundEnabled ? "كتم الصوت" : "تشغيل الصوت"}>
+              {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+            </button>
+            <button onClick={() => { requestNotificationPermission().then(g => setNotifEnabled(g)); }}
+              className={`flex shrink-0 h-10 w-10 items-center justify-center rounded-xl border transition-all ${notifEnabled ? "bg-emerald-900/40 border-emerald-700 text-emerald-400" : "bg-gray-800 border-gray-700 text-gray-500 hover:text-gray-300"}`}
+              title={notifEnabled ? "إشعارات مفعلة" : "تفعيل الإشعارات"}>
+              {notifEnabled ? <Bell size={16} /> : <BellOff size={16} />}
+            </button>
           </div>
         </div>
 
-        {/* Right: Search & Utils */}
-        <div className="flex items-center gap-3 w-full xl:w-auto">
-          <div className="relative flex-1 xl:w-72">
-            <input type="text" placeholder="ابحث برقم الطلب أو الهاتف..."
-              value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-xl bg-gray-50 border border-gray-100 pl-4 pr-10 py-2.5 text-[13px] font-bold outline-none focus:border-[var(--dynamic-color)] focus:bg-white transition-all" />
-            <Filter className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+        {/* Status Pipeline - only in active mode */}
+        {viewMode === "active" && (
+          <div className="bg-gray-50 border-t border-gray-200 px-4 sm:px-6 py-3 flex items-center gap-3 overflow-x-auto">
+            <span className="text-[11px] font-black text-gray-400 uppercase tracking-wider shrink-0">الحالات:</span>
+            {[
+              { label: "جديد", count: stats.pending, color: "bg-amber-500", textColor: "text-amber-700", bg: "bg-amber-50 border-amber-200" },
+              { label: "تجهيز", count: stats.preparing, color: "bg-sky-500", textColor: "text-sky-700", bg: "bg-sky-50 border-sky-200" },
+              { label: "جاهز", count: stats.ready, color: "bg-emerald-500", textColor: "text-emerald-700", bg: "bg-emerald-50 border-emerald-200" },
+              { label: "مؤكد", count: stats.confirmed, color: "bg-blue-500", textColor: "text-blue-700", bg: "bg-blue-50 border-blue-200" },
+            ].map((s, i) => (
+              <div key={i} className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border ${s.bg} shrink-0`}>
+                <div className={`h-2 w-2 rounded-full ${s.color}`} />
+                <span className={`text-[12px] font-black ${s.textColor}`}>{s.label}</span>
+                <span className={`text-[13px] font-black ${s.textColor}`}>{s.count}</span>
+              </div>
+            ))}
+            {delayedOrdersCount > 0 && (
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-red-300 bg-red-50 shrink-0 animate-pulse">
+                <AlertTriangle size={14} className="text-red-600" />
+                <span className="text-[12px] font-black text-red-700">{delayedOrdersCount} متأخر!</span>
+              </div>
+            )}
           </div>
-          <button onClick={() => setSoundEnabled(!soundEnabled)}
-            className={`flex shrink-0 h-10 w-10 items-center justify-center rounded-xl border transition-all ${soundEnabled ? "bg-emerald-50 border-emerald-200 text-emerald-600" : "bg-gray-50 border-gray-200 text-gray-400 hover:bg-gray-100"}`}
-            title={soundEnabled ? "كتم الصوت" : "تشغيل الصوت"}>
-            {soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
-          </button>
-          <button onClick={() => { requestNotificationPermission().then(g => setNotifEnabled(g)); }}
-            className={`flex shrink-0 h-10 w-10 items-center justify-center rounded-xl border transition-all ${notifEnabled ? "bg-emerald-50 border-emerald-200 text-emerald-600" : "bg-gray-50 border-gray-200 text-gray-400 hover:bg-gray-100"}`}
-            title={notifEnabled ? "إشعارات مفعلة" : "تفعيل الإشعارات"}>
-            {notifEnabled ? <Bell size={18} /> : <BellOff size={18} />}
-          </button>
-        </div>
+        )}
       </div>
 
       {/* ── Dynamic Content Area ── */}
       <div className="flex-1 flex flex-col min-h-0">
-        
-        {delayedOrdersCount > 0 && viewMode === "active" && (
-          <div className="shrink-0 mb-6 rounded-2xl bg-red-50 border border-red-200 p-4 sm:px-5 sm:py-4 flex items-center gap-4 shadow-sm animate-in fade-in zoom-in-95">
-            <div className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl bg-red-100 text-red-600 animate-pulse">
-              <AlertTriangle size={24} />
-            </div>
-            <div>
-              <h3 className="text-[14px] sm:text-[15px] font-black text-red-900 leading-tight">تنبيه: يوجد {delayedOrdersCount} طلب متأخر القبول!</h3>
-              <p className="text-[12px] sm:text-[13px] font-bold text-red-700 mt-0.5">لم يتم قبول بعض الطلبات منذ أكثر من 5 دقائق. راجع عمود "طلبات جديدة" فوراً.</p>
-            </div>
-          </div>
-        )}
 
-        {/* ── Tabs Content (CSS Toggled for Instant Switching) ── */}
-        
-        {/* ACTIVE ORDERS LIST (Responsive List/Table style) */}
+        {/* ACTIVE ORDERS LIST */}
         <div className={`${viewMode === "active" ? "block" : "hidden"} flex-1 overflow-y-auto pr-1 pb-20 space-y-4`}>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <div className="h-6 w-1.5 rounded-full" style={{ backgroundColor: themeColor }} />
-              <h2 className="text-[16px] font-black text-gray-900">طلبات المطبخ النشطة (من الأحدث للأقدم)</h2>
-            </div>
-            <div className="flex gap-2">
-              <span className="text-[12px] font-bold text-gray-500 bg-gray-100 px-3 py-1.5 rounded-xl">{filteredOrders.filter(o => ACTIVE_STATUSES.includes(o.status)).length} طلب نشط</span>
-            </div>
-          </div>
-
           <div className="flex flex-col gap-3">
             {filteredOrders.filter(o => ACTIVE_STATUSES.includes(o.status)).map((order) => (
               <OrderRow key={order.id} order={order}
@@ -412,37 +393,74 @@ export default function OrdersTab({ restaurantId, themeColor }) {
           </div>
 
           {filteredOrders.filter(o => ACTIVE_STATUSES.includes(o.status)).length === 0 && (
-            <EmptyState text="لا توجد طلبات نشطة حالياً." icon={ChefHat} />
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="h-20 w-20 rounded-3xl bg-gray-100 flex items-center justify-center mb-4">
+                <ChefHat size={36} className="text-gray-300" />
+              </div>
+              <h3 className="text-[16px] font-black text-gray-400 mb-1">لا توجد طلبات نشطة</h3>
+              <p className="text-[13px] font-bold text-gray-400">ستظهر الطلبات الجديدة هنا تلقائياً</p>
+            </div>
           )}
         </div>
 
-        {/* HISTORY & STATS VIEW */}
-        <div className={`${viewMode === "history" ? "block" : "hidden"} flex-1 overflow-y-auto pr-1 pb-20 space-y-8`}>
+        {/* HISTORY & ANALYTICS VIEW */}
+        <div className={`${viewMode === "history" ? "block" : "hidden"} flex-1 overflow-y-auto pr-1 pb-20 space-y-6`}>
           
-          <section className="pb-2">
+          {/* Analytics Header */}
+          <section>
             <div className="mb-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <div className="h-6 w-1.5 rounded-full" style={{ backgroundColor: themeColor }} />
-                <h2 className="text-[16px] font-black text-gray-900">إحصائيات الأداء</h2>
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${themeColor}15` }}>
+                  <Activity size={20} style={{ color: themeColor }} />
+                </div>
+                <div>
+                  <h2 className="text-[16px] font-black text-gray-900">لوحة التحليلات</h2>
+                  <p className="text-[12px] font-bold text-gray-500">تحليل شامل لأداء المطعم</p>
+                </div>
               </div>
               <DateRangePicker value={dateRange} onChange={setDateRange} themeColor={themeColor} />
             </div>
 
-            {/* 6-card split stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-              <StatCard label="إيراد الطلبات" value={stats.orderRevenue.toFixed(0)} unit="ج.م" icon={DollarSign} color={themeColor} trend="صافي دخلك" />
-              <StatCard label="رسوم التوصيل" value={stats.deliveryFees.toFixed(0)} unit="ج.م" icon={Truck} color="#3b82f6" trend="محصّلة للتوصيل" />
-              <StatCard label="الخسائر" value={stats.totalLossAmount.toFixed(0)} unit="ج.م" icon={TrendingDown} color="#ef4444" trend={`${stats.losses} طلب ملغى بخسارة`} isLoss />
-              <StatCard label="عدد الطلبات" value={stats.total} icon={ShoppingBag} color="#f59e0b" trend={`${stats.pending} جديد · ${stats.preparing} تجهيز`} />
+            {/* Revenue Hero Card */}
+            <div className="rounded-2xl p-5 mb-4 text-white shadow-lg" style={{ background: `linear-gradient(135deg, ${themeColor}, ${themeColor}cc)` }}>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-wider opacity-80">صافي الإيرادات</p>
+                  <p className="text-[32px] font-black tracking-tight mt-1">{stats.orderRevenue.toFixed(0)} <span className="text-[16px] opacity-70">ج.م</span></p>
+                </div>
+                <div className="flex flex-col items-end gap-2">
+                  <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1.5">
+                    <ShoppingBag size={14} />
+                    <span className="text-[13px] font-black">{stats.total} طلب</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1.5">
+                    <Users size={14} />
+                    <span className="text-[13px] font-black">{stats.successful_orders} مكتمل</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+              <StatCard label="رسوم التوصيل" value={stats.deliveryFees.toFixed(0)} unit="ج.م" icon={Truck} color="#3b82f6" trend="محصّلة" />
+              <StatCard label="الخسائر" value={stats.totalLossAmount.toFixed(0)} unit="ج.م" icon={TrendingDown} color="#ef4444" trend={`${stats.losses} ملغي`} isLoss />
               <StatCard label="متوسط الطلب" value={stats.aov.toFixed(0)} unit="ج.م" icon={BarChart3} color="#8b5cf6" trend="AOV" />
-              <StatCard label="نسبة النجاح" value={`${stats.rate.toFixed(0)}%`} icon={Target} color="#10b981" trend="الطلبات المكتملة" />
+              <StatCard label="نسبة النجاح" value={`${stats.rate.toFixed(0)}%`} icon={Target} color="#10b981" trend="الإنجاز" />
+              <StatCard label="الملغية" value={stats.losses + (stats.total - stats.successful_orders - stats.losses)} icon={XCircle} color="#f59e0b" trend={`من ${stats.total}`} />
             </div>
           </section>
 
+          {/* Order History */}
           <section className="space-y-4">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="h-6 w-1.5 rounded-full bg-gray-800" />
-              <h2 className="text-[16px] font-black text-gray-900">سجل الطلبات</h2>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="h-6 w-1.5 rounded-full bg-gray-800" />
+                <h2 className="text-[16px] font-black text-gray-900">سجل الطلبات</h2>
+              </div>
+              <span className="text-[12px] font-bold text-gray-500 bg-gray-100 px-3 py-1.5 rounded-lg">
+                {filteredOrders.filter(o => ARCHIVED_STATUSES.includes(o.status)).length} طلب
+              </span>
             </div>
             <div className="flex flex-col gap-3">
               {filteredOrders.filter(o => ARCHIVED_STATUSES.includes(o.status)).map((order) => (
@@ -458,36 +476,31 @@ export default function OrdersTab({ restaurantId, themeColor }) {
               <EmptyState text="لا توجد طلبات في السجل تطابق بحثك." icon={ClipboardList} />
             )}
           </section>
-        </div>
 
+        </div>
       </div>
 
-      {/* Cancellation Confirmation Modal */}
+      {/* Cancel Confirmation Modal */}
       {cancelConfirm && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm" dir="rtl">
-          <div className="w-full max-w-sm rounded-3xl bg-white shadow-2xl p-6 animate-in zoom-in-95 fade-in duration-200">
-            {LOSS_STATUSES.includes(cancelConfirm.currentStatus) ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-[28px] max-w-sm w-full p-6 shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="flex justify-center mb-4">
+              <div className="h-16 w-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
+                <AlertTriangle size={32} />
+              </div>
+            </div>
+            <h3 className="text-[20px] font-black text-center text-gray-900 mb-2">تأكيد الإلغاء</h3>
+            <p className="text-center text-[14px] font-bold text-gray-500 mb-6 leading-relaxed">
+              هل أنت متأكد من إلغاء هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.
+            </p>
+            {LOSS_STATUSES.includes(cancelConfirm.currentStatus) && (
               <>
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-100 mb-4">
-                  <TrendingDown size={28} className="text-red-600" />
-                </div>
-                <h3 className="text-[20px] font-black text-gray-900 mb-2">تأكيد إلغاء الطلب</h3>
-                <p className="text-[14px] font-bold text-gray-500 mb-1">الطلب في مرحلة <strong className="text-gray-800">{STATUS_MAP[cancelConfirm.currentStatus]?.label}</strong> — الأكل جاهز.</p>
-                <div className="my-4 rounded-2xl bg-red-50 border border-red-200 px-4 py-3 flex items-center gap-3">
-                  <AlertTriangle size={18} className="text-red-500 shrink-0" />
-                  <p className="text-[13px] font-black text-red-700">
-                    سيُسجَّل هذا كـ <span className="underline">خسارة</span> بقيمة {Math.abs(Number(cancelConfirm.originalAmount)).toFixed(0)} ج.م
-                  </p>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-100 mb-4">
-                  <XCircle size={28} className="text-amber-600" />
-                </div>
-                <h3 className="text-[20px] font-black text-gray-900 mb-2">إلغاء الطلب؟</h3>
-                <div className="my-4 rounded-2xl bg-amber-50 border border-amber-200 px-4 py-3">
-                  <p className="text-[13px] font-black text-amber-700">سيُسجَّل كـ <span className="underline">تعادل</span> — لا خسارة مالية.</p>
+                <div className="mb-6 p-4 rounded-2xl bg-red-50 border border-red-100 flex gap-3 items-start">
+                  <TrendingDown size={20} className="text-red-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-[13px] font-black text-red-900 mb-1">إلغاء الطلب والخسارة...</p>
+                    <p className="text-[12px] font-bold text-red-700">هذا الطلب وصل لمرحلة متقدمة. إلغاؤه الآن سيُسجل كخسارة بقيمة <span className="font-black text-red-900 bg-red-200/50 px-1 rounded">{cancelConfirm.originalAmount} ج.م</span> في تقاريرك.</p>
+                  </div>
                 </div>
               </>
             )}
@@ -516,356 +529,3 @@ export default function OrdersTab({ restaurantId, themeColor }) {
     </div>
   );
 }
-
-// ── OrderRow (Strict Table Row Layout) ──
-const OrderRow = memo(function OrderRow({ order, isExpanded, onToggle, onStatusUpdate, themeColor, setReceiptOrder, setCancelConfirm }) {
-  const statusInfo = STATUS_MAP[order.status] || STATUS_MAP.pending;
-  const StatusIcon = statusInfo.icon;
-  const TypeIcon = ORDER_TYPE_ICONS[order.order_type] || Truck;
-  const cart = order.cart_snapshot || [];
-  
-  const createdAt = new Date(order.created_at);
-  const timeStr = createdAt.toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" });
-  
-  // Calculate total items
-  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
-
-  const waLink = `https://wa.me/${order.customer_phone?.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`مرحباً ${order.customer_name}، بخصوص طلبك ${order.tracking_id} ✨`)}`;
-
-  // Status visual mapping for the entire row
-  const baseBg = order.status === 'pending' ? 'bg-amber-50/80' : 
-                 order.status === 'preparing' ? 'bg-blue-50/80' : 
-                 order.status === 'ready' ? 'bg-emerald-50/80' : 
-                 order.status === 'cancelled' ? 'bg-red-50/80' : 'bg-white';
-
-  const borderColor = order.status === 'pending' ? 'border-amber-300' :
-                      order.status === 'preparing' ? 'border-blue-300' :
-                      order.status === 'ready' ? 'border-emerald-300' :
-                      order.status === 'cancelled' ? 'border-red-300' : 'border-gray-300';
-
-  const rightBorderColor = order.status === 'pending' ? 'bg-amber-500' :
-                           order.status === 'preparing' ? 'bg-blue-500' :
-                           order.status === 'ready' ? 'bg-emerald-500' :
-                           order.status === 'cancelled' ? 'bg-red-500' :
-                           order.status === 'delivered' || order.status === 'completed' ? 'bg-green-500' : 'bg-gray-400';
-
-  return (
-    <div className={`relative rounded-xl border-2 transition-all duration-200 hover:shadow-md overflow-hidden ${baseBg} ${borderColor} ${isExpanded ? "ring-4 ring-gray-200 shadow-lg" : "shadow-sm"}`}>
-      {/* ── Status Indicator Line ── */}
-      <div className={`absolute top-0 right-0 bottom-0 w-2 ${rightBorderColor}`} />
-
-      {/* ── Compact Row (Table-like) ── */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 p-3 pr-5 lg:pr-6 cursor-pointer" onClick={() => onToggle(order.id)}>
-        
-        <div className="flex flex-1 items-center gap-4 lg:gap-6 min-w-0">
-          {/* Order ID & Time */}
-          <div className="flex flex-col items-center justify-center shrink-0 w-16 lg:w-20 border-l-2 border-gray-200/80 pl-3 lg:pl-4">
-            <span className="text-[15px] font-black text-gray-900 leading-none mb-1">#{order.tracking_id}</span>
-            <span className="text-[12px] font-bold text-gray-600 flex items-center gap-1"><Clock size={12}/> {timeStr}</span>
-          </div>
-
-          {/* Customer Info */}
-          <div className="flex flex-col flex-1 min-w-0 border-l-2 border-gray-200/80 pl-3 lg:border-none lg:pl-0">
-            <span className="text-[15px] font-black text-gray-900 truncate">{order.customer_name}</span>
-            <span className="text-[13px] font-bold text-gray-600 truncate mt-0.5" dir="ltr">{order.customer_phone}</span>
-          </div>
-
-          {/* Type & Status */}
-          <div className="hidden sm:flex flex-col items-start w-36 shrink-0 border-l-2 border-gray-200/80 pl-3 lg:border-none lg:pl-0">
-            <div className="flex items-center gap-1.5 text-[12px] font-bold text-gray-800 bg-white shadow-sm px-2.5 py-1 rounded-md border border-gray-300">
-              <TypeIcon size={14} className="opacity-80" /> 
-              {order.order_type === "in_house" ? `طاولة ${order.table_number}` : ORDER_TYPE_LABELS[order.order_type]}
-            </div>
-            <div className={`mt-2 flex items-center gap-1.5 text-[12px] font-black px-2.5 py-1 rounded-md border shadow-sm ${statusInfo.color}`}>
-              <StatusIcon size={14} /> {statusInfo.label}
-            </div>
-          </div>
-          
-          {/* Summary / Total */}
-          <div className="hidden lg:flex flex-col items-end w-28 shrink-0">
-            <span className="text-[12px] font-bold text-gray-600 bg-white/60 px-2 py-0.5 rounded-md border border-gray-200">{totalItems} أصناف</span>
-            <span className={`text-[17px] font-black mt-1 ${Number(order.total_amount) < 0 ? "text-red-700" : "text-gray-900"}`}>
-              {Number(order.total_amount).toFixed(0)} <span className="text-[11px] text-gray-600">ج.م</span>
-            </span>
-          </div>
-        </div>
-
-        {/* Actions Strip */}
-        <div className="flex items-center justify-between lg:justify-end gap-3 w-full lg:w-auto pt-3 lg:pt-0 border-t-2 border-gray-200/80 lg:border-t-0" onClick={e => e.stopPropagation()}>
-          {/* Mobile Only Summary Info */}
-          <div className="flex lg:hidden items-center gap-2 text-[13px] font-black bg-white/60 px-3 py-1.5 rounded-lg border border-gray-200">
-             <span className="text-gray-600">{totalItems} أصناف</span>
-             <span className="text-gray-400">|</span>
-             <span className={Number(order.total_amount) < 0 ? "text-red-700" : "text-gray-900"}>{Number(order.total_amount).toFixed(0)} ج.م</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {order.status === "pending" && (
-              <>
-                <button onClick={() => onStatusUpdate(order.id, "preparing")} className="px-4 py-2 text-white text-[13px] font-black rounded-xl shadow-md transition-all whitespace-nowrap active:scale-95" style={{ backgroundColor: themeColor }}>قبول وتجهيز</button>
-                <button onClick={() => setCancelConfirm({ orderId: order.id, currentStatus: order.status, originalAmount: order.total_amount })} className="px-3 py-2 bg-red-100 text-red-700 border border-red-300 text-[13px] font-black rounded-xl hover:bg-red-200 transition-all shadow-sm active:scale-95">إلغاء</button>
-              </>
-            )}
-            {order.status === "preparing" && (
-              <button onClick={() => onStatusUpdate(order.id, "ready")} className="px-5 py-2 bg-blue-600 text-white text-[13px] font-black rounded-xl shadow-md hover:bg-blue-700 transition-all whitespace-nowrap active:scale-95">جاهز للتسليم</button>
-            )}
-            {(order.status === "ready" || order.status === "confirmed") && (
-              <button onClick={() => onStatusUpdate(order.id, order.order_type === "delivery" ? "delivered" : "completed")} className="px-5 py-2 bg-emerald-600 text-white text-[13px] font-black rounded-xl shadow-md hover:bg-emerald-700 transition-all whitespace-nowrap active:scale-95">
-                {order.order_type === "delivery" ? "تم التوصيل" : "تم التسليم"}
-              </button>
-            )}
-            {ARCHIVED_STATUSES.includes(order.status) && (
-              <div className={`px-4 py-1.5 rounded-xl text-[12px] font-black border shadow-sm ${order.status === "cancelled" ? (Number(order.total_amount) < 0 ? "bg-red-100 text-red-800 border-red-300" : "bg-gray-200 text-gray-700 border-gray-400") : statusInfo.color}`}>
-                {order.status === "cancelled" ? (Number(order.total_amount) < 0 ? "خسارة" : "ملغي") : statusInfo.label}
-              </div>
-            )}
-            <button onClick={() => onToggle(order.id)} className="h-10 w-10 flex items-center justify-center bg-white text-gray-700 border-2 border-gray-300 shadow-sm rounded-xl hover:bg-gray-50 transition-all active:scale-95">
-               <Eye size={18} />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Expanded Content (Cart & Utils) ── */}
-      {isExpanded && (
-        <div className="border-t-2 border-gray-300 bg-gray-100 flex flex-col lg:flex-row text-right animate-in slide-in-from-top-1 fade-in duration-200 shadow-inner">
-          {/* Order Items Section */}
-          <div className="flex-1 p-4 lg:p-6 lg:border-l-2 border-gray-300">
-            <h4 className="text-[13px] font-black text-gray-600 mb-4 flex items-center gap-2">
-              <ShoppingBag size={16} /> تفاصيل الطلب
-            </h4>
-            <div className="space-y-3">
-              {cart.map((item, idx) => (
-                <div key={idx} className="flex gap-4 bg-white p-3 lg:p-4 rounded-xl border border-gray-300 shadow-sm">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-800 border border-blue-200">
-                    <span className="text-[16px] font-black">x{item.quantity}</span>
-                  </div>
-                  <div className="flex-1 min-w-0 flex flex-col justify-center">
-                    <div className="flex justify-between items-start gap-4">
-                      <span className="text-[15px] font-black text-gray-900 leading-tight">{item.itemName}</span>
-                      <span className="text-[16px] font-black text-gray-800 shrink-0">{(item.quantity * (Number(item.size?.price || 0) + (item.extras?.reduce((s,e)=>s + Number(e.price) * Number(e.quantity || 1), 0) || 0))).toFixed(0)} <span className="text-[12px] text-gray-500">ج.م</span></span>
-                    </div>
-                    {(item.size?.name || item.extras?.length > 0) && (
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {item.size?.name && (
-                          <span className="bg-gray-100 text-gray-800 px-2 py-0.5 rounded-md text-[12px] font-black border border-gray-300 shadow-sm">حجم: {item.size.name}</span>
-                        )}
-                        {item.extras?.map(e => (
-                          <span key={e.name} className="bg-orange-100 text-orange-800 px-2 py-0.5 rounded-md text-[12px] font-black border border-orange-300 shadow-sm">
-                            + {e.name} {Number(e.quantity || 1) > 1 ? `(x${e.quantity})` : ""}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-            {/* Totals Sub-block */}
-            <div className="mt-5 flex justify-between items-center bg-white px-5 py-4 rounded-xl shadow-md border-2 border-gray-300">
-              <span className="text-[15px] font-black text-gray-900 flex items-center gap-2">
-                <div className="bg-emerald-100 p-1.5 rounded-lg border border-emerald-200"><DollarSign size={18} className="text-emerald-600" /></div>
-                المبلغ الإجمالي
-              </span>
-              <span className="text-[24px] font-black tracking-tight" style={{ color: themeColor }}>{Number(order.total_amount).toFixed(0)} <span className="text-[14px] text-gray-600">ج.م</span></span>
-            </div>
-          </div>
-
-          {/* Customer & Delivery Section */}
-          <div className="w-full lg:w-[340px] shrink-0 p-4 lg:p-6 bg-slate-50">
-            <h4 className="text-[13px] font-black text-gray-600 mb-4 flex items-center gap-2">
-              <Phone size={16} /> التوصيل والتواصل
-            </h4>
-            
-            <div className="space-y-4 mb-6">
-              {order.order_type === "delivery" && order.delivery_zones && (
-                <div className="flex items-start gap-3 bg-blue-50 rounded-xl px-4 py-4 border-2 border-blue-200 shadow-sm">
-                  <div className="bg-white p-2.5 rounded-lg shadow border border-blue-200 shrink-0"><MapPin size={20} className="text-blue-600" /></div>
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <span className="text-[12px] font-black text-blue-600 mb-1">المنطقة ({order.delivery_zones.fee} ج.م)</span>
-                    <span className="text-[15px] font-black text-blue-950 mb-1.5 leading-tight">{order.delivery_zones.region_name}</span>
-                    {order.delivery_address && (
-                      <span className="text-[13px] font-bold text-blue-900 leading-relaxed bg-white/70 p-2.5 rounded-lg border border-blue-200/70 mt-1">
-                        {order.delivery_address}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Actions Panel */}
-            <div className="space-y-3">
-               {ACTIVE_STATUSES.includes(order.status) && order.status !== "pending" && (
-                 <button 
-                  onClick={() => setCancelConfirm({ orderId: order.id, currentStatus: order.status, originalAmount: order.total_amount })}
-                  className="w-full py-3.5 text-[14px] font-black text-white bg-red-600 hover:bg-red-700 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 active:scale-95"
-                 >
-                  <XCircle size={18} />
-                  إلغاء الطلب {LOSS_STATUSES.includes(order.status) ? "(بخسارة)" : ""}
-                 </button>
-               )}
-
-               <div className="grid grid-cols-2 gap-3 pt-4 border-t-2 border-gray-200">
-                 <a href={waLink} target="_blank" rel="noreferrer" className="flex justify-center items-center gap-2 py-3.5 bg-green-500 text-white text-[14px] font-black rounded-xl shadow-md hover:bg-green-600 transition-colors active:scale-95">
-                   <MessageCircle size={18} /> واتساب
-                 </a>
-                 <button onClick={() => setReceiptOrder(order)} className="flex justify-center items-center gap-2 py-3.5 bg-white text-gray-900 text-[14px] font-black rounded-xl border-2 border-gray-300 shadow-sm hover:bg-gray-100 transition-colors active:scale-95">
-                   <Printer size={18} /> طباعة
-                 </button>
-               </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-});
-
-// ── KitchenTicket (Fully Expanded KDS View for Active Orders) ──
-const KitchenTicket = memo(function KitchenTicket({ order, onStatusUpdate, themeColor, setReceiptOrder, setCancelConfirm }) {
-  const statusInfo = STATUS_MAP[order.status] || STATUS_MAP.pending;
-  const TypeIcon = ORDER_TYPE_ICONS[order.order_type] || Truck;
-  const cart = order.cart_snapshot || [];
-  const createdAt = new Date(order.created_at);
-  const [elapsed, setElapsed] = useState(getRelativeTime(order.created_at));
-
-  useEffect(() => {
-    const i = setInterval(() => setElapsed(getRelativeTime(order.created_at)), 30000);
-    return () => clearInterval(i);
-  }, [order.created_at]);
-
-  const waLink = `https://wa.me/${order.customer_phone?.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`مرحباً ${order.customer_name}، بخصوص طلبك ${order.tracking_id} ✨`)}`;
-
-  return (
-    <div className={`flex flex-col bg-white rounded-3xl overflow-hidden border shadow-sm transition-all ${
-      order.status === "pending" ? "border-amber-300 ring-2 ring-amber-100" : "border-gray-200 hover:border-gray-300"
-    }`}>
-      {/* Header Bar */}
-      <div className={`px-4 py-3 border-b flex justify-between items-center ${statusInfo.color.replace('border', 'border-b')}`}>
-        <div className="flex flex-col">
-          <span className="text-[11px] font-black opacity-60 flex items-center gap-1">
-            <Hash size={10} /> {order.tracking_id}
-          </span>
-          <span className="text-[15px] font-black mt-0.5">{statusInfo.label}</span>
-        </div>
-        <div className="text-left flex flex-col items-end">
-          <span className="text-[12px] font-bold opacity-70 flex items-center gap-1">
-            <Clock size={12} /> {elapsed}
-          </span>
-          <span className="text-[13px] font-black flex items-center gap-1 mt-0.5">
-            <TypeIcon size={14} /> 
-            {order.order_type === "in_house" ? `طاولة ${order.table_number}` : ORDER_TYPE_LABELS[order.order_type]}
-          </span>
-        </div>
-      </div>
-
-      {/* Customer Info */}
-      <div className="px-4 py-3 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-        <div className="flex flex-col flex-1 min-w-0 pr-2">
-          <span className="text-[14px] font-black text-gray-900 truncate">{order.customer_name}</span>
-          <a href={`tel:${order.customer_phone}`} className="text-[12px] font-bold text-gray-500 truncate" dir="ltr">{order.customer_phone}</a>
-        </div>
-        <div className="flex gap-2 shrink-0">
-          <a href={waLink} target="_blank" rel="noreferrer" className="flex h-9 w-9 items-center justify-center rounded-xl bg-green-100 text-green-600 hover:bg-green-200 transition-colors">
-            <MessageCircle size={16} />
-          </a>
-          <button onClick={() => setReceiptOrder(order)} className="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-200 text-gray-600 hover:bg-gray-300 transition-colors">
-            <Printer size={16} />
-          </button>
-        </div>
-      </div>
-
-      {/* Items List */}
-      <div className="p-4 space-y-4">
-        {cart.map((item, idx) => (
-          <div key={idx} className="flex gap-3">
-            <span className="text-[15px] font-black text-gray-900 w-6 text-left shrink-0 opacity-80">x{item.quantity}</span>
-            <div className="flex-1 min-w-0">
-              <span className="text-[14px] font-black text-gray-900 break-words leading-tight block mb-1">
-                {item.itemName}
-              </span>
-              {item.size?.name && (
-                <span className="inline-block bg-gray-100 text-gray-600 px-2 py-0.5 rounded-lg text-[11px] font-bold border border-gray-200 mr-1 mb-1">
-                  حجم: {item.size.name}
-                </span>
-              )}
-              {item.extras?.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {item.extras.map(e => (
-                    <span key={e.name} className="bg-orange-50 text-orange-700 px-2 py-0.5 rounded-lg text-[11px] font-bold border border-orange-100">
-                      + {e.name} {Number(e.quantity || 1) > 1 ? `(x${e.quantity})` : ""}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Delivery Zone / Address */}
-      {order.order_type === "delivery" && (
-        <div className="px-4 pb-4">
-          <div className="bg-blue-50 border border-blue-100 rounded-2xl p-3">
-            <div className="flex items-center gap-2 text-blue-700 mb-1.5">
-              <Truck size={14} />
-              <span className="text-[12px] font-black">{order.delivery_zones?.region_name}</span>
-            </div>
-            {order.delivery_address && (
-              <p className="text-[12px] font-bold text-gray-600 leading-relaxed flex items-start gap-1.5">
-                <MapPin size={14} className="mt-0.5 shrink-0" />
-                {order.delivery_address}
-              </p>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Actions */}
-      <div className="p-4 border-t border-gray-100 bg-gray-50 flex flex-col gap-2">
-        <div className="flex gap-2">
-          {order.status === "pending" && (
-            <button onClick={() => onStatusUpdate(order.id, "preparing")} 
-              className="flex-1 py-3 bg-[var(--dynamic-color)] text-white text-[13px] font-black rounded-2xl hover:brightness-110 active:scale-95 shadow-md flex justify-center items-center gap-2"
-              style={{ backgroundColor: themeColor }}>
-              <ChefHat size={16} /> تجهيز
-            </button>
-          )}
-          {order.status === "preparing" && (
-            <button onClick={() => onStatusUpdate(order.id, "ready")} 
-              className="flex-1 py-3 bg-blue-600 text-white text-[13px] font-black rounded-2xl hover:bg-blue-700 active:scale-95 shadow-md flex justify-center items-center gap-2">
-              <PackageCheck size={16} /> جاهز للتسليم
-            </button>
-          )}
-          {order.status === "ready" && (
-            <button onClick={() => onStatusUpdate(order.id, "completed")} 
-              className="flex-1 py-3 bg-emerald-600 text-white text-[13px] font-black rounded-2xl hover:bg-emerald-700 active:scale-95 shadow-md flex justify-center items-center gap-2">
-              <CheckCircle2 size={16} /> إنهاء وتسليم
-            </button>
-          )}
-          {order.status === "confirmed" && (
-            <button onClick={() => onStatusUpdate(order.id, "delivered")} 
-              className="flex-1 py-3 bg-green-600 text-white text-[13px] font-black rounded-2xl hover:bg-green-700 active:scale-95 shadow-md flex justify-center items-center gap-2">
-              <Truck size={16} /> تم التوصيل
-            </button>
-          )}
-        </div>
-
-        {/* Universal Cancel Button with logic-based styling */}
-        <button 
-          onClick={() => setCancelConfirm({ orderId: order.id, currentStatus: order.status, originalAmount: order.total_amount })}
-          className={`w-full py-2.5 rounded-xl text-[12px] font-black transition-all flex items-center justify-center gap-1.5 ${
-            LOSS_STATUSES.includes(order.status)
-              ? "bg-red-50 text-red-600 border border-red-100 hover:bg-red-100"
-              : "bg-white border border-gray-200 text-gray-500 hover:bg-gray-50"
-          }`}
-        >
-          <XCircle size={14} />
-          {LOSS_STATUSES.includes(order.status) ? "إلغاء (خسارة)" : "إلغاء الطلب"}
-        </button>
-      </div>
-    </div>
-  );
-});
-

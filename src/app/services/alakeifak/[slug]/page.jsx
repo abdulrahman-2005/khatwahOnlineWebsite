@@ -8,7 +8,7 @@ import { generateRestaurantMetadata } from "@/lib/seo";
 export const revalidate = 120;
 
 export async function generateStaticParams() {
-  const supabase = createServerSupabase({ useServiceRole: true });
+  const supabase = createServerSupabase();
   const { data: restaurants } = await supabase
     .from("restaurants")
     .select("slug")
@@ -21,7 +21,7 @@ export async function generateStaticParams() {
 
 // Wrap the initial restaurant fetch in React cache() to dedupe between metadata and page render
 const getRestaurant = cache(async (slug) => {
-  const supabase = createServerSupabase({ useServiceRole: true });
+  const supabase = createServerSupabase();
   const { data, error } = await supabase
     .from("restaurants")
     .select("*")
@@ -51,7 +51,7 @@ export default async function RestaurantMenuPage({ params }) {
     notFound();
   }
 
-  const supabase = createServerSupabase({ useServiceRole: true });
+  const supabase = createServerSupabase();
 
   // ── Step 1: Fetch restaurant ONLY — check is_active BEFORE any further queries
   const restaurant = await getRestaurant(slug);

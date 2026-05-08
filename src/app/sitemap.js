@@ -95,7 +95,7 @@ export default async function sitemap() {
   // Alakeifak Restaurants (verified only)
   let restaurantPages = [];
   try {
-    const supabase = createServerSupabase({ useServiceRole: true });
+    const supabase = createServerSupabase();
     const { data: restaurants } = await supabase
       .from("restaurants")
       .select("slug, updated_at")
