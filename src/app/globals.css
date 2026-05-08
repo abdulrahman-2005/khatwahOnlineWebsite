@@ -30,14 +30,6 @@ body:has(.alakeifak-active) .khatwah-chrome {
   }
 }
 
-/* @font-face {
-  font-family: "terrabica";
-  src: url('/fonts/khatwah.otf')  ;
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-} 
-*/
 
 :root {
   /* === CORE BRAND === */

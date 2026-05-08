@@ -34,7 +34,7 @@ export default function ProjectsContent() {
           </Reveal>
 
           <Reveal direction="up" distance={30} delay={100}>
-            <h1 className="max-w-5xl text-7xl font-black leading-[0.8] sm:text-9xl lg:text-[160px] tracking-tighter" style={{ fontFamily: "var(--font-display)", color: "var(--color-text)" }}>
+            <h1 className="max-w-5xl text-7xl font-black leading-snug sm:text-9xl lg:text-[160px] tracking-tighter" style={{ fontFamily: "var(--font-display)", color: "var(--color-text)" }}>
               <span className="relative inline-block animate-gradient bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-accent)] to-[var(--color-primary)] bg-clip-text text-transparent" style={{ backgroundSize: "200% auto" }}>
                 {i18n[locale].projects_page.hero_headline}
               </span>

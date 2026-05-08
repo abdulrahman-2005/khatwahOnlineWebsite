@@ -20,33 +20,33 @@ export default function ItemCard({ item, themeColor, disabled, onClick, variant 
 
   return (
     <div
-      className={`group relative flex flex-col overflow-hidden bg-white text-right transition-all duration-500
+      className={`group relative flex flex-col overflow-hidden bg-[#131B2B] text-right transition-all duration-500 border border-white/5
         ${isFull ? "rounded-[28px]" : "rounded-[22px]"}
         ${(disabled || isUnavailable)
           ? "cursor-not-allowed opacity-50 grayscale-[40%]"
-          : "hover:shadow-[0_12px_40px_-8px_rgba(0,0,0,0.12)] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] cursor-pointer active:scale-[0.98]"
+          : "hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.5)] cursor-pointer active:scale-[0.98] hover:border-[var(--dynamic-color)]/40 hover:-translate-y-1"
         }
       `}
       style={{ '--dynamic-color': activeColor }}
       onClick={() => !disabled && !isUnavailable && onClick(item, null)}
     >
       {/* Image Area */}
-      <div className={`relative w-full shrink-0 overflow-hidden bg-gray-100 ${isFull ? "aspect-[16/9]" : "aspect-square"}`}>
+      <div className={`relative w-full shrink-0 overflow-hidden bg-[#0F172A] ${isFull ? "aspect-[16/9]" : "aspect-square"}`}>
         {item.image_url ? (
           <>
             <Image
               src={item.image_url}
               alt={item.name}
               fill
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              className="object-cover transition-transform duration-00 ease-out group-hover:scale-105"
               sizes={isFull ? "(max-width: 768px) 100vw, 800px" : "(max-width: 640px) 50vw, 300px"}
             />
             {/* Dark gradient for overlaid pills readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0F1A]/90 via-black/10 to-transparent" />
           </>
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gray-50">
-            <UtensilsCrossed size={isFull ? 48 : 32} className="text-gray-200" strokeWidth={1.2} />
+          <div className="flex h-full w-full items-center justify-center bg-[#1E293B]">
+            <UtensilsCrossed size={isFull ? 48 : 32} className="text-gray-600" strokeWidth={1.2} />
           </div>
         )}
 
@@ -99,9 +99,9 @@ export default function ItemCard({ item, themeColor, disabled, onClick, variant 
       </div>
 
       {/* Content */}
-      <div className={`flex flex-col ${isFull ? "p-4 sm:p-5" : "p-3"}`}>
+      <div className={`flex flex-col flex-1 ${isFull ? "p-4 sm:p-5" : "p-3"}`}>
         <h3
-          className={`font-black leading-tight tracking-tight text-gray-900 ${
+          className={`font-black leading-tight tracking-tight text-white group-hover:text-[var(--dynamic-color)] transition-colors ${
             isFull ? "text-[20px] sm:text-[22px] mb-1.5" : "text-[15px] mb-1 line-clamp-2"
           }`}
           style={{ fontFamily: "var(--font-body)" }}
@@ -110,7 +110,7 @@ export default function ItemCard({ item, themeColor, disabled, onClick, variant 
         </h3>
 
         {isFull && item.description && (
-          <p className="line-clamp-2 text-[13px] sm:text-[14px] font-medium leading-relaxed text-gray-500 mb-2">
+          <p className="line-clamp-2 text-[13px] sm:text-[14px] font-bold leading-relaxed text-gray-400 mb-2">
             {item.description}
           </p>
         )}
@@ -119,8 +119,8 @@ export default function ItemCard({ item, themeColor, disabled, onClick, variant 
         <div className="flex items-center justify-between mt-auto">
           {sortedSizes.length > 0 && (
             <span className="text-[14px] font-black text-[var(--dynamic-color)]" dir="ltr">
-              {sortedSizes.length > 1 && <span className="text-gray-400 text-[11px] font-bold ml-1">من</span>}
-              {Number(sortedSizes[0].price).toFixed(0)} <span className="text-[11px] font-bold text-gray-400">ج.م</span>
+              {sortedSizes.length > 1 && <span className="text-gray-500 text-[11px] font-bold ml-1">من</span>}
+              {Number(sortedSizes[0].price).toFixed(0)} <span className="text-[11px] font-bold text-gray-500">ج.م</span>
             </span>
           )}
         </div>

@@ -199,7 +199,7 @@ export default function MembersModal({ restaurant, onClose }) {
                     {member.role === "owner" ? <Crown size={14} className="text-orange-400" /> : <Shield size={14} className="text-zinc-500" />}
                   </div>
                   <div className="min-w-0">
-                    <span className="text-xs font-mono font-bold text-zinc-300 block truncate mb-0.5">
+                    <span className="text-xs font-mono font-bold text-zinc-300 block break-all mb-0.5">
                       {member.email}
                     </span>
                     <div className="flex items-center gap-2">

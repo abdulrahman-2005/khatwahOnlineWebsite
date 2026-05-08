@@ -4,7 +4,7 @@ const nextConfig = {
   
   // Performance optimizations
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
+    removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
   },
   
   // Optimize images
@@ -31,10 +31,6 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: '*.r2.cloudflarestorage.com',
-      },
-      {
-        protocol:'https',
-        hostname:'*'
       },
       {
         protocol:'https',

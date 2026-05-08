@@ -52,10 +52,10 @@ export default function ProductsSection() {
                 color: "var(--color-text)"
               }}
             >
-              <span className="block">{sectionData.headline_part1}</span>
+              <span className="block pb-5">{sectionData.headline_part1}</span>
               {sectionData.headline_part2 && (
                 <span 
-                  className="block mt-2 bg-gradient-to-r bg-clip-text text-transparent"
+                  className="block mt-2 bg-gradient-to-r bg-clip-text text-transparent p-2"
                   style={{ backgroundImage: "linear-gradient(to right, var(--color-primary), var(--color-gold))" }}
                 >
                   {sectionData.headline_part2}

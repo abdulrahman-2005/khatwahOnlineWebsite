@@ -129,27 +129,12 @@ export default function NavBar() {
           }}
         >
           {/* ── Logo (Acts as Home Link) ── */}
-          <Link href="/" className="navbar-logo group shrink-0" aria-label="Khatwah Online — Home">
-            <span
-              className="text-4xl font-bold tracking-tight"
-              style={{
-                color: "var(--color-text)",
-                transition: "color 0.3s",
-                fontFamily: "terrabica",
-              }}
-            >
-              خطوة
-            </span>
-            <span
-              className="text-1xl font-bold tracking-[3px] uppercase"
-              style={{
-                fontFamily: "terrabica",
-                color: "var(--color-gold)",
-                transition: "color 0.3s",
-              }}
-            >
-              اونلاين
-            </span>
+          <Link href="/" className="navbar-logo group shrink-0 flex items-center justify-right relative w-24 h-10 sm:w-32 sm:h-12" aria-label="Khatwah Online — Home">
+            <img
+              src={theme === "dark" ? "/icon-dark.png" : "/icon-light.png"}
+              alt="Khatwah Online Logo"
+              className="absolute inset-0 w-fit h-full object-contain scale-[1.5] sm:scale-[1.3] origin-center transition-all duration-300"
+            />
           </Link>
 
           {/* ── Desktop Main Navigation ── */}

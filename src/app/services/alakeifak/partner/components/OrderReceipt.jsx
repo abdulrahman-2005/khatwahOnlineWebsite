@@ -116,13 +116,13 @@ export default function OrderReceipt({ order, restaurantName, onClose }) {
         <div class="divider"></div>
 
         ${cart.map((item) => {
-          const itemTotal = item.quantity * (Number(item.size?.price || 0) + (item.extras?.reduce((s, e) => s + Number(e.price), 0) || 0));
+          const itemTotal = item.quantity * (Number(item.size?.price || 0) + (item.extras?.reduce((s, e) => s + (Number(e.price) * (e.quantity || 1)), 0) || 0));
           return `
             <div class="row">
               <span class="item-name">×${item.quantity} ${item.itemName}${item.size?.name ? ` (${item.size.name})` : ""}</span>
               <span class="item-price">${itemTotal.toFixed(0)}</span>
             </div>
-            ${item.extras?.length > 0 ? `<div class="small" style="padding-right: 12px;">+ ${item.extras.map(e => e.name).join("، ")}</div>` : ""}
+            ${item.extras?.length > 0 ? `<div class="small" style="padding-right: 12px;">${item.extras.map(e => `+ ${e.name} ${Number(e.quantity || 1) > 1 ? `(x${e.quantity})` : ''}`).join("<br/>")}</div>` : ""}
           `;
         }).join("")}
 
@@ -164,9 +164,16 @@ export default function OrderReceipt({ order, restaurantName, onClose }) {
           </div>
           <div className="border-t border-dashed border-gray-300 my-2" />
           {cart.map((item, idx) => (
-            <div key={idx} className="flex justify-between text-xs">
-              <span>×{item.quantity} {item.itemName}</span>
-              <span>{(item.quantity * (Number(item.size?.price || 0) + (item.extras?.reduce((s, e) => s + Number(e.price), 0) || 0))).toFixed(0)}</span>
+            <div key={idx} className="flex flex-col text-xs text-right mb-2">
+              <div className="flex justify-between">
+                <span>×{item.quantity} {item.itemName}</span>
+                <span>{(item.quantity * (Number(item.size?.price || 0) + (item.extras?.reduce((s, e) => s + (Number(e.price) * (e.quantity || 1)), 0) || 0))).toFixed(0)}</span>
+              </div>
+              {item.extras && item.extras.length > 0 && (
+                <div className="text-[10px] text-gray-500 pr-2">
+                  {item.extras.map((e, i) => <div key={i}>+ {e.name} {Number(e.quantity || 1) > 1 ? `(x${e.quantity})` : ''}</div>)}
+                </div>
+              )}
             </div>
           ))}
           <div className="border-t border-dashed border-gray-300 my-2" />

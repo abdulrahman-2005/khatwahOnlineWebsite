@@ -15,6 +15,25 @@ import {
   ArrowRightLeft
 } from "lucide-react";
 
+function StatCard({ label, value, subtext, icon: Icon, color, bgColor = "bg-zinc-800/50", borderColor = "border-zinc-800" }) {
+  return (
+    <div className={`rounded-xl border ${borderColor} ${bgColor} p-5 transition-all hover:border-zinc-700`}>
+      <div className="flex items-center gap-2 mb-3">
+        <Icon size={16} className={color} />
+        <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{label}</span>
+      </div>
+      <div className={`text-3xl font-black ${color === "text-zinc-400" ? "text-white" : color}`}>
+        {value}
+      </div>
+      {subtext && (
+        <div className="mt-1 text-[10px] font-bold text-zinc-600 uppercase">
+          {subtext}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function FinancialsDashboard() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -264,21 +283,3 @@ export default function FinancialsDashboard() {
   );
 }
 
-function StatCard({ label, value, subtext, icon: Icon, color, bgColor = "bg-zinc-800/50", borderColor = "border-zinc-800" }) {
-  return (
-    <div className={`rounded-xl border ${borderColor} ${bgColor} p-5 transition-all hover:border-zinc-700`}>
-      <div className="flex items-center gap-2 mb-3">
-        <Icon size={16} className={color} />
-        <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{label}</span>
-      </div>
-      <div className={`text-3xl font-black ${color === "text-zinc-400" ? "text-white" : color}`}>
-        {value}
-      </div>
-      {subtext && (
-        <div className="mt-1 text-[10px] font-bold text-zinc-600 uppercase">
-          {subtext}
-        </div>
-      )}
-    </div>
-  );
-}

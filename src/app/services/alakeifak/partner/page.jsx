@@ -227,14 +227,14 @@ export default function PartnerPage() {
   // Loading state
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-white">
+      <main className="flex min-h-screen items-center justify-center bg-[#FFFBF5]">
         <div className="flex flex-col items-center gap-6">
           <div className="relative flex h-20 w-20 items-center justify-center">
-            <div className="absolute inset-0 rounded-full border-4 border-gray-100" />
+            <div className="absolute inset-0 rounded-full border-4 border-amber-100" />
             <div className="absolute inset-0 rounded-full border-4 border-orange-500 border-t-transparent animate-spin" />
             <Store className="text-orange-500 animate-pulse" size={24} />
           </div>
-          <p className="text-[15px] font-black text-gray-400">جاري الدخول لمساحة شركاء على كيفك...</p>
+          <p className="text-[15px] font-black text-stone-400">جاري الدخول لمساحة شركاء على كيفك...</p>
         </div>
       </main>
     );
@@ -248,18 +248,18 @@ export default function PartnerPage() {
   // Logged in but missing email (e.g. invalid auth provider for our system)
   if (!user.email) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4" dir="rtl">
+      <main className="flex min-h-screen flex-col items-center justify-center bg-[#FFF7ED] p-4" dir="rtl">
         <div className="max-w-md rounded-[32px] bg-white p-8 text-center shadow-xl border border-red-100">
           <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 text-red-500">
             <AlertTriangle size={24} />
           </div>
-          <h2 className="mb-3 text-[24px] font-black text-gray-900">حساب غير مكتمل</h2>
-          <p className="mb-6 text-[15px] font-bold text-gray-500 leading-relaxed">
+          <h2 className="mb-3 text-[24px] font-black text-stone-900">حساب غير مكتمل</h2>
+          <p className="mb-6 text-[15px] font-bold text-stone-500 leading-relaxed">
             النظام يتطلب تسجيل الدخول باستخدام حساب جوجل لضمان ربط المطعم ببريدك الإلكتروني بشكل صحيح. يرجى تسجيل الخروج والمحاولة مرة أخرى بحساب جوجل.
           </p>
           <button
             onClick={() => supabase.auth.signOut()}
-            className="w-full rounded-xl bg-gray-900 px-4 py-3 text-[15px] font-black text-white hover:bg-black transition-colors"
+            className="w-full rounded-xl bg-stone-900 px-4 py-3 text-[15px] font-black text-white hover:bg-stone-950 transition-colors"
           >
             تسجيل الخروج
           </button>
@@ -274,7 +274,7 @@ export default function PartnerPage() {
     // Create New Restaurant Flow (Setup Wizard)
     if (isCreatingNew) {
       return (
-        <main className="min-h-screen bg-gray-50 text-gray-900" dir="rtl">
+        <main className="min-h-screen bg-[#FFF7ED] text-stone-900" dir="rtl">
           <style jsx global>{`
             nav { display: none !important; }
             main { padding-top: 0 !important; }
@@ -282,7 +282,7 @@ export default function PartnerPage() {
           `}</style>
   
           {/* Setup Bar */}
-          <div className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50">
+          <div className="bg-white border-b border-amber-200 px-6 py-4 sticky top-0 z-50">
             <div className="mx-auto flex max-w-4xl items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500 text-white shadow-lg shadow-orange-500/20">
@@ -294,7 +294,7 @@ export default function PartnerPage() {
                 {memberships && memberships.length > 0 && (
                   <button
                     onClick={() => setIsCreatingNew(false)}
-                    className="flex items-center gap-2 rounded-[14px] bg-gray-100 px-4 py-2 text-[14px] font-black text-gray-600 hover:bg-gray-200 transition-colors"
+                    className="flex items-center gap-2 rounded-[14px] bg-amber-50 px-4 py-2 text-[14px] font-black text-stone-600 hover:bg-amber-100 transition-colors"
                   >
                     تراجع
                   </button>
@@ -319,7 +319,7 @@ export default function PartnerPage() {
 
     // Workspace Selector Flow
     return (
-      <main className="min-h-screen bg-gray-50 text-gray-900" dir="rtl">
+      <main className="min-h-screen bg-[#FFF7ED] text-stone-900" dir="rtl">
         <style jsx global>{`
           nav { display: none !important; }
           main { padding-top: 0 !important; }
@@ -327,7 +327,7 @@ export default function PartnerPage() {
         `}</style>
 
         {/* Top Bar */}
-        <div className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50">
+        <div className="bg-white border-b border-amber-200 px-6 py-4 sticky top-0 z-50">
           <div className="mx-auto flex max-w-4xl items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500 text-white shadow-lg shadow-orange-500/20">
@@ -360,7 +360,7 @@ export default function PartnerPage() {
   // Logged in but restaurant is deactivated (kill switch)
   if (restaurant && restaurant.is_active === false) {
     return (
-      <main className="min-h-screen bg-gray-50 text-gray-900 flex items-center justify-center p-6" dir="rtl">
+      <main className="min-h-screen bg-[#FFF7ED] text-stone-900 flex items-center justify-center p-6" dir="rtl">
         <style jsx global>{`
           nav { display: none !important; }
           main { padding-top: 0 !important; }
@@ -370,23 +370,23 @@ export default function PartnerPage() {
           <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-[32px] bg-red-50 border border-red-100">
             <ShieldCheck size={40} className="text-red-400" />
           </div>
-          <h1 className="text-2xl font-black text-gray-900 mb-3">تم تعليق الحساب</h1>
-          <p className="text-gray-500 font-bold mb-4 leading-relaxed">
-            تم تعليق حساب <span className="text-gray-900">{restaurant.name}</span> مؤقتاً. 
+          <h1 className="text-2xl font-black text-stone-900 mb-3">تم تعليق الحساب</h1>
+          <p className="text-stone-500 font-bold mb-4 leading-relaxed">
+            تم تعليق حساب <span className="text-stone-900">{restaurant.name}</span> مؤقتاً. 
             للاستفسار عن حالة الاشتراك أو لتجديده، يُرجى التواصل مع فريق الدعم.
           </p>
           <a
             href="https://khatwah.online/contact"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-2xl bg-gray-900 px-8 py-4 text-sm font-black text-white hover:bg-black transition-all mb-4"
+            className="inline-flex items-center gap-2 rounded-2xl bg-stone-900 px-8 py-4 text-sm font-black text-white hover:bg-stone-950 transition-all mb-4"
           >
             تواصل مع فريق الدعم
           </a>
           <div className="mt-4">
             <button
               onClick={handleLogout}
-              className="text-sm font-bold text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-sm font-bold text-stone-400 hover:text-stone-600 transition-colors"
             >
               تسجيل الخروج
             </button>
@@ -398,7 +398,7 @@ export default function PartnerPage() {
 
   // Logged in with restaurant → Dashboard
   return (
-    <main className="min-h-screen bg-gray-50 text-gray-900" dir="rtl">
+    <main className="min-h-screen bg-[#FFF7ED] text-stone-900" dir="rtl">
 
       {/* DASHBOARD NAVBAR (Premium Glass) */}
       <div 
@@ -406,27 +406,27 @@ export default function PartnerPage() {
           headerVisible && !isModalOpen ? "translate-y-0 opacity-100" : "-translate-y-24 opacity-0 pointer-events-none"
         }`}
       >
-        <div className="mx-auto max-w-6xl rounded-[24px] sm:rounded-[28px] bg-white/80 backdrop-blur-xl border border-gray-200 shadow-sm flex items-center justify-between px-3 sm:px-6 py-2 sm:py-3">
+        <div className="mx-auto max-w-6xl rounded-[24px] sm:rounded-[28px] bg-white/80 backdrop-blur-xl border border-amber-200 shadow-sm flex items-center justify-between px-3 sm:px-6 py-2 sm:py-3">
           
           {/* Left Side: Brand & Identity */}
           <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0 pr-2">
             <Link
               href="/services/alakeifak"
-              className="flex shrink-0 h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-[14px] sm:rounded-[18px] bg-gray-50 text-gray-400 hover:text-orange-500 hover:bg-orange-50 transition-all border border-gray-100"
+              className="flex shrink-0 h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-[14px] sm:rounded-[18px] bg-amber-50 text-stone-400 hover:text-orange-500 hover:bg-orange-50 transition-all border border-amber-100"
             >
               <ArrowRight size={18} className="sm:w-5 sm:h-5" />
             </Link>
 
             <div className="flex items-center gap-2 sm:gap-3 h-10 px-1 min-w-0">
-              <div className="h-9 w-9 sm:h-10 sm:w-10 shrink-0 overflow-hidden rounded-[12px] sm:rounded-[14px] border-2 border-white shadow-sm bg-gray-100">
+              <div className="h-9 w-9 sm:h-10 sm:w-10 shrink-0 overflow-hidden rounded-[12px] sm:rounded-[14px] border-2 border-white shadow-sm bg-amber-50">
                 {restaurant.logo_url ? (
                   <img src={restaurant.logo_url} alt="" className="h-full w-full object-cover" />
                 ) : (
-                  <div className="h-full w-full flex items-center justify-center bg-gray-50"><Store size={16} className="text-gray-300 sm:w-5 sm:h-5" /></div>
+                  <div className="h-full w-full flex items-center justify-center bg-amber-50"><Store size={16} className="text-amber-300 sm:w-5 sm:h-5" /></div>
                 )}
               </div>
               <div className="flex flex-col min-w-0 justify-center">
-                <h1 className="text-[14px] sm:text-[17px] font-black leading-tight tracking-tight text-gray-900 truncate">{restaurant.name}</h1>
+                <h1 className="text-[14px] sm:text-[17px] font-black leading-tight tracking-tight text-stone-900 truncate">{restaurant.name}</h1>
                 <p className="text-[10px] sm:text-[12px] font-bold uppercase tracking-wider text-orange-500 truncate mt-0.5">لوحة التحكم</p>
               </div>
             </div>
@@ -443,7 +443,7 @@ export default function PartnerPage() {
             {memberships && memberships.length > 1 && (
               <button
                 onClick={handleSwitchWorkspace}
-                className="flex h-9 sm:h-11 items-center justify-center gap-1.5 sm:gap-2 rounded-[14px] sm:rounded-[18px] bg-gray-100 px-3 sm:px-5 text-[13px] sm:text-[14px] font-black text-gray-600 hover:bg-gray-200 transition-all active:scale-95 border border-gray-200"
+                className="flex h-9 sm:h-11 items-center justify-center gap-1.5 sm:gap-2 rounded-[14px] sm:rounded-[18px] bg-amber-50 px-3 sm:px-5 text-[13px] sm:text-[14px] font-black text-stone-600 hover:bg-amber-100 transition-all active:scale-95 border border-amber-200"
                 title="تبديل مساحة العمل"
               >
                 <ArrowLeftRight size={16} className="sm:w-4 sm:h-4" />
@@ -453,7 +453,7 @@ export default function PartnerPage() {
 
             <button
               onClick={handleLogout}
-              className="flex h-9 sm:h-11 items-center justify-center gap-1.5 sm:gap-2 rounded-[14px] sm:rounded-[18px] bg-gray-900 px-3 sm:px-5 text-[13px] sm:text-[14px] font-black text-white hover:bg-black transition-all shadow-xl shadow-gray-900/10 active:scale-95"
+              className="flex h-9 sm:h-11 items-center justify-center gap-1.5 sm:gap-2 rounded-[14px] sm:rounded-[18px] bg-stone-900 px-3 sm:px-5 text-[13px] sm:text-[14px] font-black text-white hover:bg-stone-950 transition-all shadow-xl shadow-stone-900/10 active:scale-95"
             >
               <LogOut size={16} className="sm:w-4 sm:h-4" />
               <span className="hidden md:inline">خروج</span>
@@ -464,6 +464,7 @@ export default function PartnerPage() {
 
       <div className="pt-28">
         <DashboardContent
+          key={restaurant.id}
           restaurant={restaurant}
           onRestaurantUpdate={(updated) => setRestaurant(updated)}
         />
@@ -476,7 +477,7 @@ export default function PartnerPage() {
 function PartnerLogin() {
   return (
     <main 
-      className="min-h-screen w-full bg-zinc-50 flex items-center justify-center p-4 sm:p-6 lg:p-8 font-sans selection:bg-orange-500/30" 
+      className="min-h-screen w-full bg-[#FFF9F0] flex items-center justify-center p-4 sm:p-6 lg:p-8 font-sans selection:bg-orange-500/30" 
       dir="rtl"
     >
       {/* Background Ambient Glow */}
@@ -486,7 +487,7 @@ function PartnerLogin() {
       </div>
 
       {/* Main Floating Container */}
-      <div className="relative w-full max-w-6xl bg-white rounded-[2rem] sm:rounded-[3rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-zinc-100 flex flex-col lg:flex-row overflow-hidden z-10 min-h-[700px]">
+      <div className="relative w-full max-w-6xl bg-white rounded-[2rem] sm:rounded-[3rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-amber-100 flex flex-col lg:flex-row overflow-hidden z-10 min-h-[700px]">
         
         {/* ════ RIGHT SIDE (Visually Right in RTL): LOGIN PANEL ════ */}
         <section className="flex flex-col justify-between w-full lg:w-1/2 p-8 sm:p-12 lg:p-16 relative">
@@ -500,7 +501,7 @@ function PartnerLogin() {
 
             <Link
               href="/services/alakeifak"
-              className="flex items-center gap-1.5 text-sm font-bold text-zinc-400 hover:text-zinc-900 transition-colors group"
+              className="flex items-center gap-1.5 text-sm font-bold text-stone-400 hover:text-stone-900 transition-colors group"
             >
               <span>العودة</span>
               <ChevronRight size={16} className="transition-transform group-hover:-translate-x-1" />
@@ -509,11 +510,11 @@ function PartnerLogin() {
 
           {/* Main Auth Area */}
           <div className="flex-1 flex flex-col justify-center max-w-sm">
-            <h1 className="text-4xl sm:text-5xl font-black text-zinc-900 leading-[1.1] mb-4 tracking-tight">
+            <h1 className="text-4xl sm:text-5xl font-black text-stone-900 leading-[1.1] mb-4 tracking-tight">
               أهلاً بك في <br />
               مطبخ <span className="text-transparent bg-clip-text bg-gradient-to-l from-orange-400 to-orange-600">النجاح.</span>
             </h1>
-            <p className="text-zinc-500 font-bold leading-relaxed mb-10 text-base sm:text-lg">
+            <p className="text-stone-500 font-bold leading-relaxed mb-10 text-base sm:text-lg">
               مساحة العمل الخاصة بك للتحكم في المنيو، الأسعار، واستقبال الطلبات في ثوانٍ.
             </p>
 
@@ -527,8 +528,8 @@ function PartnerLogin() {
           </div>
 
           {/* Footer Info */}
-          <div className="mt-12 pt-8 border-t border-zinc-100 flex items-center justify-between">
-            <a href="https://khatwah.online/contact" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm font-bold text-zinc-500 hover:text-orange-500 transition-colors">
+          <div className="mt-12 pt-8 border-t border-amber-100 flex items-center justify-between">
+            <a href="https://khatwah.online/contact" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm font-bold text-stone-500 hover:text-orange-500 transition-colors">
               <LifeBuoy size={18} />
               تحتاج مساعدة؟
             </a>
@@ -540,7 +541,7 @@ function PartnerLogin() {
         </section>
 
         {/* ════ LEFT SIDE (Visually Left in RTL): MARKETING SHOWCASE ════ */}
-        <section className="hidden lg:flex w-1/2 bg-zinc-950 p-12 relative flex-col items-center justify-center overflow-hidden">
+        <section className="hidden lg:flex w-1/2 bg-stone-950 p-12 relative flex-col items-center justify-center overflow-hidden">
           
           {/* Abstract Dark Background Elements */}
           <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-orange-500 via-transparent to-transparent" />
@@ -572,7 +573,7 @@ function PartnerLogin() {
                   </div>
                   <div>
                     <h3 className="text-white font-black text-lg mb-0.5">{feature.title}</h3>
-                    <p className="text-zinc-400 font-bold text-sm">{feature.desc}</p>
+                    <p className="text-stone-400 font-bold text-sm">{feature.desc}</p>
                   </div>
                 </div>
               ))}
@@ -581,7 +582,7 @@ function PartnerLogin() {
           </div>
 
           {/* Copyright/Watermark */}
-          <div className="absolute bottom-8 text-center w-full text-zinc-600 text-[10px] font-black uppercase tracking-[0.3em]">
+          <div className="absolute bottom-8 text-center w-full text-stone-600 text-[10px] font-black uppercase tracking-[0.3em]">
             Powered by Khatwah Online
           </div>
         </section>

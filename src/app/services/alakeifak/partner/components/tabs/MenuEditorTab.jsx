@@ -10,8 +10,75 @@ import {
   Save, QrCode, Printer, Copy, Plus, Edit3, Pizza, ArrowUp, ArrowDown
 } from "lucide-react";
 import { IconButton, InputField, PrimaryBtn, LoadingSpinner, EmptyState } from "../ui/PartnerUI";
+import { QRCodeSVG } from 'qrcode.react';
 
 const EMOJI_OPTIONS = ["🍽️","🍔","🍕","🍗","🍝","🥗","🐟","🍰","🧇","🍨","☕","🥤","🧊","🍟","🌮","🥙","🍜","🍣","🥩","🍩","🧁","🫔","🥪","🍱","🔥"];
+
+function QRSection({ restaurant, themeColor }) {
+  const [showQR, setShowQR] = useState(false);
+
+  useEffect(() => {
+    if (showQR) {
+      document.body.classList.add('modal-open');
+      return () => document.body.classList.remove('modal-open');
+    }
+  }, [showQR]);
+
+  return (
+    <>
+      {/* ═══ Action Header (QR / Print) ═══ */}
+      <div className="mb-6 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-[28px] bg-[var(--dynamic-color)]/5 border border-[var(--dynamic-color)]/10 p-5 shadow-sm">
+        <div className="flex items-center gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white shadow-sm">
+            <QrCode size={24} style={{ color: themeColor }} />
+          </div>
+          <div>
+            <h3 className="text-[16px] font-black text-gray-900 leading-tight">معاينة وتصدير المنيو</h3>
+            <p className="text-[12px] font-bold text-gray-500 mt-0.5">شارك رابط المنيو أو اطبعه للنسخة الورقية</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <button onClick={() => setShowQR(true)} className="flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-[14px] font-bold text-gray-700 shadow-sm transition hover:shadow border border-gray-200">
+            <QrCode size={18} /> رمز الـ QR
+          </button>
+          <button onClick={() => window.print()} className="flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14px] font-black text-white shadow-sm transition hover:scale-105" style={{ backgroundColor: themeColor }}>
+            <Printer size={18} /> طباعة ورقية
+          </button>
+        </div>
+      </div>
+
+      {showQR && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={() => setShowQR(false)}>
+          <div className="w-full max-w-sm rounded-[32px] bg-white p-8 text-center shadow-2xl relative" onClick={e => e.stopPropagation()}>
+            <IconButton icon={X} onClick={() => setShowQR(false)} borderClass="absolute top-4 right-4 bg-gray-100" />
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[20px] bg-[var(--dynamic-color)]/10 mb-6">
+              <QrCode size={36} style={{ color: themeColor }} />
+            </div>
+            <h3 className="text-[20px] font-black text-gray-900 mb-2">رمز القائمة الخاص بك</h3>
+            <p className="text-[13px] font-bold text-gray-500 mb-8 leading-relaxed">
+              يمكنك طباعة هذا الرمز أو تحميله ووضعه على طاولات المطعم ليتمكن العملاء من التصفح مباشرة.
+            </p>
+            <div className="mx-auto w-48 h-48 rounded-[24px] border-4 border-gray-100 p-2 shadow-sm mb-6 bg-white overflow-hidden flex items-center justify-center">
+              <QRCodeSVG 
+                value={`${typeof window !== "undefined" ? window.location.origin : "https://khatwah.online"}/services/alakeifak/${restaurant?.slug || ""}`} 
+                size={160} 
+                level="M"
+                includeMargin={false}
+              />
+            </div>
+            <a 
+              href={`https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(typeof window !== "undefined" ? window.location.origin : "https://khatwah.online")}/services/alakeifak/${restaurant?.slug || ""}`} 
+              download={`qr-${restaurant?.slug}.png`}
+              target="_blank" rel="noreferrer"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl py-3 text-[15px] font-black text-white transition hover:brightness-110" style={{ backgroundColor: themeColor }}>
+              <Copy size={18} /> تحميل صورة الرمز عالية الدقة
+            </a>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
 
 export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) {
   const [categories, setCategories] = useState([]);
@@ -33,7 +100,6 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
 
   // Item form state
   const [showItemForm, setShowItemForm] = useState(false);
-  const [showQR, setShowQR] = useState(false);
   const [itemFormSubId, setItemFormSubId] = useState(null);
   const [editingItem, setEditingItem] = useState(null);
   const [formData, setFormData] = useState({ name: "", description: "", ingredients: "", is_available: true, sizes: [{ name: "", price: "" }] });
@@ -43,12 +109,17 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState("");
 
-  useEffect(() => {
-    if (showQR) {
-      document.body.classList.add('modal-open');
-      return () => document.body.classList.remove('modal-open');
-    }
-  }, [showQR]);
+  const triggerRevalidate = async () => {
+    if (!restaurant?.slug) return;
+    try {
+      await fetch('/api/alakeifak/revalidate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slug: restaurant.slug })
+      });
+    } catch { /* ignore */ }
+  };
+
 
   const fetchData = useCallback(async () => {
     const { data: catData, error: catErr } = await safeQuery(() =>
@@ -74,21 +145,21 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
     if (!newCatName.trim()) return;
     await safeMutation(
       () => supabase.from("categories").insert({ restaurant_id: restaurantId, name: newCatName.trim(), icon: newCatIcon, sort_order: categories.length }),
-      { onSuccess: () => { setNewCatName(""); setNewCatIcon("🔥"); fetchData(); } }
+      { onSuccess: () => { setNewCatName(""); setNewCatIcon("🔥"); fetchData(); triggerRevalidate(); } }
     );
   };
   const updateCategory = async (id) => {
     if (!editCatName.trim()) return;
     await safeMutation(
       () => supabase.from("categories").update({ name: editCatName.trim(), icon: editCatIcon }).eq("id", id),
-      { onSuccess: () => { setEditingCat(null); fetchData(); } }
+      { onSuccess: () => { setEditingCat(null); fetchData(); triggerRevalidate(); } }
     );
   };
   const deleteCategory = async (id) => {
     if (!confirm("هل أنت متأكد من حذف القسم وكل التصنيفات والأصناف المرتبطة به نهائيا؟")) return;
     await safeMutation(
       () => supabase.from("categories").delete().eq("id", id),
-      { onSuccess: fetchData }
+      { onSuccess: () => { fetchData(); triggerRevalidate(); } }
     );
   };
 
@@ -106,7 +177,7 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
     
     await safeMutation(() => Promise.all(
       ordered.map(c => supabase.from('categories').update({ sort_order: c.sort_order }).eq('id', c.id))
-    ));
+    ), { onSuccess: triggerRevalidate });
   };
 
   // ── Subcategory CRUD ──
@@ -116,21 +187,21 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
     const catSubs = subcategories.filter(s => s.category_id === categoryId);
     await safeMutation(
       () => supabase.from("subcategories").insert({ category_id: categoryId, name: subName.trim(), sort_order: catSubs.length }),
-      { onSuccess: () => { setNewSubNames({ ...newSubNames, [categoryId]: "" }); fetchData(); } }
+      { onSuccess: () => { setNewSubNames({ ...newSubNames, [categoryId]: "" }); fetchData(); triggerRevalidate(); } }
     );
   };
   const updateSubcategory = async (id) => {
     if (!editSubName.trim()) return;
     await safeMutation(
       () => supabase.from("subcategories").update({ name: editSubName.trim() }).eq("id", id),
-      { onSuccess: () => { setEditingSub(null); fetchData(); } }
+      { onSuccess: () => { setEditingSub(null); fetchData(); triggerRevalidate(); } }
     );
   };
   const deleteSubcategory = async (id) => {
     if (!confirm("حذف هذا التصنيف وكل الأصناف المرتبطة به؟")) return;
     await safeMutation(
       () => supabase.from("subcategories").delete().eq("id", id),
-      { onSuccess: fetchData }
+      { onSuccess: () => { fetchData(); triggerRevalidate(); } }
     );
   };
 
@@ -192,7 +263,7 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
         if (!ok) throw error || new Error("فشل إضافة الصنف.");
         if (newItem) await safeMutation(() => supabase.from("item_sizes").insert(validSizes.map((s, idx) => ({ item_id: newItem.id, name: s.name.trim(), price: Number(s.price), sort_order: idx }))));
       }
-      resetItemForm(); fetchData();
+      resetItemForm(); fetchData(); triggerRevalidate();
     } catch (err) { setFormError(err.message || "حدث خطأ."); }
     finally { setSaving(false); }
   };
@@ -203,6 +274,7 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
       {
         optimisticUpdate: () => setItems(prev => prev.map(i => i.id === item.id ? { ...i, is_available: !i.is_available } : i)),
         rollback: () => setItems(prev => prev.map(i => i.id === item.id ? { ...i, is_available: item.is_available } : i)),
+        onSuccess: triggerRevalidate,
       }
     );
   };
@@ -210,7 +282,7 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
     if (!confirm("حذف هذا الصنف نهائيا؟")) return;
     await safeMutation(
       () => supabase.from("items").delete().eq("id", id),
-      { onSuccess: fetchData }
+      { onSuccess: () => { fetchData(); triggerRevalidate(); } }
     );
   };
 
@@ -278,52 +350,7 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
         </div>
       )}
 
-      {/* ═══ Action Header (QR / Print) ═══ */}
-      <div className="mb-6 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-[28px] bg-[var(--dynamic-color)]/5 border border-[var(--dynamic-color)]/10 p-5 shadow-sm">
-        <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white shadow-sm">
-            <QrCode size={24} style={{ color: themeColor }} />
-          </div>
-          <div>
-            <h3 className="text-[16px] font-black text-gray-900 leading-tight">معاينة وتصدير المنيو</h3>
-            <p className="text-[12px] font-bold text-gray-500 mt-0.5">شارك رابط المنيو أو اطبعه للنسخة الورقية</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <button onClick={() => setShowQR(true)} className="flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-[14px] font-bold text-gray-700 shadow-sm transition hover:shadow border border-gray-200">
-            <QrCode size={18} /> رمز الـ QR
-          </button>
-          <button onClick={() => window.print()} className="flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-[14px] font-black text-white shadow-sm transition hover:scale-105" style={{ backgroundColor: themeColor }}>
-            <Printer size={18} /> طباعة ورقية
-          </button>
-        </div>
-      </div>
-
-
-  {showQR && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={() => setShowQR(false)}>
-          <div className="w-full max-w-sm rounded-[32px] bg-white p-8 text-center shadow-2xl relative" onClick={e => e.stopPropagation()}>
-            <IconButton icon={X} onClick={() => setShowQR(false)} borderClass="absolute top-4 right-4 bg-gray-100" />
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[20px] bg-[var(--dynamic-color)]/10 mb-6">
-              <QrCode size={36} style={{ color: themeColor }} />
-            </div>
-            <h3 className="text-[20px] font-black text-gray-900 mb-2">رمز القائمة الخاص بك</h3>
-            <p className="text-[13px] font-bold text-gray-500 mb-8 leading-relaxed">
-              يمكنك طباعة هذا الرمز أو تحميله ووضعه على طاولات المطعم ليتمكن العملاء من التصفح مباشرة.
-            </p>
-            <div className="mx-auto w-48 h-48 rounded-[24px] border-4 border-gray-100 p-2 shadow-sm mb-6 bg-white overflow-hidden flex items-center justify-center">
-              <img src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(typeof window !== "undefined" ? window.location.origin : "https://khatwah.com")}/services/alakeifak/${restaurant?.slug || ""}`} alt="QR Code" className="w-full h-full object-contain" />
-            </div>
-            <a 
-              href={`https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(typeof window !== "undefined" ? window.location.origin : "https://khatwah.com")}/services/alakeifak/${restaurant?.slug || ""}`} 
-              download={`qr-${restaurant?.slug}.png`}
-              target="_blank" rel="noreferrer"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl py-3 text-[15px] font-black text-white transition hover:brightness-110" style={{ backgroundColor: themeColor }}>
-              <Copy size={18} /> تحميل صورة الرمز عالية الدقة
-            </a>
-          </div>
-        </div>
-      )}
+      <QRSection restaurant={restaurant} themeColor={themeColor} />
 
       {/* ═══ New Category Form ═══ */}
       <div className="mb-8 rounded-[28px] bg-white p-5 shadow-sm border border-gray-100">
@@ -420,39 +447,55 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
                         )}
                       </div>
 
-                      {/* ── Items inside (Tier 3 — Clean white cards) ── */}
+                      {/* ── Items inside (Tier 3 — Clean grid cards) ── */}
                       {subItems.length > 0 && (
-                        <div className="px-4 py-3 space-y-2 bg-white">
+                        <div className="p-4 sm:p-5 bg-white grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                           {subItems.map((item) => (
-                            <div key={item.id} className={`flex items-center gap-3 rounded-[16px] p-3 transition-all group ${item.is_available ? "bg-gray-50/70 hover:bg-gray-100/70 border border-transparent hover:border-gray-200" : "bg-red-50/30 border border-red-100/50 opacity-70"}`}>
-                              {/* Thumbnail */}
-                              {item.image_url ? (
-                                <div className="h-12 w-12 shrink-0 overflow-hidden rounded-[12px] bg-gray-200 shadow-sm ring-2 ring-white">
-                                  <img src={item.image_url} alt="" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                                </div>
-                              ) : (
-                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[12px] bg-gray-100 ring-2 ring-white">
-                                  <Pizza size={18} className="text-gray-300" />
-                                </div>
-                              )}
-                              {/* Info */}
-                              <div className="flex-1 min-w-0">
-                                <span className="text-[14px] font-black text-gray-900 block truncate leading-tight">{item.name}</span>
-                                <span className="text-[12px] font-bold text-gray-400 mt-0.5 block">{item.item_sizes?.map(s => `${s.price} ج`).join("  ·  ")}</span>
+                            <div key={item.id} className={`relative flex flex-col overflow-hidden rounded-[24px] border-2 transition-all duration-300 group ${item.is_available ? "bg-white border-gray-100 hover:border-[var(--dynamic-color)]/30 hover:shadow-[0_8px_30px_-10px_rgba(0,0,0,0.1)]" : "bg-red-50/30 border-red-100 opacity-80"}`}>
+                              
+                              {/* Action Overlay */}
+                              <div className="absolute top-2 left-2 z-10 flex flex-col gap-1.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity bg-white/90 backdrop-blur-md p-1.5 rounded-[20px] shadow-sm border border-gray-100">
+                                <button onClick={() => toggleAvailability(item)} className="p-2 rounded-xl hover:bg-gray-100 transition-colors flex items-center justify-center" title={item.is_available ? "إيقاف" : "تفعيل"}>
+                                  {item.is_available ? <ToggleRight size={22} className="text-green-500" /> : <ToggleLeft size={22} className="text-gray-400" />}
+                                </button>
+                                <div className="h-[1px] w-full bg-gray-100 my-0.5" />
+                                <button onClick={() => openEditItem(item)} className="p-2 rounded-xl hover:bg-blue-50 transition-colors flex items-center justify-center" title="تعديل">
+                                  <Edit3 size={18} className="text-blue-500" />
+                                </button>
+                                <button onClick={() => deleteItem(item.id)} className="p-2 rounded-xl hover:bg-red-50 transition-colors flex items-center justify-center" title="حذف">
+                                  <Trash2 size={18} className="text-red-500" />
+                                </button>
                               </div>
-                              {/* Tags */}
-                              {!item.is_available && <span className="shrink-0 text-[10px] font-black text-red-500 bg-red-100 px-2 py-0.5 rounded-full">نفذت</span>}
-                              {/* Actions — Separated with gap */}
-                              <div className="shrink-0 flex items-center gap-0.5 opacity-100 sm:opacity-50 sm:group-hover:opacity-100 transition-opacity">
-                                <button onClick={() => toggleAvailability(item)} className="p-1 sm:p-1.5 rounded-lg hover:bg-white transition-colors" title={item.is_available ? "إيقاف" : "تفعيل"}>
-                                  {item.is_available ? <ToggleRight size={20} className="text-green-500" /> : <ToggleLeft size={20} className="text-gray-300" />}
-                                </button>
-                                <button onClick={() => openEditItem(item)} className="p-1 sm:p-1.5 rounded-lg hover:bg-white transition-colors" title="تعديل">
-                                  <Edit3 size={14} className="text-gray-400" />
-                                </button>
-                                <button onClick={() => deleteItem(item.id)} className="p-1 sm:p-1.5 rounded-lg hover:bg-red-50 transition-colors" title="حذف">
-                                  <Trash2 size={14} className="text-gray-300 hover:text-red-500" />
-                                </button>
+
+                              {/* Thumbnail */}
+                              <div className="relative aspect-video w-full bg-gray-50 overflow-hidden border-b border-gray-100">
+                                {item.image_url ? (
+                                  <img src={item.image_url} alt="" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                                ) : (
+                                  <div className="flex h-full w-full items-center justify-center bg-gray-50">
+                                    <Pizza size={32} className="text-gray-300" strokeWidth={1.5} />
+                                  </div>
+                                )}
+                                {!item.is_available && (
+                                  <div className="absolute inset-0 bg-red-900/10 flex items-center justify-center backdrop-blur-[2px]">
+                                    <span className="bg-red-500 text-white font-black text-[13px] px-4 py-1.5 rounded-full shadow-lg">موقوف</span>
+                                  </div>
+                                )}
+                              </div>
+                              
+                              {/* Info */}
+                              <div className="p-4 flex flex-col flex-1">
+                                <h4 className="text-[16px] font-black text-gray-900 leading-tight mb-1">{item.name}</h4>
+                                {item.description && <p className="text-[12px] font-medium text-gray-500 line-clamp-2 mb-3 leading-relaxed">{item.description}</p>}
+                                
+                                <div className="mt-auto pt-3 flex flex-wrap gap-2">
+                                  {item.item_sizes?.map((s, i) => (
+                                    <div key={i} className="flex items-center gap-1.5 bg-gray-50 border border-gray-100 px-2.5 py-1.5 rounded-xl">
+                                      {s.name && <span className="text-[11px] font-bold text-gray-500">{s.name}</span>}
+                                      <span className="text-[13px] font-black text-[var(--dynamic-color)]">{s.price} ج</span>
+                                    </div>
+                                  ))}
+                                </div>
                               </div>
                             </div>
                           ))}

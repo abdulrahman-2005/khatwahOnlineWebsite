@@ -3,6 +3,7 @@ import productsData from "../../data/products.json";
 import servicesData from "../../data/services.json";
 import { getPostSlugs } from "@/sanity/client";
 import { seoConfig } from "@/lib/seo";
+import { createServerSupabase } from "./services/alakeifak/lib/supabaseServer";
 
 export default async function sitemap() {
   const baseUrl = seoConfig.baseUrl;
@@ -91,5 +92,26 @@ export default async function sitemap() {
     console.warn('Failed to fetch blog posts for sitemap:', error);
   }
 
-  return [...staticPages, ...productPages, ...projectPages, ...servicePages, ...blogPages];
+  // Alakeifak Restaurants (verified only)
+  let restaurantPages = [];
+  try {
+    const supabase = createServerSupabase({ useServiceRole: true });
+    const { data: restaurants } = await supabase
+      .from("restaurants")
+      .select("slug, updated_at")
+      .eq("is_verified", true);
+
+    if (restaurants) {
+      restaurantPages = restaurants.map((r) => ({
+        url: `${baseUrl}/services/alakeifak/${r.slug}`,
+        lastModified: r.updated_at ? new Date(r.updated_at) : new Date(),
+        changeFrequency: "weekly",
+        priority: 0.8,
+      }));
+    }
+  } catch (error) {
+    console.warn('Failed to fetch restaurants for sitemap:', error);
+  }
+
+  return [...staticPages, ...productPages, ...projectPages, ...servicePages, ...blogPages, ...restaurantPages];
 }

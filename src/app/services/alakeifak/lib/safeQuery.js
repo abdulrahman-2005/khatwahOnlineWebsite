@@ -8,7 +8,7 @@
 import { supabase } from './supabaseClient';
 
 // Helper to prevent infinite hanging due to stuck Supabase token refresh
-const withTimeout = (promise, ms = 8000) => {
+const withTimeout = (promise, ms = 30000) => {
   return Promise.race([
     promise,
     new Promise((_, reject) => {

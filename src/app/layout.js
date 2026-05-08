@@ -132,14 +132,7 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
-        
-        <link 
-          rel="preload" 
-          href="/fonts/terrabica.otf" 
-          as="font" 
-          type="font/otf" 
-          crossOrigin="anonymous"
-        />
+       
         
         <link rel="dns-prefetch" href="https://cdn.sanity.io" />
         

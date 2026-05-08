@@ -22,6 +22,7 @@ export const useCartStore = create((set, get) => ({
   deliveryZone: null,  // { id, region_name, fee }
   orderType: 'delivery', // 'delivery' | 'pickup' | 'in_house'
   restaurantSlug: null,
+  showDeliveryPricing: true,
 
   // Initialize cart from localStorage for a specific restaurant
   initCart: (slug) => {
@@ -50,7 +51,7 @@ export const useCartStore = create((set, get) => ({
   },
 
   addItem: (item) => {
-    const cartItemId = `${item.itemId}_${item.size.id}_${item.extras.map(e => e.id).sort().join(',')}`;
+    const cartItemId = item.cartItemId || `cart_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 7)}`;
     
     set((state) => {
       const existing = state.items.find(i => i.cartItemId === cartItemId);
@@ -93,6 +94,19 @@ export const useCartStore = create((set, get) => ({
     get()._persist();
   },
 
+  updateExtraQuantity: (cartItemId, extraId, delta) => {
+    set((state) => ({
+      items: state.items.map(item => {
+        if (item.cartItemId !== cartItemId) return item;
+        const newExtras = item.extras.map(e => 
+          e.id === extraId ? { ...e, quantity: Math.max(0, e.quantity + delta) } : e
+        ).filter(e => e.quantity > 0);
+        return { ...item, extras: newExtras };
+      })
+    }));
+    get()._persist();
+  },
+
   setDeliveryZone: (zone) => {
     set({ deliveryZone: zone });
     get()._persist();
@@ -101,6 +115,10 @@ export const useCartStore = create((set, get) => ({
   setOrderType: (type) => {
     set({ orderType: type });
     get()._persist();
+  },
+
+  setShowDeliveryPricing: (show) => {
+    set({ showDeliveryPricing: show });
   },
 
   clearCart: () => {
@@ -114,23 +132,19 @@ export const useCartStore = create((set, get) => ({
   // Computed values
   getItemTotal: (cartItem) => {
     const sizePrice = cartItem.size.price * cartItem.quantity;
-    const extrasPrice = cartItem.extras.reduce((sum, e) => sum + e.price, 0) * cartItem.quantity;
+    const extrasPrice = cartItem.extras.reduce((sum, e) => sum + (e.price * (e.quantity || 1)), 0);
     return sizePrice + extrasPrice;
   },
 
   getSubtotal: () => {
-    const { items } = get();
-    return items.reduce((total, item) => {
-      const sizePrice = item.size.price * item.quantity;
-      const extrasPrice = item.extras.reduce((sum, e) => sum + e.price, 0) * item.quantity;
-      return total + sizePrice + extrasPrice;
-    }, 0);
+    const { items, getItemTotal } = get();
+    return items.reduce((total, item) => total + getItemTotal(item), 0);
   },
 
   getDeliveryFee: () => {
-    const { deliveryZone, orderType } = get();
+    const { deliveryZone, orderType, showDeliveryPricing } = get();
     // No delivery fee for pickup or in-house orders
-    if (orderType !== 'delivery') return 0;
+    if (orderType !== 'delivery' || !showDeliveryPricing) return 0;
     return deliveryZone?.fee || 0;
   },
 

@@ -13,6 +13,9 @@
 # testing
 /coverage
 
+#custom scripts
+/ALAKEIFAK_UPLOADER/
+
 # next.js
 /.next/
 /out/

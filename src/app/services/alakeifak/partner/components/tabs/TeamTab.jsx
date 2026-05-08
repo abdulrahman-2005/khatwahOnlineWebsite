@@ -243,7 +243,7 @@ export default function TeamTab({ restaurantId }) {
 
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-[15px] font-black text-gray-900 truncate">
+                      <span className="text-[15px] font-black text-gray-900 break-all">
                         {member.email}
                       </span>
                       {isCurrentUser && (

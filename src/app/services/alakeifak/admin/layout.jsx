@@ -17,10 +17,8 @@ import {
  * Admin layout — Client-side auth guard for Khatwah super admins.
  * 
  * Since Supabase auth is handled entirely client-side (no SSR cookies),
- * the guard runs here instead of Edge middleware. The layout checks the
- * user's email against the NEXT_PUBLIC_SUPER_ADMIN_EMAILS env var.
- * 
- * Set NEXT_PUBLIC_SUPER_ADMIN_EMAILS in .env.local as a comma-separated list.
+ * the guard runs here instead of Edge middleware. The layout checks if the
+ * user is a super admin using the is_super_admin() RPC function.
  */
 
 export default function AdminLayout({ children }) {

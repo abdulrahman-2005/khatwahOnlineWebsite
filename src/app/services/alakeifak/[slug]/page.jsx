@@ -1,106 +1,68 @@
 import { createServerSupabase } from "../lib/supabaseServer";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import MenuContent from "./MenuContent";
 import { generateRestaurantMetadata } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+// Enable ISR: Cache the menu page for 2 minutes. This protects the database during traffic spikes.
+export const revalidate = 120;
 
-export async function generateMetadata({ params }) {
-  const { slug } = await params;
+export async function generateStaticParams() {
   const supabase = createServerSupabase({ useServiceRole: true });
+  const { data: restaurants } = await supabase
+    .from("restaurants")
+    .select("slug")
+    .eq("is_active", true);
 
-  const { data: restaurant } = await supabase
+  return (restaurants || []).map((restaurant) => ({
+    slug: restaurant.slug,
+  }));
+}
+
+// Wrap the initial restaurant fetch in React cache() to dedupe between metadata and page render
+const getRestaurant = cache(async (slug) => {
+  const supabase = createServerSupabase({ useServiceRole: true });
+  const { data, error } = await supabase
     .from("restaurants")
     .select("*")
     .eq("slug", slug)
     .single();
+  
+  if (error) return null;
+  return data;
+});
+
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const restaurant = await getRestaurant(slug);
+
+  if (!restaurant) return {};
 
   return {
     ...generateRestaurantMetadata(restaurant),
-    manifest: `/api/alakeifak/manifest?slug=${slug}`
+    manifest: `/api/alakeifak/manifest?slug=${slug}`,
   };
 }
 
 export default async function RestaurantMenuPage({ params }) {
   const { slug } = await params;
-  
-  if (slug === "partner" || slug === "migrations") {
+
+  if (slug === "partner" || slug === "migrations" || slug === "admin") {
     notFound();
   }
 
-  // Use service role to bypass RLS so we can fetch unverified restaurants.
-  // The client component (MenuContent) will handle the actual owner verification securely!
   const supabase = createServerSupabase({ useServiceRole: true });
 
-  // Fetch restaurant with all related data
-  const { data: restaurant, error: restaurantError } = await supabase
-    .from("restaurants")
-    .select("*")
-    .eq("slug", slug)
-    .single();
-
-  if (restaurantError || !restaurant) {
+  // ── Step 1: Fetch restaurant ONLY — check is_active BEFORE any further queries
+  const restaurant = await getRestaurant(slug);
+  if (!restaurant) {
     notFound();
   }
 
-  // Fetch categories
-  const { data: categories } = await supabase
-    .from("categories")
-    .select("*")
-    .eq("restaurant_id", restaurant.id)
-    .order("sort_order");
-
-  const categoryIds = (categories || []).map((c) => c.id);
-
-  // Fetch subcategories
-  const { data: subcategories } = await supabase
-    .from("subcategories")
-    .select("*")
-    .in("category_id", categoryIds.length > 0 ? categoryIds : [null])
-    .order("sort_order");
-
-  const subcategoryIds = (subcategories || []).map((s) => s.id);
-
-  // Fetch items with sizes
-  const { data: items } = await supabase
-    .from("items")
-    .select(`*, item_sizes (*)`)
-    .in("subcategory_id", subcategoryIds.length > 0 ? subcategoryIds : [null])
-    .order("sort_order");
-
-  // Fetch extras
-  const { data: extras } = await supabase
-    .from("extras")
-    .select("*")
-    .eq("restaurant_id", restaurant.id)
-    .eq("is_available", true);
-
-  // Fetch delivery zones
-  const { data: deliveryZones } = await supabase
-    .from("delivery_zones")
-    .select("*")
-    .eq("restaurant_id", restaurant.id)
-    .order("region_name");
-
-  // Group structure: categorizedItems[categoryId] = [ { subcategory, items: [] } ]
-  const groupedData = {};
-  (categories || []).forEach((cat) => {
-    const catSubs = (subcategories || []).filter((sub) => sub.category_id === cat.id);
-    
-    const subWithItems = catSubs.map(sub => {
-      return {
-        ...sub,
-        items: (items || []).filter(item => item.subcategory_id === sub.id)
-      };
-    }).filter(sub => sub.items.length > 0); // Only include subcategories that have items
-
-    groupedData[cat.id] = subWithItems;
-  });
-
-  // ── KILL SWITCH CHECK ──
-  // If the super admin has deactivated this restaurant OR it is unverified, show an unavailable screen
-  if (restaurant.is_active === false || restaurant.is_verified === false) {
+  // ── Step 2: Kill switch — if not active, return unavailable page IMMEDIATELY.
+  // No menu data is fetched. is_active controls the menu link; is_verified controls
+  // whether the restaurant appears in the public listing (/alakeifak).
+  if (restaurant.is_active === false) {
     return (
       <main className="min-h-screen bg-gray-50 flex items-center justify-center p-6" dir="rtl">
         <div className="w-full max-w-md text-center">
@@ -124,52 +86,151 @@ export default async function RestaurantMenuPage({ params }) {
     );
   }
 
+  // ── Step 3: Restaurant is active — fetch menu data with proper error handling
+  let categories = [];
+  let subcategories = [];
+  let items = [];
+  let extras = [];
+  let deliveryZones = [];
+
+  try {
+    // Fetch categories — select only needed columns
+    const { data: catData, error: catError } = await supabase
+      .from("categories")
+      .select("id,restaurant_id,name,icon,sort_order")
+      .eq("restaurant_id", restaurant.id)
+      .order("sort_order");
+
+    if (catError) throw catError;
+    categories = catData || [];
+
+    const categoryIds = categories.map((c) => c.id);
+
+    if (categoryIds.length > 0) {
+      // Fetch subcategories
+      const { data: subData, error: subError } = await supabase
+        .from("subcategories")
+        .select("id,category_id,name,sort_order")
+        .in("category_id", categoryIds)
+        .order("sort_order");
+
+      if (subError) throw subError;
+      subcategories = subData || [];
+
+      const subcategoryIds = subcategories.map((s) => s.id);
+
+      if (subcategoryIds.length > 0) {
+        // Fetch items with sizes
+        const { data: itemData, error: itemError } = await supabase
+          .from("items")
+          .select("id,subcategory_id,name,description,ingredients,image_url,is_available,sort_order,item_sizes(id,item_id,name,price,sort_order)")
+          .in("subcategory_id", subcategoryIds)
+          .order("sort_order");
+
+        if (itemError) throw itemError;
+        items = itemData || [];
+      }
+    }
+
+    // Fetch extras and delivery zones in parallel
+    const [extrasResult, zonesResult] = await Promise.all([
+      supabase
+        .from("extras")
+        .select("id,restaurant_id,name,price,is_available,image_url,suggested_subcategories")
+        .eq("restaurant_id", restaurant.id)
+        .eq("is_available", true),
+      supabase
+        .from("delivery_zones")
+        .select("id,restaurant_id,region_name,fee")
+        .eq("restaurant_id", restaurant.id)
+        .order("region_name"),
+    ]);
+
+    if (!extrasResult.error) extras = extrasResult.data || [];
+    if (!zonesResult.error) deliveryZones = zonesResult.data || [];
+  } catch (err) {
+    console.error("[RestaurantMenuPage] Failed to fetch menu data:", err);
+    // Render the page with whatever data we managed to get — don't crash
+  }
+
+  // ── Step 4: Build grouped data structure
+  // categorizedItems[categoryId] = [ { subcategory, items: [] } ]
+  const groupedData = {};
+  categories.forEach((cat) => {
+    const catSubs = subcategories.filter((sub) => sub.category_id === cat.id);
+    const subWithItems = catSubs
+      .map((sub) => ({
+        ...sub,
+        items: items.filter((item) => item.subcategory_id === sub.id),
+      }))
+      .filter((sub) => sub.items.length > 0);
+    groupedData[cat.id] = subWithItems;
+  });
+
+  // ── Step 5: Build JSON-LD structured data (richer schema)
+  const restaurantUrl = `https://www.khatwah.online/services/alakeifak/${restaurant.slug}`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": restaurant.name,
+    "description": `${restaurant.name} - مطعم في العريش، متاح للطلب أونلاين عبر منصة على كيفك وموقع khatwah.online`,
+    "image": restaurant.banner_url || restaurant.logo_url,
+    "url": restaurantUrl,
+    "servesCuisine": restaurant.cuisine_type || "Egyptian",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Arish",
+      "addressRegion": "North Sinai",
+      "addressCountry": "EG",
+    },
+    "telephone": restaurant.whatsapp_number,
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+        "opens": "00:00",
+        "closes": "23:59",
+      },
+    ],
+    "menu": restaurantUrl,
+    "hasMenu": {
+      "@type": "Menu",
+      "name": `قائمة ${restaurant.name}`,
+      "url": restaurantUrl,
+      ...(items.length > 0 && {
+        "hasMenuSection": categories.slice(0, 5).map((cat) => ({
+          "@type": "MenuSection",
+          "name": cat.name,
+          "hasMenuItem": (groupedData[cat.id] || [])
+            .flatMap((sub) => sub.items)
+            .slice(0, 5)
+            .map((item) => ({
+              "@type": "MenuItem",
+              "name": item.name,
+              "description": item.description || undefined,
+              "offers": {
+                "@type": "Offer",
+                "price": item.item_sizes?.[0]?.price ?? 0,
+                "priceCurrency": "EGP",
+              },
+            })),
+        })),
+      }),
+    },
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Restaurant",
-            "name": restaurant.name,
-            "description": `${restaurant.name} - مطعم في العريش، متاح للطلب أونلاين عبر منصة على كيفك وموقع khatwah.online`,
-            "image": restaurant.banner_url || restaurant.logo_url,
-            "url": `https://www.khatwah.online/services/alakeifak/${restaurant.slug}`,
-            "servesCuisine": restaurant.cuisine_type || "Egyptian",
-            "address": {
-              "@type": "PostalAddress",
-              "addressLocality": "Arish",
-              "addressRegion": "North Sinai",
-              "addressCountry": "EG"
-            },
-            "openingHoursSpecification": [
-              {
-                "@type": "OpeningHoursSpecification",
-                "dayOfWeek": [
-                  "Monday",
-                  "Tuesday",
-                  "Wednesday",
-                  "Thursday",
-                  "Friday",
-                  "Saturday",
-                  "Sunday"
-                ],
-                "opens": "00:00",
-                "closes": "23:59"
-              }
-            ],
-            "menu": `https://www.khatwah.online/services/alakeifak/${restaurant.slug}`,
-            "telephone": restaurant.whatsapp_number
-          })
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <MenuContent
         restaurant={restaurant}
-        categories={categories || []}
+        categories={categories}
         groupedData={groupedData}
-        extras={extras || []}
-        deliveryZones={deliveryZones || []}
+        extras={extras}
+        deliveryZones={deliveryZones}
       />
     </>
   );

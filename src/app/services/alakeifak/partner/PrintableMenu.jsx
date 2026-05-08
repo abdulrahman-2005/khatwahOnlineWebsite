@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { QRCodeSVG } from 'qrcode.react';
+
 export default function PrintableMenu({ restaurant, categories, subcategories, items, themeColor }) {
   if (!restaurant) return null;
 
@@ -319,7 +321,7 @@ export default function PrintableMenu({ restaurant, categories, subcategories, i
           }
 
           /* Typography */
-          .pm-display { font-family: "terrabica", "Cairo", "IBM Plex Sans Arabic", serif; }
+          .pm-display { font-family: "Cairo", "IBM Plex Sans Arabic", serif; }
           .pm-text { font-family: "Cairo", "IBM Plex Sans Arabic", sans-serif; }
         }
 
@@ -328,7 +330,6 @@ export default function PrintableMenu({ restaurant, categories, subcategories, i
           .pm-cover, .pm-body { display: none !important; }
         }
       `}} />
-
 
       {/* ═══════════════════════════════════════════════════════ */}
       {/*                     COVER PAGE                        */}
@@ -415,7 +416,13 @@ export default function PrintableMenu({ restaurant, categories, subcategories, i
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
         }}>
           <div style={{ padding: '8px', border: '1.5px solid #e0e0e0', borderRadius: '16px', background: 'white' }}>
-            <img src={qrSrc} alt="QR" style={{ width: '10rem', height: '10rem', display: 'block' }} />
+            <QRCodeSVG 
+              value={menuUrl} 
+              size={160} 
+              level="M"
+              includeMargin={false}
+              fgColor="#1a1a1a"
+            />
           </div>
           <span className="pm-text" style={{ fontSize: '9px', fontWeight: 700, color: '#bbb', letterSpacing: '1px' }}>
             امسح للطلب أونلاين

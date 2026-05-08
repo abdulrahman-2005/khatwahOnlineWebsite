@@ -36,7 +36,7 @@ export async function GET(request) {
     });
   }
 
-  const supabase = createServerSupabase({ useServiceRole: true });
+  const supabase = createServerSupabase();
 
   const { data: restaurant } = await supabase
     .from("restaurants")
@@ -57,5 +57,9 @@ export async function GET(request) {
     background_color: "#ffffff",
     theme_color: restaurant.theme_color || "#f97316",
     icons: DEFAULT_ICONS
+  }, {
+    headers: {
+      'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+    }
   });
 }

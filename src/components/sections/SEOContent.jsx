@@ -22,7 +22,7 @@ export default function SEOContent() {
           <div className="mb-20 lg:mb-28 grid lg:grid-cols-[1fr_auto] lg:items-end gap-8">
             <div>
               <h2
-                className="text-5xl sm:text-6xl lg:text-7xl font-black leading-[0.92] tracking-tight"
+                className="text-5xl sm:text-6xl lg:text-7xl font-black tracking leading-snug"
                 style={{ fontFamily: 'var(--font-display)', color: 'var(--color-text)' }}
               >
                 {content.title}

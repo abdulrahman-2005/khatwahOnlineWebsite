@@ -24,10 +24,36 @@ import {
   PieChart,
 } from "lucide-react";
 
+function StatCard({
+  label,
+  value,
+  icon: Icon,
+  color,
+  bgColor = "bg-zinc-800/50",
+  borderColor = "border-zinc-800",
+}) {
+  return (
+    <div
+      className={`rounded-xl border ${borderColor} ${bgColor} p-4 transition-all hover:border-zinc-700`}
+    >
+      <div className="flex items-center gap-2 mb-2">
+        <Icon size={14} className={color} />
+        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+          {label}
+        </span>
+      </div>
+      <div className={`text-2xl font-black ${color === "text-zinc-400" ? "text-white" : color}`}>
+        {value}
+      </div>
+    </div>
+  );
+}
+
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("crm"); // "crm" | "financials"
   
   const [restaurants, setRestaurants] = useState([]);
+  const [platformStats, setPlatformStats] = useState({ losses: 0, cancelledCount: 0, totalOrders: 0 });
   const [loading, setLoading] = useState(true);
 
   // Modal states
@@ -50,19 +76,84 @@ export default function AdminPage() {
 
   const fetchRestaurants = useCallback(async () => {
     setLoading(true);
-    const { data, error } = await safeQuery(() =>
-      supabase
-        .from("restaurants")
-        .select(`
-          *,
-          orders(count),
-          restaurant_members(count)
-        `)
-        .order("created_at", { ascending: false })
-    );
+    
+    // Attempt to use new RPC first to avoid 1000 row limit on orders
+    const statsResult = await supabase.rpc('get_admin_platform_stats');
 
-    if (!error && data) {
-      setRestaurants(data);
+    if (!statsResult.error && statsResult.data) {
+      // Use efficient RPC approach and relation counts
+      const [restaurantsResult, membersResult] = await Promise.all([
+        safeQuery(() => supabase.from("restaurants").select("*, orders(count)").order("created_at", { ascending: false })),
+        safeQuery(() => supabase.from("restaurant_members").select("restaurant_id"))
+      ]);
+
+      if (!restaurantsResult.error && restaurantsResult.data) {
+        const memberCounts = {};
+        (membersResult.data || []).forEach(m => {
+          memberCounts[m.restaurant_id] = (memberCounts[m.restaurant_id] || 0) + 1;
+        });
+
+        const enrichedData = restaurantsResult.data.map(r => ({
+          ...r,
+          // Supabase count returns an array with a count property
+          orders: [{ count: r.orders?.[0]?.count || 0 }],
+          restaurant_members: [{ count: memberCounts[r.id] || 0 }]
+        }));
+        
+        setRestaurants(enrichedData);
+      }
+
+      setPlatformStats({
+        losses: statsResult.data.losses || 0,
+        cancelledCount: statsResult.data.cancelledCount || 0,
+        totalOrders: statsResult.data.totalOrders || 0
+      });
+    } else {
+      // Fallback to old behavior (max 1000 orders limit)
+      console.warn("Analytics RPC failed or missing, falling back to client-side aggregation (max 1000 orders). Please run migration 021_admin_analytics_rpc.sql.");
+      const [restaurantsResult, ordersResult, membersResult] = await Promise.all([
+        safeQuery(() => supabase.from("restaurants").select("*").order("created_at", { ascending: false })),
+        safeQuery(() => supabase.from("orders").select("restaurant_id, status, total_amount")),
+        safeQuery(() => supabase.from("restaurant_members").select("restaurant_id"))
+      ]);
+
+      if (!restaurantsResult.error && restaurantsResult.data) {
+        // Count orders and members per restaurant
+        const orderCounts = {};
+        const memberCounts = {};
+        
+        (ordersResult.data || []).forEach(o => {
+          orderCounts[o.restaurant_id] = (orderCounts[o.restaurant_id] || 0) + 1;
+        });
+        
+        (membersResult.data || []).forEach(m => {
+          memberCounts[m.restaurant_id] = (memberCounts[m.restaurant_id] || 0) + 1;
+        });
+        
+        // Attach counts to restaurants
+        const enrichedData = restaurantsResult.data.map(r => ({
+          ...r,
+          orders: [{ count: orderCounts[r.id] || 0 }],
+          restaurant_members: [{ count: memberCounts[r.id] || 0 }]
+        }));
+        
+        setRestaurants(enrichedData);
+
+        // Calculate Platform Stats
+        let totalLosses = 0;
+        let cancelledCount = 0;
+        (ordersResult.data || []).forEach(o => {
+          if (o.status === 'cancelled') {
+            cancelledCount++;
+            if (o.total_amount < 0) totalLosses += Math.abs(o.total_amount);
+          }
+        });
+        setPlatformStats({
+          losses: totalLosses,
+          cancelledCount,
+          totalOrders: ordersResult.data?.length || 0
+        });
+      }
     }
     setLoading(false);
   }, []);
@@ -132,13 +223,18 @@ export default function AdminPage() {
       if (!r.subscription_end_date) return false;
       return new Date(r.subscription_end_date) < new Date();
     }).length;
-    const totalOrders = restaurants.reduce(
+    const totalOrdersCount = restaurants.reduce(
       (sum, r) => sum + (r.orders?.[0]?.count || 0),
       0
     );
 
-    return { total, active, inactive, expiringSoon, expired, totalOrders };
-  }, [restaurants]);
+    return { 
+      total, active, inactive, expiringSoon, expired, 
+      totalOrders: totalOrdersCount,
+      losses: platformStats.losses,
+      cancelRate: platformStats.totalOrders > 0 ? (platformStats.cancelledCount / platformStats.totalOrders) * 100 : 0
+    };
+  }, [restaurants, platformStats]);
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -244,6 +340,22 @@ export default function AdminPage() {
               bgColor="bg-orange-500/5"
               borderColor="border-orange-500/10"
             />
+            <StatCard
+              label="Total Losses"
+              value={`EGP ${stats.losses.toLocaleString()}`}
+              icon={AlertTriangle}
+              color="text-red-500"
+              bgColor="bg-red-500/5"
+              borderColor="border-red-500/10"
+            />
+            <StatCard
+              label="Cancel Rate"
+              value={`${stats.cancelRate.toFixed(1)}%`}
+              icon={Activity}
+              color="text-amber-500"
+              bgColor="bg-amber-500/5"
+              borderColor="border-amber-500/10"
+            />
           </div>
 
           {/* ── MAIN TABLE ── */}
@@ -324,27 +436,3 @@ export default function AdminPage() {
   );
 }
 
-function StatCard({
-  label,
-  value,
-  icon: Icon,
-  color,
-  bgColor = "bg-zinc-800/50",
-  borderColor = "border-zinc-800",
-}) {
-  return (
-    <div
-      className={`rounded-xl border ${borderColor} ${bgColor} p-4 transition-all hover:border-zinc-700`}
-    >
-      <div className="flex items-center gap-2 mb-2">
-        <Icon size={14} className={color} />
-        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
-          {label}
-        </span>
-      </div>
-      <div className={`text-2xl font-black ${color === "text-zinc-400" ? "text-white" : color}`}>
-        {value}
-      </div>
-    </div>
-  );
-}

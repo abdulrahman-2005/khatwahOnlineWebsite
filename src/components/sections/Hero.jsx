@@ -101,16 +101,6 @@ export default function Hero() {
                   }}
                 />
               </div>
-              <div className="flex items-center gap-3 sm:gap-4">
-                <span className="h-px w-10 sm:w-16 bg-gold" />
-                <span 
-                  className="text-2xl sm:text-3xl font-black tracking-[0.25em] uppercase text-gold" 
-                  style={{ fontFamily: "var(--font-display)" }}
-                >
-                  {brandSubtitle}
-                </span>
-                <span className="h-px w-10 sm:w-16 bg-gold" />
-              </div>
             </div>
           </Reveal>
 
@@ -173,30 +163,20 @@ export default function Hero() {
             <Reveal direction="up" distance={40} duration={900}>
               <div className="flex flex-col items-start gap-1">
                 {/* Theme-aware hero wordmark */}
-                <div className="relative w-full">
+                <div className="relative w-full h-full">
                   <Image
                     src={isLight ? "/lightmode-khatwah-hero.png" : "/darkmode-khatwah-hero.png"}
                     alt="خطوة Khatwah"
                     width={900}
                     height={450}
                     priority
-                    className="w-full h-auto object-contain transition-all duration-700"
+                    className="w-full h-auto object-contain transition-all duration-700 scale-150"
                     style={{
                       filter: isLight
                         ? 'drop-shadow(0 12px 32px rgba(0,0,0,0.14))'
                         : 'drop-shadow(0 12px 48px rgba(238,147,12,0.28)) drop-shadow(0 4px 16px rgba(0,0,0,0.5))'
                     }}
                   />
-                </div>
-                <div className="flex items-center gap-6 w-full">
-                  <span className={`h-[2px] w-16 bg-gold ${isLight ? 'opacity-60' : 'opacity-50'}`} />
-                  <span 
-                    className={`text-4xl xl:text-5xl 2xl:text-6xl font-black tracking-[0.3em] uppercase text-gold ${!isLight ? 'drop-shadow-[0_0_30px_var(--color-gold-glow)]' : ''}`} 
-                    style={{ fontFamily: "var(--font-display)" }}
-                  >
-                    {brandSubtitle}
-                  </span>
-                  <span className={`h-[2px] flex-1 bg-gold ${isLight ? 'opacity-60' : 'opacity-50'}`} />
                 </div>
               </div>
             </Reveal>

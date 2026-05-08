@@ -19,9 +19,21 @@ const TABS = [
   { id: "settings", label: "الإعدادات", icon: Settings },
 ];
 
+export const getContrastYIQ = (hexcolor) => {
+  if (!hexcolor) return "#ffffff";
+  hexcolor = hexcolor.replace("#", "");
+  if (hexcolor.length === 3) hexcolor = hexcolor.split("").map(c => c + c).join("");
+  const r = parseInt(hexcolor.substr(0, 2), 16) || 0;
+  const g = parseInt(hexcolor.substr(2, 2), 16) || 0;
+  const b = parseInt(hexcolor.substr(4, 2), 16) || 0;
+  const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+  return yiq >= 200 ? "#111827" : "#ffffff";
+};
+
 export default function DashboardContent({ restaurant, onRestaurantUpdate }) {
   const [activeTab, setActiveTab] = useState("orders");
   const themeColor = restaurant.theme_color || "#ee930c";
+  const themeTextColor = getContrastYIQ(themeColor);
 
   // Track which tabs have been visited so we only mount them once they're first opened
   const [mountedTabs, setMountedTabs] = useState(new Set(["orders"]));
@@ -37,12 +49,15 @@ export default function DashboardContent({ restaurant, onRestaurantUpdate }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-32 text-gray-900 overflow-x-hidden print:pb-0 print:bg-white" dir="rtl" style={{ '--dynamic-color': themeColor, fontFamily: "var(--font-body)" }}>
+    <div className="min-h-screen text-gray-900 pb-32 overflow-x-hidden print:pb-0 print:bg-white relative" dir="rtl" style={{ '--dynamic-color': themeColor, '--dynamic-text': themeTextColor, fontFamily: "var(--font-body)" }}>
+      {/* ═══ ARTISTIC BACKGROUND VIBE ═══ */}
+      <div className="fixed inset-0 -z-20 bg-[#FBF7F0] print:hidden" />
+      <div className="fixed inset-0 -z-10 opacity-[0.03] pointer-events-none print:hidden" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23000000\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
+      <div className="absolute top-[-100px] left-[-200px] -z-10 h-[800px] w-[800px] rounded-full blur-[140px] opacity-[0.12] print:hidden" style={{ backgroundColor: themeColor }} />
+      <div className="absolute top-[400px] right-[-200px] -z-10 h-[600px] w-[600px] rounded-full blur-[140px] opacity-[0.08] print:hidden" style={{ backgroundColor: themeColor }} />
+
       {/* Session Recovery Banner */}
       <SessionRecoveryBanner />
-
-      {/* Dynamic Glow Background */}
-      <div className="absolute top-0 left-1/2 -z-10 h-[500px] w-full -translate-x-1/2 rounded-full opacity-10 blur-[120px] pointer-events-none print:hidden" style={{ backgroundColor: themeColor }} />
 
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12 relative z-10 print:mx-0 print:max-w-none print:px-0 print:py-0">
         {/* Header Section */}
@@ -51,10 +66,10 @@ export default function DashboardContent({ restaurant, onRestaurantUpdate }) {
             <div className="inline-block rounded-full bg-white px-3 py-1 text-[11px] font-bold text-[var(--dynamic-color)] border border-[var(--dynamic-color)]/20 shadow-sm mb-3">
               لوحة تحكم على كيفك ⚡
             </div>
-            <h1 className="text-3xl font-black tracking-tight text-gray-900 mb-2" style={{ fontFamily: "var(--font-display)" }}>
+            <h1 className="text-3xl font-black tracking-tight text-stone-900 mb-2" style={{ fontFamily: "var(--font-display)" }}>
               مساحة العمل
             </h1>
-            <p className="text-[15px] text-gray-500 font-medium">إدارة شاملة لمطعم ({restaurant.name}) بأسلوب عصري.</p>
+            <p className="text-[15px] text-stone-500 font-medium">إدارة شاملة لمطعم ({restaurant.name}) بأسلوب عصري.</p>
           </div>
           
           <div className="flex flex-wrap items-center gap-3">
@@ -62,7 +77,7 @@ export default function DashboardContent({ restaurant, onRestaurantUpdate }) {
               href={`/services/alakeifak/${restaurant.slug}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-12 items-center gap-2 rounded-[20px] bg-white px-5 text-[14px] font-bold text-gray-700 shadow-sm hover:shadow-md hover:bg-gray-50 active:scale-95 transition-all border border-gray-100"
+              className="inline-flex h-12 items-center gap-2 rounded-[20px] bg-white px-5 text-[14px] font-bold text-stone-700 shadow-sm hover:shadow-md hover:bg-amber-50 active:scale-95 transition-all border border-amber-100"
             >
               <Eye size={18} className="text-[var(--dynamic-color)]" />
               معاينة المنيو
@@ -70,7 +85,8 @@ export default function DashboardContent({ restaurant, onRestaurantUpdate }) {
             </a>
             <button
               onClick={() => navigator.clipboard.writeText(`${window.location.origin}/services/alakeifak/${restaurant.slug}`)}
-              className="inline-flex h-12 items-center gap-2 rounded-[20px] bg-[var(--dynamic-color)] px-5 text-[14px] font-bold text-white shadow-[0_10px_20px_-5px_var(--dynamic-color)] active:scale-95 transition-transform"
+              className="inline-flex h-12 items-center gap-2 rounded-[20px] bg-[var(--dynamic-color)] px-5 text-[14px] font-bold shadow-[0_10px_20px_-5px_var(--dynamic-color)] active:scale-95 transition-transform"
+              style={{ color: "var(--dynamic-text)" }}
             >
               <Copy size={16} />
               نسخ الرابط
@@ -80,7 +96,7 @@ export default function DashboardContent({ restaurant, onRestaurantUpdate }) {
 
         {/* Floating Dynamic Island Tabs (Light Bento) */}
         <div className="mb-10 w-full overflow-x-auto scrollbar-hide pb-4 pt-2 print:hidden sticky top-0 sm:top-4 z-30">
-          <div className="flex inline-flex p-1.5 rounded-[24px] bg-white/80 backdrop-blur-md shadow-sm border border-gray-100 min-w-max mx-auto md:mx-0">
+          <div className="flex inline-flex p-1.5 rounded-[24px] bg-white/80 backdrop-blur-md shadow-sm border border-amber-100 min-w-max mx-auto md:mx-0">
             {TABS.map((tab) => {
               const isActive = activeTab === tab.id;
               const Icon = tab.icon;
@@ -89,7 +105,7 @@ export default function DashboardContent({ restaurant, onRestaurantUpdate }) {
                   key={tab.id}
                   onClick={() => handleTabChange(tab.id)}
                   className={`relative flex items-center justify-center gap-2.5 rounded-[18px] px-6 py-3.5 text-[15px] font-bold transition-all duration-400 ease-out ${
-                    isActive ? "text-gray-900" : "text-gray-400 hover:text-gray-700 hover:bg-gray-50"
+                    isActive ? "text-stone-900" : "text-stone-400 hover:text-stone-700 hover:bg-amber-50"
                   }`}
                 >
                   {isActive && (

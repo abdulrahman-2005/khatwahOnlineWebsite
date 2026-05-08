@@ -13,6 +13,7 @@ export default function SettingsTab({ restaurant, onUpdate }) {
   const [whatsapp, setWhatsapp] = useState(restaurant.whatsapp_number);
   const [themeColor, setThemeColor] = useState(restaurant.theme_color || "#ee930c");
   const [isOpen, setIsOpen] = useState(restaurant.is_open);
+  const [showDeliveryPricing, setShowDeliveryPricing] = useState(restaurant.show_delivery_pricing ?? true);
   const [saving, setSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState("");
 
@@ -79,12 +80,24 @@ export default function SettingsTab({ restaurant, onUpdate }) {
           whatsapp_number: formattedPhone, 
           theme_color: themeColor, 
           is_open: isOpen,
+          show_delivery_pricing: showDeliveryPricing,
           logo_url: logoUrl,
           banner_url: bannerUrl,
         }).eq("id", restaurant.id).select().single()
       );
       if (!ok || error) setSaveStatus("error");
-      else if (data) { onUpdate(data); setSaveStatus("success"); setTimeout(() => setSaveStatus(""), 3000); }
+      else if (data) { 
+        onUpdate(data); 
+        setSaveStatus("success"); 
+        setTimeout(() => setSaveStatus(""), 3000); 
+        
+        // Revalidate the cache
+        fetch('/api/alakeifak/revalidate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slug: restaurant.slug })
+        }).catch(() => {});
+      }
     } catch (err) { setSaveStatus("error"); }
     setSaving(false);
   };
@@ -173,6 +186,21 @@ export default function SettingsTab({ restaurant, onUpdate }) {
         </div>
         <button onClick={() => setIsOpen(!isOpen)} className="shrink-0 hover:scale-105 transition-transform bg-gray-50 p-1 rounded-full border border-gray-100">
           {isOpen ? <ToggleRight size={64} className="text-[var(--dynamic-color)]" /> : <ToggleLeft size={64} className="text-gray-300" />}
+        </button>
+      </div>
+
+      {/* Delivery Pricing Toggle */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 rounded-[36px] bg-white border border-gray-100 p-8 shadow-sm">
+        <div className="flex-1">
+          <span className="text-[18px] font-black text-gray-900 leading-tight block">إظهار تسعيرة التوصيل للعملاء 🚚</span>
+          <p className="text-[14px] font-bold text-gray-500 mt-2 leading-relaxed">
+            {showDeliveryPricing 
+              ? "سيتم إظهار سعر التوصيل لكل منطقة وإضافته للإجمالي النهائي وفاتورة الواتساب." 
+              : "سيتم إخفاء سعر التوصيل من المنيو والواتساب. سيختار العميل منطقته فقط للعلم، وسيكون التوصيل (مخفي السعر) من الإجمالي."}
+          </p>
+        </div>
+        <button onClick={() => setShowDeliveryPricing(!showDeliveryPricing)} className="shrink-0 hover:scale-105 transition-transform bg-gray-50 p-1 rounded-full border border-gray-100">
+          {showDeliveryPricing ? <ToggleRight size={64} className="text-[var(--dynamic-color)]" /> : <ToggleLeft size={64} className="text-gray-300" />}
         </button>
       </div>
 

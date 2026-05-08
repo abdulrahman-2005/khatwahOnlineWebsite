@@ -88,30 +88,74 @@ export function fileToDataUrl(file) {
  * The API route is a thin proxy — no heavy work on Vercel.
  * 
  * @param {File} compressedFile - Already compressed by compressImage/compressLogo
- * @param {'logos'|'items'} folder - Target folder in R2
+ * @param {'logos'|'items'|'banners'} folder - Target folder in R2
  * @returns {Promise<string>} Public URL of the uploaded image
  */
 export async function uploadImage(compressedFile, folder) {
+  const { supabase } = await import('./supabaseClient.js');
+  let accessToken = null;
+
+  try {
+    // 1. Try to get a fresh token
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError) throw sessionError;
+    
+    if (session) {
+      // Refresh it to be 100% sure it's valid for the upcoming upload
+      const { data: refreshData } = await supabase.auth.refreshSession();
+      accessToken = refreshData?.session?.access_token || session.access_token;
+    }
+  } catch (err) {
+    console.warn('[imageUtils] Session check failed:', err);
+  }
+
+  if (!accessToken) {
+    throw new Error('يجب تسجيل الدخول أولاً لرفع الصور. حاول تحديث الصفحة.');
+  }
+
   const formData = new FormData();
   formData.append('file', compressedFile);
   formData.append('folder', folder);
 
-  const response = await fetch('/api/alakeifak/upload', {
-    method: 'POST',
-    body: formData,
-  });
-
-  const textResult = await response.text();
-  let result = {};
+  let response;
   try {
-    result = JSON.parse(textResult);
-  } catch (e) {
-    console.warn('[imageUtils] Non-JSON response:', textResult);
+    response = await fetch('/api/alakeifak/upload', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${accessToken}` },
+      body: formData,
+      credentials: 'omit', // 👈 Prevent 431 errors by not sending heavy browser cookies
+    });
+  } catch (netErr) {
+    console.error('[imageUtils] Fetch crash:', netErr);
+    throw new Error('فشل الاتصال بالخادم (Network Error). تأكد من جودة الإنترنت.');
+  }
+
+  const contentType = response.headers.get("content-type");
+  let result = {};
+  let rawText = "";
+
+  try {
+    rawText = await response.text();
+    if (contentType && contentType.includes("application/json")) {
+      result = JSON.parse(rawText);
+    }
+  } catch (parseErr) {
+    console.error('[imageUtils] Response parse failed:', rawText);
   }
 
   if (!response.ok) {
-    console.warn(`[imageUtils] Upload failed with status ${response.status}:`, textResult);
-    throw new Error(result.error || 'فشل رفع الصورة. حاول مرة أخرى.');
+    // Detailed error reporting
+    if (response.status === 401) throw new Error('انتهت صلاحية الجلسة. يرجى إعادة تسجيل الدخول.');
+    if (response.status === 413) throw new Error('حجم الملف كبير جداً بالنسبة للخادم.');
+    
+    // If the server gave us a specific JSON error, show it. 
+    // Otherwise show the status code and first few chars of whatever the server sent.
+    const serverError = result.error || (rawText ? `Server Error: ${rawText.substring(0, 50)}...` : `Error ${response.status}`);
+    throw new Error(serverError);
+  }
+
+  if (!result.url) {
+    throw new Error('لم يتم استلام رابط الصورة. تأكد من إعدادات R2 في ملف .env');
   }
 
   return result.url;

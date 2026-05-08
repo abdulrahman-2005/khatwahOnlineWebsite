@@ -1,5 +1,6 @@
-﻿import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { NextResponse } from 'next/server';
+import { createServerSupabase } from "@/app/services/alakeifak/lib/supabaseServer";
 
 /**
  * POST /api/alakeifak/upload
@@ -29,12 +30,35 @@ const ALLOWED_FOLDERS = ['logos', 'items', 'banners'];
 
 export async function POST(request) {
   try {
+    // ── Auth: Standard Bearer Token pattern ──
+    // The client sends: Authorization: Bearer <access_token>
+    // We verify the token with Supabase's getUser(token) which validates
+    // the JWT signature server-side. This is the same pattern used by
+    // Stripe, GitHub, and every major REST API.
+    const authHeader = request.headers.get('authorization') || '';
+    const accessToken = authHeader.startsWith('Bearer ')
+      ? authHeader.slice(7)
+      : null;
+
+    if (!accessToken) {
+      return NextResponse.json({ error: 'غير مصرح لك برفع الصور.' }, { status: 401 });
+    }
+
+    const supabase = createServerSupabase();
+    const { data: { user }, error: authError } = await supabase.auth.getUser(accessToken);
+
+    if (authError || !user) {
+      return NextResponse.json({ error: 'غير مصرح لك برفع الصور.' }, { status: 401 });
+    }
     const formData = await request.formData();
     const file = formData.get('file');
     const folder = formData.get('folder');
 
     if (!file || !(file instanceof Blob)) {
       return NextResponse.json({ error: 'ملف مطلوب' }, { status: 400 });
+    }
+    if (file.type !== 'image/webp') {
+      return NextResponse.json({ error: 'نوع الملف غير مدعوم. يجب أن يكون WebP.' }, { status: 400 });
     }
     if (!folder || !ALLOWED_FOLDERS.includes(folder)) {
       return NextResponse.json({ error: 'مجلد غير صالح' }, { status: 400 });
@@ -69,7 +93,13 @@ export async function POST(request) {
     // so the bucket name should NOT be in the URL path.
     return NextResponse.json({ url: `${R2_PUBLIC_URL}/${key}` });
   } catch (error) {
-    console.error('[R2 Upload]', error?.message || error);
+    console.error(JSON.stringify({
+      level: 'error',
+      context: 'R2_Upload',
+      message: error?.message || 'Unknown upload error',
+      stack: error?.stack,
+      timestamp: new Date().toISOString()
+    }));
     return NextResponse.json({ error: 'فشل رفع الصورة.' }, { status: 500 });
   }
 }

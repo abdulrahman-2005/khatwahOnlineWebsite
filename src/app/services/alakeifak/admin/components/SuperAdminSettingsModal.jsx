@@ -117,7 +117,7 @@ export default function SuperAdminSettingsModal({ onClose }) {
                     key={email}
                     className="flex items-center justify-between rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 py-3"
                   >
-                    <span className="text-sm font-bold text-zinc-300">{email}</span>
+                    <span className="text-sm font-bold text-zinc-300 break-all pr-2">{email}</span>
                     <button
                       onClick={() => handleRemove(email)}
                       disabled={saving}

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { supabase } from "../../lib/supabaseClient";
+import { safeMutation } from "../../lib/safeQuery";
 import {
   Store,
   ToggleRight,
@@ -15,6 +17,9 @@ import {
   Search,
   ChevronDown,
   ChevronUp,
+  Tag,
+  Plus,
+  X,
 } from "lucide-react";
 
 export default function RestaurantsTable({
@@ -26,6 +31,10 @@ export default function RestaurantsTable({
   const [searchQuery, setSearchQuery] = useState("");
   const [sortField, setSortField] = useState("created_at");
   const [sortDir, setSortDir] = useState("desc");
+  const [tagsEditId, setTagsEditId] = useState(null); // which restaurant is being tag-edited
+  const [tagsEditData, setTagsEditData] = useState([]); // working copy of tags (now a simple array)
+  const [tagsSaving, setTagsSaving] = useState(false);
+  const [newTagInput, setNewTagInput] = useState(""); // single input for new tags
 
   const toggleSort = (field) => {
     if (sortField === field) {
@@ -99,6 +108,59 @@ export default function RestaurantsTable({
       <ChevronDown size={12} className="text-orange-400" />
     );
   };
+
+  // ─── Tag Editor Helpers ───
+  function openTagsEditor(restaurant) {
+    setTagsEditId(restaurant.id);
+    setTagsEditData(Array.isArray(restaurant.tags) ? restaurant.tags : []);
+    setNewTagInput("");
+  }
+
+  function closeTagsEditor() {
+    setTagsEditId(null);
+    setTagsEditData([]);
+    setNewTagInput("");
+  }
+
+  function addTag() {
+    const val = newTagInput.trim();
+    if (!val) return;
+    if (tagsEditData.includes(val)) return;
+    setTagsEditData([...tagsEditData, val]);
+    setNewTagInput("");
+  }
+
+  function removeTag(tag) {
+    setTagsEditData(tagsEditData.filter(t => t !== tag));
+  }
+
+
+
+  async function saveTags() {
+    if (!tagsEditId) return;
+    setTagsSaving(true);
+    try {
+      const { error, ok } = await safeMutation(
+        () => supabase
+          .from("restaurants")
+          .update({ tags: tagsEditData })
+          .eq("id", tagsEditId)
+      );
+
+      if (ok && !error) {
+        // Optimistically update local state
+        onUpdateField(tagsEditId, "tags", tagsEditData);
+        closeTagsEditor();
+      } else {
+        alert("Failed to save tags: " + (error?.message || "Unknown error"));
+      }
+    } catch (err) {
+      console.error("Save error:", err);
+      alert("An unexpected error occurred while saving tags.");
+    } finally {
+      setTagsSaving(false);
+    }
+  }
 
   return (
     <div>
@@ -203,6 +265,9 @@ export default function RestaurantsTable({
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex items-center justify-end gap-2">
+                      <button onClick={() => openTagsEditor(r)} className="flex items-center gap-1.5 rounded-lg bg-zinc-800 px-3 py-2 text-[11px] font-bold text-zinc-300 hover:text-purple-400 hover:bg-purple-500/10 hover:border-purple-500/30 transition-all border border-zinc-700 shadow-sm" title="Manage Tags">
+                        <Tag size={14} /><span>Tags</span>
+                      </button>
                       <button onClick={() => onRecordPayment(r)} className="flex items-center gap-1.5 rounded-lg bg-zinc-800 px-3 py-2 text-[11px] font-bold text-zinc-300 hover:text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all border border-zinc-700 shadow-sm" title="Record Payment">
                         <DollarSign size={14} /><span>Payment</span>
                       </button>
@@ -271,6 +336,9 @@ export default function RestaurantsTable({
                   <ToggleSwitch active={isVerified} onClick={() => onUpdateField(r.id, "is_verified", !isVerified)} label="Verify" activeColor="text-blue-500" />
                 </div>
                 <div className="flex items-center gap-2">
+                  <button onClick={() => openTagsEditor(r)} className="flex items-center gap-1.5 rounded-lg bg-zinc-800 px-3 py-2 text-[12px] font-bold text-zinc-300 border border-zinc-700 hover:bg-zinc-700 transition-colors shadow-sm">
+                    <Tag size={14} /> Tags
+                  </button>
                   <button onClick={() => onRecordPayment(r)} className="flex items-center gap-1.5 rounded-lg bg-zinc-800 px-3 py-2 text-[12px] font-bold text-zinc-300 border border-zinc-700 hover:bg-zinc-700 transition-colors shadow-sm">
                     <DollarSign size={14} /> Pay
                   </button>
@@ -300,6 +368,83 @@ export default function RestaurantsTable({
           {filteredAndSorted.length} of {restaurants.length} restaurants
         </span>
       </div>
+
+      {/* ═══ TAGS EDITOR MODAL ═══ */}
+      {tagsEditId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={closeTagsEditor}>
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          <div className="relative w-full max-w-lg rounded-2xl bg-zinc-900 border border-zinc-700 shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800">
+              <div className="flex items-center gap-2">
+                <Tag size={16} className="text-purple-400" />
+                <h3 className="text-[15px] font-black text-white">
+                  Manage Tags — {restaurants.find(r => r.id === tagsEditId)?.name}
+                </h3>
+              </div>
+              <button onClick={closeTagsEditor} className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-800 text-zinc-400 hover:text-white transition-colors border border-zinc-700">
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-6 space-y-6 max-h-[60vh] overflow-y-auto">
+              <div className="rounded-xl border border-zinc-800 bg-zinc-950/50 p-5">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-[13px] font-black text-purple-400 uppercase tracking-wider">Restaurant Tags</span>
+                  <span className="text-[11px] font-bold text-zinc-500">{tagsEditData.length} tags total</span>
+                </div>
+
+                {/* Existing tags */}
+                <div className="flex flex-wrap gap-2.5 mb-6">
+                  {tagsEditData.map(tag => (
+                    <span key={tag} className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-800 border border-zinc-700 px-3 py-2 text-[13px] font-bold text-zinc-300">
+                      {tag}
+                      <button onClick={() => removeTag(tag)} className="text-zinc-500 hover:text-red-400 transition-colors">
+                        <X size={14} />
+                      </button>
+                    </span>
+                  ))}
+                  {tagsEditData.length === 0 && (
+                    <div className="w-full text-center py-6">
+                      <Tag size={24} className="text-zinc-700 mx-auto mb-2" />
+                      <p className="text-[12px] font-bold text-zinc-600">No tags assigned yet.</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Add tag input */}
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Type a tag and press Enter..."
+                    value={newTagInput}
+                    onChange={e => setNewTagInput(e.target.value)}
+                    onKeyDown={e => { if (e.key === "Enter") addTag(); }}
+                    className="flex-1 rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2.5 text-[14px] font-medium text-zinc-300 outline-none placeholder:text-zinc-600 focus:border-purple-500 transition-colors shadow-inner"
+                  />
+                  <button onClick={addTag} className="flex items-center gap-2 rounded-lg bg-purple-500/20 border border-purple-500/30 px-4 py-2.5 text-[13px] font-black text-purple-400 hover:bg-purple-500/30 transition-colors">
+                    <Plus size={16} /> Add
+                  </button>
+                </div>
+                <p className="mt-3 text-[11px] font-bold text-zinc-500 px-1">
+                  💡 These tags power the public search engine. (e.g. burger, pizza, delivery)
+                </p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-zinc-800 bg-zinc-900/50">
+              <button onClick={closeTagsEditor} className="rounded-lg bg-zinc-800 border border-zinc-700 px-4 py-2 text-[13px] font-bold text-zinc-400 hover:text-white transition-colors">
+                Cancel
+              </button>
+              <button onClick={saveTags} disabled={tagsSaving} className="rounded-lg bg-purple-600 px-5 py-2 text-[13px] font-bold text-white hover:bg-purple-500 transition-colors disabled:opacity-50 shadow-lg shadow-purple-600/20">
+                {tagsSaving ? "Saving..." : "Save Tags"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

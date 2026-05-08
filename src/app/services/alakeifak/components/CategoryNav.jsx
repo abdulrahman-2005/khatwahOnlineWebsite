@@ -45,7 +45,7 @@ export default function CategoryNav({
               className={`relative flex items-center gap-1.5 shrink-0 whitespace-nowrap rounded-full px-4 py-2.5 text-[14px] font-black transition-all duration-300 border select-none ${
                 isActive
                   ? "text-white shadow-[0_8px_20px_-5px_var(--dynamic-color)]"
-                  : "bg-white border-gray-100 text-gray-500 hover:bg-gray-50 hover:text-gray-800 shadow-sm"
+                  : "bg-[#131B2B] border-[#1E293B] text-gray-400 hover:bg-[#1E293B] hover:text-white shadow-xl"
               }`}
               style={{
                 backgroundColor: isActive ? activeColor : undefined,

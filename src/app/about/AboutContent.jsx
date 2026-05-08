@@ -21,7 +21,7 @@ export default function AboutContent() {
         "@type": "Person",
         name: m.name,
         jobTitle: m.structured_data_job,
-        description: m.structured_data_desc,
+        description: "m.structured_data_desc",
       })),
     },
   };
@@ -47,7 +47,7 @@ export default function AboutContent() {
               {i18n[locale].about_page.hero_eyebrow}
             </Eyebrow>
           </div>
-          <h1 className="max-w-4xl text-5xl font-black leading-[0.95] sm:text-7xl lg:text-[110px]" style={{ fontFamily: "var(--font-display)", color: "var(--color-text)", letterSpacing: "-2px" }}>
+          <h1 className="max-w-4xl text-6xl font-black leading-relaxed sm:text-7xl lg:text-[110px]" style={{ fontFamily: "var(--font-display)", color: "var(--color-text)" }}>
             {i18n[locale].about_page.hero_headline_1}
             <br />
             <span className="relative inline-block animate-gradient bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-accent)] to-[var(--color-primary)] bg-clip-text text-transparent" style={{ backgroundSize: "200% auto" }}>
@@ -168,9 +168,6 @@ export default function AboutContent() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
                       </svg>
                     </div>
-                    <p className="text-sm leading-7" style={{ fontFamily: "var(--font-body)", color: "var(--color-text-secondary)" }}>
-                      {member.bio}
-                    </p>
                   </div>
                 </div>
               </div>
