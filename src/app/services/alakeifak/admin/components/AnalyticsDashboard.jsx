@@ -1,6 +1,7 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "../../lib/supabaseClient";
+import { safeQuery } from "../../lib/safeQuery";
 import { Activity, Brain, Store, Users, RefreshCw } from "lucide-react";
 import { FilterButton } from "./AnalyticsHelpers";
 import OverviewTab from "./analytics/OverviewTab";
@@ -27,22 +28,55 @@ export default function AnalyticsDashboard() {
   const [rpcError, setRpcError] = useState(null);
   const [restaurantModal, setRestaurantModal] = useState(null);
   const [customerModal, setCustomerModal] = useState(null);
+  const abortControllerRef = useRef(null);
 
   const fetchData = useCallback(async () => {
+    // Cancel any in-flight request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    
+    // Create new abort controller for this request
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+    
     setLoading(true);
     setRpcError(null);
+    
     const params = {
       p_date_range: dateRange,
       p_custom_start: (dateRange === "custom" && customStart) ? customStart : null,
       p_custom_end: (dateRange === "custom" && customEnd) ? customEnd : null,
     };
-    const { data, error } = await supabase.rpc("get_admin_analytics", params);
-    if (!error && data) { setAd(data); setRpcError(null); }
-    else { console.error("RPC failed:", error); setRpcError(error?.message || "Unknown error"); }
+    
+    const { data, error } = await safeQuery(
+      () => supabase.rpc("get_admin_analytics", params),
+      { retries: 1, signal }
+    );
+    
+    if (signal.aborted) return; // Don't update state if aborted
+    
+    if (!error && data) { 
+      setAd(data); 
+      setRpcError(null); 
+    } else { 
+      console.error("RPC failed:", error); 
+      setRpcError(error?.message || "Unknown error"); 
+    }
+    
     setLoading(false);
   }, [dateRange, customStart, customEnd]);
 
-  useEffect(() => { fetchData(); }, [fetchData]);
+  useEffect(() => { 
+    fetchData(); 
+    
+    return () => {
+      // Cancel any pending requests on unmount
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, [fetchData]);
 
   if (loading) return (
     <div className="flex flex-col items-center justify-center py-40 space-y-4 animate-in fade-in">

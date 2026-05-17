@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { Reveal } from "@/components/ui/Reveal";
 import Link from "next/link";
 import { supabase } from "./lib/supabaseClient";
+import { safeQuery } from "./lib/safeQuery";
+import LoadingBanner from "./components/LoadingBanner";
 import {
   Search,
   UtensilsCrossed,
@@ -59,24 +61,53 @@ export default function AlakeifakPage() {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const abortControllerRef = useRef(null);
 
-  useEffect(() => { fetchRestaurants(); }, []);
+  useEffect(() => { 
+    fetchRestaurants(); 
+    
+    return () => {
+      // Cancel any pending requests on unmount
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   async function fetchRestaurants() {
+    // Cancel any in-flight request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    
+    // Create new abort controller for this request
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+    
     if (!supabase) { setLoading(false); return; }
+    
     try {
-      const { data, error } = await supabase
-        .from("restaurants")
-        .select("*")
-        .eq("is_verified", true)
-        .eq("is_active", true)
-        .order("name");
+      const { data, error } = await safeQuery(
+        () => supabase
+          .from("restaurants")
+          .select("*")
+          .eq("is_verified", true)
+          .eq("is_active", true)
+          .order("name"),
+        { retries: 1, signal }
+      );
+      
+      if (signal.aborted) return; // Don't update state if aborted
+      
       if (error) throw error;
       setRestaurants(data || []);
     } catch (err) {
+      if (err.name === 'AbortError') return; // Ignore abort errors
       console.error("Error fetching restaurants:", err);
     } finally {
-      setLoading(false);
+      if (!signal.aborted) {
+        setLoading(false);
+      }
     }
   }
 
@@ -101,6 +132,18 @@ export default function AlakeifakPage() {
 
   return (
     <main className="font-sans overflow-hidden bg-[#050D1A] text-white selection:bg-orange-500/30" dir="rtl">
+      {/* Loading Banner - shows after 5s if still loading */}
+      <LoadingBanner 
+        isLoading={loading} 
+        onRetry={() => {
+          if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+          }
+          fetchRestaurants();
+        }}
+        message="جاري تحميل المطاعم..."
+      />
+      
       {/* ═══════════════════ ULTRA ENERGETIC NEON HERO ═══════════════════ */}
       <section className="relative px-4 pt-28 pb-16 sm:pt-36 sm:pb-24 border-b border-white/5">
         {/* Neon Background Blobs */}
@@ -111,17 +154,11 @@ export default function AlakeifakPage() {
         </div>
 
         <div className="relative mx-auto max-w-5xl z-10 text-center">
-          <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-white/5 backdrop-blur-md px-5 py-2 border border-white/10 shadow-[0_0_20px_rgba(255,90,0,0.15)]">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-500 text-white shadow-[0_0_10px_rgba(255,90,0,0.5)]">
-              <Zap size={14} fill="currentColor" />
-            </span>
-            <span className="text-[14px] font-black tracking-wide text-orange-50">
-              أسرع منيو ديجيتال في العريش 🚀
-            </span>
-          </div>
+          
+
 
           <h1 className="text-[48px] sm:text-[72px] font-black leading-[1.05] tracking-tight mb-6">
-            اطلب على <span className="text-transparent bg-clip-text bg-gradient-to-l from-orange-400 via-orange-500 to-yellow-500 drop-shadow-[0_0_30px_rgba(255,90,0,0.3)]">كيفك 🍕</span>
+            اطلب على <span className="text-transparent bg-clip-text bg-gradient-to-l from-orange-400 via-orange-500 to-yellow-500 drop-shadow-[0_0_30px_rgba(255,90,0,0.3)]">كيفك </span>
           </h1>
           <p className="mx-auto text-[18px] sm:text-[22px] font-bold text-gray-400 max-w-2xl mb-12 leading-relaxed">
             تصفح المنيو، فصّل طلبك براحتك، واطلب مباشرة عبر الواتساب في ثواني!
@@ -147,6 +184,14 @@ export default function AlakeifakPage() {
                 </button>
               )}
             </div>
+          </div>
+
+          {/* Partner Login Link */}
+          <div className="flex justify-center mt-6">
+            <Link href="/services/alakeifak/partner" className="text-[14px] font-bold text-gray-400 hover:text-orange-400 transition-colors flex items-center gap-1.5 group">
+              هل أنت شريك؟ <span className="text-orange-500 underline underline-offset-4 decoration-orange-500/30 group-hover:decoration-orange-400 transition-colors">سجل دخولك من هنا</span>
+              <ArrowUpRight size={14} className="opacity-70 group-hover:opacity-100 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
           </div>
 
         </div>
@@ -427,7 +472,7 @@ function RestaurantCard({ restaurant }) {
         {/* ════ TOP HALF: THE BANNER ════ */}
         <div className="relative h-[120px] sm:h-[180px] w-full bg-gray-900 overflow-hidden shrink-0">
           {restaurant.banner_url ? (
-            <img src={restaurant.banner_url} alt="" className="w-full h-full object-cover transition-transform duration-[2s] ease-out group-hover:scale-110" />
+            <img src={restaurant.banner_url} alt="" className="w-full h-full object-cover transition-transform duration-[2s] ease-out group-hover:scale-110 transform-gpu will-change-transform [backface-visibility:hidden]" />
           ) : (
             <div className="absolute inset-0 transition-opacity duration-700" style={{ background: `linear-gradient(135deg, ${accent}44 0%, ${accent}11 100%)` }}>
               <div className="absolute inset-0 opacity-40 bg-[#0A0F1A]" />

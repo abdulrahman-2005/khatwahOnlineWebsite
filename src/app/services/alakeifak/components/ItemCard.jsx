@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { UtensilsCrossed, Plus } from "lucide-react";
 
 /**
@@ -34,15 +33,12 @@ export default function ItemCard({ item, themeColor, disabled, onClick, variant 
       <div className={`relative w-full shrink-0 overflow-hidden bg-[#0F172A] ${isFull ? "aspect-[16/9]" : "aspect-square"}`}>
         {item.image_url ? (
           <>
-            <Image
+            <img
               src={item.image_url}
               alt={item.name}
-              fill
-              className="object-cover transition-transform duration-00 ease-out group-hover:scale-105"
-              sizes={isFull ? "(max-width: 768px) 100vw, 800px" : "(max-width: 640px) 50vw, 300px"}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 transform-gpu will-change-transform [backface-visibility:hidden]"
             />
-            {/* Dark gradient for overlaid pills readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0F1A]/90 via-black/10 to-transparent" />
           </>
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-[#1E293B]">

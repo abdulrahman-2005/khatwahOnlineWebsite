@@ -27,7 +27,7 @@ These run **instantly** in your terminal. No server, no database, no keys. They 
 
 **What they check:**
 - **Cart Store**: "If I add كريب بانيه (70 EGP) + مخلل (15 EGP), does the total equal 85?" — "If I add the same item twice, does it merge into quantity 2 instead of two separate entries?" — "If I set quantity to 0, does the item get removed?"
-- **WhatsApp Utils**: "If someone types `01012345678`, does it get formatted to `+201012345678`?" — "Does the WhatsApp URL work on iOS Safari (special character encoding)?"
+- **WhatsApp Utils**: "If someone types `912345678`, does it get formatted to `+201012345678`?" — "Does the WhatsApp URL work on iOS Safari (special character encoding)?"
 - **Image Utils**: "Does the upload reject `.png` files?" — "Does it reject files over 1MB?" — "Does it reject a folder name like `../../etc`?"
 
 **How to run:**

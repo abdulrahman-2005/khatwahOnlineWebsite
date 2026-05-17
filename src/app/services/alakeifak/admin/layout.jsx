@@ -1,72 +1,241 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabaseClient";
-import { safeQuery } from "../lib/safeQuery";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { supabase, waitForClient } from "../lib/supabaseClient";
 import Link from "next/link";
 import {
   Shield,
   ShieldAlert,
   LogOut,
   ArrowRight,
-  Loader2,
   Lock,
 } from "lucide-react";
 
 /**
  * Admin layout — Client-side auth guard for Khatwah super admins.
- * 
- * Since Supabase auth is handled entirely client-side (no SSR cookies),
- * the guard runs here instead of Edge middleware. The layout checks if the
- * user is a super admin using the is_super_admin() RPC function.
+ *
+ * Fixed auth flow:
+ * 1. First call getSession() to get the initial session (handles OAuth redirects)
+ * 2. Then subscribe to onAuthStateChange for future changes
+ * 3. Debounce rapid auth events to prevent multiple RPC calls
+ *
+ * This eliminates the race condition where is_super_admin() was called
+ * before the OAuth token exchange completed, causing false "Access Denied".
  */
 
 export default function AdminLayout({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
+  const [authError, setAuthError] = useState(null);
+  const authCheckRef = useRef(null);
+  const mountedRef = useRef(true);
+
+  // Debounced auth check — prevents multiple RPC calls during rapid auth events
+  const checkAuthorization = useCallback(async (sessionUser) => {
+    // Cancel any pending check
+    if (authCheckRef.current) {
+      clearTimeout(authCheckRef.current);
+    }
+
+    if (!sessionUser) {
+      if (mountedRef.current) {
+        setUser(null);
+        setAuthorized(false);
+        setAuthError(null);
+        setLoading(false);
+      }
+      return;
+    }
+
+    // Set user immediately so we show the email during auth check
+    if (mountedRef.current) {
+      setUser(sessionUser);
+    }
+
+    // Debounce the actual RPC call by 100ms to batch rapid events
+    return new Promise((resolve) => {
+      authCheckRef.current = setTimeout(async () => {
+        if (!mountedRef.current) return resolve();
+
+        // Retry logic with exponential backoff
+        let lastError = null;
+        const maxRetries = 3;
+        
+        for (let attempt = 0; attempt < maxRetries; attempt++) {
+          if (!mountedRef.current) return resolve();
+          
+          try {
+            console.log(`[Admin Auth] Authorization check attempt ${attempt + 1}/${maxRetries} for:`, sessionUser.email);
+            
+            // Ensure session is fresh before RPC call
+            if (attempt > 0) {
+              console.log('[Admin Auth] Refreshing session before retry...');
+              await supabase.auth.refreshSession();
+              // Small delay after refresh
+              await new Promise(r => setTimeout(r, 300));
+            }
+            
+            const { data: isSuperAdmin, error } = await supabase.rpc('is_super_admin');
+
+            if (!mountedRef.current) return resolve();
+
+            if (error) {
+              lastError = error;
+              console.warn(`[Admin Auth] RPC error on attempt ${attempt + 1}:`, error.message);
+              
+              // If it's a connection error, retry
+              if (attempt < maxRetries - 1 && (
+                error.message?.includes('Failed to fetch') ||
+                error.message?.includes('NetworkError') ||
+                error.message?.includes('timeout') ||
+                error.code === 'PGRST301'
+              )) {
+                // Exponential backoff: 500ms, 1000ms, 2000ms
+                const delay = 500 * Math.pow(2, attempt);
+                console.log(`[Admin Auth] Retrying in ${delay}ms...`);
+                await new Promise(r => setTimeout(r, delay));
+                continue;
+              }
+              
+              // Non-retryable error
+              setAuthError(error.message || 'Authorization check failed');
+              setAuthorized(false);
+              break;
+            } else {
+              // Success!
+              console.log('[Admin Auth] Authorization result:', isSuperAdmin);
+              setAuthorized(!!isSuperAdmin);
+              setAuthError(null);
+              break;
+            }
+          } catch (err) {
+            lastError = err;
+            console.error(`[Admin Auth] Exception on attempt ${attempt + 1}:`, err);
+            
+            if (!mountedRef.current) return resolve();
+            
+            // Retry on network errors
+            if (attempt < maxRetries - 1) {
+              const delay = 500 * Math.pow(2, attempt);
+              console.log(`[Admin Auth] Retrying after exception in ${delay}ms...`);
+              await new Promise(r => setTimeout(r, delay));
+              continue;
+            }
+            
+            // Final attempt failed
+            setAuthError(err.message || 'Unexpected error during authorization');
+            setAuthorized(false);
+          }
+        }
+        
+        // If all retries failed
+        if (lastError && !mountedRef.current === false) {
+          console.error('[Admin Auth] All retry attempts exhausted');
+        }
+
+        if (mountedRef.current) {
+          setLoading(false);
+        }
+        resolve();
+      }, 100);
+    });
+  }, []);
 
   useEffect(() => {
+    mountedRef.current = true;
+
     if (!supabase) {
       setLoading(false);
       return;
     }
 
-    let isMounted = true;
+    // Step 1: Get initial session FIRST (this properly handles OAuth redirects)
+    async function initAuth() {
+      try {
+        console.log('[Admin Auth] Initializing auth...');
+        
+        // Wait for Supabase client to be ready
+        console.log('[Admin Auth] Waiting for Supabase client...');
+        await waitForClient();
+        console.log('[Admin Auth] Supabase client ready');
+        
+        // Check if we're coming back from OAuth (hash or code in URL)
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        const searchParams = new URLSearchParams(window.location.search);
+        const hasOAuthParams = hashParams.has('access_token') || searchParams.has('code');
+        
+        if (hasOAuthParams) {
+          console.log('[Admin Auth] OAuth redirect detected, waiting for session...');
+          // Give Supabase time to process the OAuth callback
+          await new Promise(resolve => setTimeout(resolve, 800));
+        }
+        
+        const { data: { session }, error } = await supabase.auth.getSession();
 
+        if (error) {
+          console.error("[Admin Auth] getSession error:", error);
+        }
+
+        console.log('[Admin Auth] Session:', session ? 'Found' : 'None', session?.user?.email);
+
+        if (session?.user) {
+          // Clean up URL after OAuth
+          if (hasOAuthParams && window.history.replaceState) {
+            window.history.replaceState(null, '', window.location.pathname);
+          }
+          await checkAuthorization(session.user);
+        } else {
+          if (mountedRef.current) {
+            setLoading(false);
+          }
+        }
+      } catch (err) {
+        console.error("[Admin Auth] Init auth error:", err);
+        if (mountedRef.current) {
+          setLoading(false);
+        }
+      }
+    }
+
+    initAuth();
+
+    // Step 2: Listen for future auth changes (sign in, sign out, token refresh)
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (!isMounted) return;
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!mountedRef.current) return;
 
-      const u = session?.user || null;
-      setUser(u);
+      console.log('[Admin Auth] Auth state change:', event);
+
+      // Skip the initial session event — we already handled it above
+      if (event === 'INITIAL_SESSION') return;
       
-      if (u) {
-        // Check DB for super admin status
-        const { data: isSuperAdmin, error } = await safeQuery(() => supabase.rpc('is_super_admin'));
-        // Only set authorized to false if the query succeeded AND returned false.
-        // If it failed due to network, we leave it as true if it was already true, or false if it was already false.
-        if (!error && isSuperAdmin !== null) {
-          setAuthorized(!!isSuperAdmin);
-        }
-      } else {
-        setAuthorized(false);
+      // Handle sign in event (from OAuth)
+      if (event === 'SIGNED_IN' && session?.user) {
+        console.log('[Admin Auth] User signed in, checking authorization...');
+        await checkAuthorization(session.user);
+        return;
       }
-      
-      setLoading(false);
+
+      const sessionUser = session?.user || null;
+      await checkAuthorization(sessionUser);
     });
 
     return () => {
-      isMounted = false;
+      mountedRef.current = false;
+      if (authCheckRef.current) {
+        clearTimeout(authCheckRef.current);
+      }
       subscription.unsubscribe();
     };
-  }, []);
+  }, [checkAuthorization]);
 
   async function handleLogout() {
     await supabase.auth.signOut();
     setUser(null);
     setAuthorized(false);
+    setAuthError(null);
   }
 
   // Loading
@@ -136,9 +305,23 @@ export default function AdminLayout({ children }) {
           <p className="mb-2 text-sm text-zinc-500">
             <span className="text-zinc-400 font-mono">{user.email}</span> is not authorized.
           </p>
-          <p className="mb-8 text-xs text-zinc-600">
+          {authError && (
+            <p className="mb-2 text-xs text-red-400/70 font-mono">
+              Error: {authError}
+            </p>
+          )}
+          <p className="mb-4 text-xs text-zinc-600">
             Contact the Khatwah team if you believe this is an error.
           </p>
+          <button
+            onClick={async () => {
+              setLoading(true);
+              await checkAuthorization(user);
+            }}
+            className="mb-4 w-full rounded-xl border border-orange-500/30 bg-orange-500/10 px-4 py-3 text-sm font-bold text-orange-400 transition-all hover:bg-orange-500/20"
+          >
+            ↻ Retry Authorization Check
+          </button>
           <div className="flex gap-3">
             <button
               onClick={handleLogout}

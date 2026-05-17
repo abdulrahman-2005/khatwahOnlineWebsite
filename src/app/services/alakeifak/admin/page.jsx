@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { safeQuery, safeMutation, createDebouncedFetcher } from "../lib/safeQuery";
 import { createManagedChannel } from "../lib/realtimeManager";
 import SessionRecoveryBanner from "../components/SessionRecoveryBanner";
+import LoadingBanner from "../components/LoadingBanner";
+import { ToastProvider, useToast } from "./components/Toast";
 import RestaurantsTable from "./components/RestaurantsTable";
 import PaymentModal from "./components/PaymentModal";
 import MembersModal from "./components/MembersModal";
@@ -22,6 +24,7 @@ import {
   ShieldOff,
   Settings,
   PieChart,
+  RefreshCw,
 } from "lucide-react";
 
 function StatCard({
@@ -49,12 +52,55 @@ function StatCard({
   );
 }
 
-export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState("crm"); // "crm" | "financials"
+// Skeleton loader for stats grid
+function StatsSkeleton() {
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div key={i} className="rounded-xl border border-zinc-800 bg-zinc-800/50 p-4 animate-pulse">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="h-3.5 w-3.5 rounded bg-zinc-700" />
+            <div className="h-2.5 w-16 rounded bg-zinc-700" />
+          </div>
+          <div className="h-7 w-12 rounded bg-zinc-700" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Skeleton loader for the table
+function TableSkeleton() {
+  return (
+    <div className="space-y-0">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className="flex items-center gap-4 px-5 py-4 border-b border-zinc-800/30 animate-pulse">
+          <div className="h-10 w-10 rounded-xl bg-zinc-800" />
+          <div className="flex-1 space-y-2">
+            <div className="h-3.5 w-32 rounded bg-zinc-800" />
+            <div className="h-2.5 w-20 rounded bg-zinc-800/60" />
+          </div>
+          <div className="h-3.5 w-8 rounded bg-zinc-800 hidden sm:block" />
+          <div className="h-3.5 w-16 rounded bg-zinc-800 hidden md:block" />
+          <div className="h-6 w-16 rounded-md bg-zinc-800 hidden lg:block" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function AdminPageInner() {
+  const toast = useToast();
+  const [activeTab, setActiveTab] = useState("crm");
   
   const [restaurants, setRestaurants] = useState([]);
+  const [allTags, setAllTags] = useState([]);
   const [platformStats, setPlatformStats] = useState({ losses: 0, cancelledCount: 0, totalOrders: 0 });
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const fetchCountRef = useRef(0);
+  const abortControllerRef = useRef(null);
+  const fetchInProgressRef = useRef(false);
 
   // Modal states
   const [paymentModalRestaurant, setPaymentModalRestaurant] = useState(null);
@@ -74,97 +120,208 @@ export default function AdminPage() {
     });
   }
 
-  const fetchRestaurants = useCallback(async () => {
-    setLoading(true);
+  const fetchData = useCallback(async (isRefresh = false) => {
+    // Prevent concurrent fetches
+    if (fetchInProgressRef.current) {
+      console.log('[Admin CRM] Fetch already in progress, skipping...');
+      return;
+    }
     
-    // Attempt to use new RPC first to avoid 1000 row limit on orders
-    const statsResult = await supabase.rpc('get_admin_platform_stats');
+    console.log('[Admin CRM] Starting fetch, isRefresh:', isRefresh);
+    fetchInProgressRef.current = true;
+    
+    // Cancel any in-flight request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    
+    // Create new abort controller for this request
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+    
+    const fetchId = ++fetchCountRef.current;
+    
+    if (isRefresh) {
+      setRefreshing(true);
+    } else {
+      setLoading(true);
+    }
+    
+    try {
+      // Try the new single-call CRM RPC first
+      console.log('[Admin CRM] Calling get_admin_crm_data RPC...');
+      const crmResult = await safeQuery(() => supabase.rpc('get_admin_crm_data'), { signal });
 
-    if (!statsResult.error && statsResult.data) {
-      // Use efficient RPC approach and relation counts
-      const [restaurantsResult, membersResult] = await Promise.all([
-        safeQuery(() => supabase.from("restaurants").select("*, orders(count)").order("created_at", { ascending: false })),
-        safeQuery(() => supabase.from("restaurant_members").select("restaurant_id"))
-      ]);
+      console.log('[Admin CRM] RPC result:', crmResult.error ? 'ERROR' : 'SUCCESS', crmResult.error?.message);
 
-      if (!restaurantsResult.error && restaurantsResult.data) {
-        const memberCounts = {};
-        (membersResult.data || []).forEach(m => {
-          memberCounts[m.restaurant_id] = (memberCounts[m.restaurant_id] || 0) + 1;
-        });
-
-        const enrichedData = restaurantsResult.data.map(r => ({
-          ...r,
-          // Supabase count returns an array with a count property
-          orders: [{ count: r.orders?.[0]?.count || 0 }],
-          restaurant_members: [{ count: memberCounts[r.id] || 0 }]
-        }));
-        
-        setRestaurants(enrichedData);
+      if (fetchId !== fetchCountRef.current) {
+        console.log('[Admin CRM] Stale request, aborting');
+        fetchInProgressRef.current = false;
+        return; // Stale request
       }
 
-      setPlatformStats({
-        losses: statsResult.data.losses || 0,
-        cancelledCount: statsResult.data.cancelledCount || 0,
-        totalOrders: statsResult.data.totalOrders || 0
-      });
-    } else {
-      // Fallback to old behavior (max 1000 orders limit)
-      console.warn("Analytics RPC failed or missing, falling back to client-side aggregation (max 1000 orders). Please run migration 021_admin_analytics_rpc.sql.");
-      const [restaurantsResult, ordersResult, membersResult] = await Promise.all([
-        safeQuery(() => supabase.from("restaurants").select("*").order("created_at", { ascending: false })),
-        safeQuery(() => supabase.from("orders").select("restaurant_id, status, total_amount")),
-        safeQuery(() => supabase.from("restaurant_members").select("restaurant_id"))
-      ]);
-
-      if (!restaurantsResult.error && restaurantsResult.data) {
-        // Count orders and members per restaurant
-        const orderCounts = {};
-        const memberCounts = {};
+      if (!crmResult.error && crmResult.data) {
+        const data = crmResult.data;
         
-        (ordersResult.data || []).forEach(o => {
-          orderCounts[o.restaurant_id] = (orderCounts[o.restaurant_id] || 0) + 1;
-        });
-        
-        (membersResult.data || []).forEach(m => {
-          memberCounts[m.restaurant_id] = (memberCounts[m.restaurant_id] || 0) + 1;
-        });
-        
-        // Attach counts to restaurants
-        const enrichedData = restaurantsResult.data.map(r => ({
+        // Restaurants come pre-enriched with orderCount and memberCount
+        const enrichedRestaurants = (data.restaurants || []).map(r => ({
           ...r,
-          orders: [{ count: orderCounts[r.id] || 0 }],
-          restaurant_members: [{ count: memberCounts[r.id] || 0 }]
+          orders: [{ count: r.orderCount || 0 }],
+          restaurant_members: [{ count: r.memberCount || 0 }],
         }));
-        
-        setRestaurants(enrichedData);
 
-        // Calculate Platform Stats
-        let totalLosses = 0;
-        let cancelledCount = 0;
-        (ordersResult.data || []).forEach(o => {
-          if (o.status === 'cancelled') {
-            cancelledCount++;
-            if (o.total_amount < 0) totalLosses += Math.abs(o.total_amount);
-          }
-        });
+        setRestaurants(enrichedRestaurants);
+        setAllTags(data.allTags || []);
         setPlatformStats({
-          losses: totalLosses,
-          cancelledCount,
-          totalOrders: ordersResult.data?.length || 0
+          losses: data.platformStats?.losses || 0,
+          cancelledCount: data.platformStats?.cancelledCount || 0,
+          totalOrders: data.platformStats?.totalOrders || 0,
         });
+      } else {
+        // Fallback: use old multi-query approach
+        console.warn("CRM RPC unavailable, falling back. Run 022_admin_crm_rpc.sql. Error:", crmResult.error?.message);
+
+        const statsResult = await supabase.rpc('get_admin_platform_stats');
+
+        if (fetchId !== fetchCountRef.current) {
+          fetchInProgressRef.current = false;
+          return;
+        }
+
+        if (!statsResult.error && statsResult.data) {
+          const [restaurantsResult, membersResult] = await Promise.all([
+            safeQuery(() => supabase.from("restaurants").select("*, orders(count)").order("created_at", { ascending: false }), { signal }),
+            safeQuery(() => supabase.from("restaurant_members").select("restaurant_id"), { signal })
+          ]);
+
+          if (fetchId !== fetchCountRef.current) {
+            fetchInProgressRef.current = false;
+            return;
+          }
+
+          if (!restaurantsResult.error && restaurantsResult.data) {
+            const memberCounts = {};
+            (membersResult.data || []).forEach(m => {
+              memberCounts[m.restaurant_id] = (memberCounts[m.restaurant_id] || 0) + 1;
+            });
+
+            const enrichedData = restaurantsResult.data.map(r => ({
+              ...r,
+              orders: [{ count: r.orders?.[0]?.count || 0 }],
+              restaurant_members: [{ count: memberCounts[r.id] || 0 }]
+            }));
+            
+            setRestaurants(enrichedData);
+            
+            // Extract unique tags
+            const tagSet = new Set();
+            enrichedData.forEach(r => {
+              if (Array.isArray(r.tags)) r.tags.forEach(t => tagSet.add(t));
+            });
+            setAllTags([...tagSet]);
+          }
+
+          setPlatformStats({
+            losses: statsResult.data.losses || 0,
+            cancelledCount: statsResult.data.cancelledCount || 0,
+            totalOrders: statsResult.data.totalOrders || 0
+          });
+        } else {
+          // Last resort: client-side aggregation
+          const [restaurantsResult, ordersResult, membersResult] = await Promise.all([
+            safeQuery(() => supabase.from("restaurants").select("*").order("created_at", { ascending: false }), { signal }),
+            safeQuery(() => supabase.from("orders").select("restaurant_id, status, total_amount"), { signal }),
+            safeQuery(() => supabase.from("restaurant_members").select("restaurant_id"), { signal })
+          ]);
+
+          if (fetchId !== fetchCountRef.current) {
+            fetchInProgressRef.current = false;
+            return;
+          }
+
+          if (!restaurantsResult.error && restaurantsResult.data) {
+            const orderCounts = {};
+            const memberCounts = {};
+            
+            (ordersResult.data || []).forEach(o => {
+              orderCounts[o.restaurant_id] = (orderCounts[o.restaurant_id] || 0) + 1;
+            });
+            
+            (membersResult.data || []).forEach(m => {
+              memberCounts[m.restaurant_id] = (memberCounts[m.restaurant_id] || 0) + 1;
+            });
+            
+            const enrichedData = restaurantsResult.data.map(r => ({
+              ...r,
+              orders: [{ count: orderCounts[r.id] || 0 }],
+              restaurant_members: [{ count: memberCounts[r.id] || 0 }]
+            }));
+            
+            setRestaurants(enrichedData);
+
+            let totalLosses = 0;
+            let cancelledCount = 0;
+            (ordersResult.data || []).forEach(o => {
+              if (o.status === 'cancelled') {
+                cancelledCount++;
+                if (o.total_amount < 0) totalLosses += Math.abs(o.total_amount);
+              }
+          });
+          setPlatformStats({
+            losses: totalLosses,
+            cancelledCount,
+            totalOrders: ordersResult.data?.length || 0
+          });
+        }
       }
     }
-    setLoading(false);
+    } catch (err) {
+      if (err.name !== 'AbortError' && !err.message?.includes('aborted')) {
+        console.error('[Admin CRM] Fetch error:', err);
+      } else {
+        console.log('[Admin CRM] Fetch aborted');
+      }
+    } finally {
+      if (!signal?.aborted) {
+        setLoading(false);
+        setRefreshing(false);
+      }
+      fetchInProgressRef.current = false;
+    }
   }, []);
 
-  // Debounced version for realtime events (batches rapid events into single fetch)
-  const debouncedFetch = useMemo(() => createDebouncedFetcher(fetchRestaurants, 600), [fetchRestaurants]);
+  // Debounced version for realtime events
+  const debouncedFetch = useMemo(() => createDebouncedFetcher(() => fetchData(true), 800), [fetchData]);
 
   useEffect(() => {
-    fetchRestaurants();
+    fetchData();
 
-    // Subscribe to realtime changes — uses self-healing managed channel
+    // Visibility change handler - pause fetches when tab is hidden
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        // Tab became visible, refresh data
+        console.log('[Admin CRM] Tab visible, refreshing...');
+        fetchData(true);
+      }
+    };
+    
+    // Handle page show event (fires on back/forward navigation and hard refresh)
+    const handlePageShow = (event) => {
+      // event.persisted is true if page was loaded from cache (bfcache)
+      if (event.persisted) {
+        console.log('[Admin CRM] Page restored from cache, forcing refresh...');
+        // Force a complete refresh
+        if (abortControllerRef.current) {
+          abortControllerRef.current.abort();
+        }
+        fetchInProgressRef.current = false;
+        fetchData(true);
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('pageshow', handlePageShow);
+
     const { unsubscribe } = createManagedChannel(
       "admin_restaurants_changes",
       (channel) => {
@@ -172,20 +329,32 @@ export default function AdminPage() {
           "postgres_changes",
           { event: "*", schema: "public", table: "restaurants" },
           () => {
-            debouncedFetch();
+            // Only fetch if document is visible
+            if (document.visibilityState === 'visible') {
+              debouncedFetch();
+            }
           }
         );
       }
     );
 
     return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('pageshow', handlePageShow);
       unsubscribe();
+      // Cancel any pending requests on unmount
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
-  }, [fetchRestaurants, debouncedFetch]);
+  }, [fetchData, debouncedFetch]);
 
-  // Optimistic update with rollback for boolean fields
-  async function updateField(restaurantId, field, newValue) {
-    const previousRestaurants = [...restaurants];
+  // Optimistic update with rollback + toast feedback
+  const updateField = useCallback(async (restaurantId, field, newValue) => {
+    const previousRestaurants = restaurants;
+    const restaurant = restaurants.find(r => r.id === restaurantId);
+    const fieldLabel = field === 'is_active' ? 'Active status' : field === 'is_verified' ? 'Verification' : field;
+    
     await safeMutation(
       () => supabase
         .from("restaurants")
@@ -201,11 +370,29 @@ export default function AdminPage() {
         },
         rollback: () => {
           setRestaurants(previousRestaurants);
-          alert(`Failed to update ${field}. Changes reverted.`);
+          toast.error(`Failed to update ${fieldLabel}. Changes reverted.`);
+        },
+        onSuccess: () => {
+          toast.success(`${restaurant?.name || 'Restaurant'}: ${fieldLabel} updated.`);
         },
       }
     );
-  }
+  }, [restaurants, toast]);
+
+  // Tag update handler — called from RestaurantsTable after successful tag save
+  const handleTagsUpdated = useCallback((restaurantId, newTags) => {
+    setRestaurants(prev =>
+      prev.map(r => r.id === restaurantId ? { ...r, tags: newTags } : r)
+    );
+    // Update allTags
+    const tagSet = new Set();
+    restaurants.forEach(r => {
+      const tags = r.id === restaurantId ? newTags : (r.tags || []);
+      tags.forEach(t => tagSet.add(t));
+    });
+    setAllTags([...tagSet]);
+    toast.success("Tags saved successfully.");
+  }, [restaurants, toast]);
 
   // Stats
   const stats = useMemo(() => {
@@ -227,12 +414,16 @@ export default function AdminPage() {
       (sum, r) => sum + (r.orders?.[0]?.count || 0),
       0
     );
+    const withTags = restaurants.filter(r => Array.isArray(r.tags) && r.tags.length > 0).length;
+    const withoutTags = total - withTags;
 
     return { 
       total, active, inactive, expiringSoon, expired, 
       totalOrders: totalOrdersCount,
       losses: platformStats.losses,
-      cancelRate: platformStats.totalOrders > 0 ? (platformStats.cancelledCount / platformStats.totalOrders) * 100 : 0
+      cancelRate: platformStats.totalOrders > 0 ? (platformStats.cancelledCount / platformStats.totalOrders) * 100 : 0,
+      withTags,
+      withoutTags,
     };
   }, [restaurants, platformStats]);
 
@@ -240,6 +431,18 @@ export default function AdminPage() {
     <div className="space-y-6 animate-in fade-in duration-500">
       {/* Session Recovery Banner */}
       <SessionRecoveryBanner />
+      
+      {/* Loading Banner - shows after 5s if still loading */}
+      <LoadingBanner 
+        isLoading={loading || refreshing} 
+        onRetry={() => {
+          if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+          }
+          fetchInProgressRef.current = false;
+          fetchData(true);
+        }}
+      />
       
       {/* ── TABS & SETTINGS ── */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-b border-zinc-800 pb-4">
@@ -288,75 +491,79 @@ export default function AdminPage() {
         </button>
       </div>
 
-      {/* CRM Tab — always rendered since it's the default */}
+      {/* CRM Tab */}
       <div style={{ display: activeTab === "crm" ? "block" : "none" }}>
         <>
           {/* ── STATS GRID (CRM) ── */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-            <StatCard
-              label="Total Restaurants"
-              value={stats.total}
-              icon={Store}
-              color="text-zinc-400"
-              bgColor="bg-zinc-800/50"
-            />
-            <StatCard
-              label="Active"
-              value={stats.active}
-              icon={ShieldCheck}
-              color="text-blue-400"
-              bgColor="bg-blue-500/5"
-              borderColor="border-blue-500/10"
-            />
-            <StatCard
-              label="Deactivated"
-              value={stats.inactive}
-              icon={ShieldOff}
-              color="text-red-400"
-              bgColor="bg-red-500/5"
-              borderColor="border-red-500/10"
-            />
-            <StatCard
-              label="Expiring (7d)"
-              value={stats.expiringSoon}
-              icon={AlertTriangle}
-              color="text-amber-400"
-              bgColor="bg-amber-500/5"
-              borderColor="border-amber-500/10"
-            />
-            <StatCard
-              label="Expired"
-              value={stats.expired}
-              icon={AlertTriangle}
-              color="text-red-500"
-              bgColor="bg-red-500/5"
-              borderColor="border-red-500/10"
-            />
-            <StatCard
-              label="Total Orders"
-              value={stats.totalOrders}
-              icon={TrendingUp}
-              color="text-orange-400"
-              bgColor="bg-orange-500/5"
-              borderColor="border-orange-500/10"
-            />
-            <StatCard
-              label="Total Losses"
-              value={`EGP ${stats.losses.toLocaleString()}`}
-              icon={AlertTriangle}
-              color="text-red-500"
-              bgColor="bg-red-500/5"
-              borderColor="border-red-500/10"
-            />
-            <StatCard
-              label="Cancel Rate"
-              value={`${stats.cancelRate.toFixed(1)}%`}
-              icon={Activity}
-              color="text-amber-500"
-              bgColor="bg-amber-500/5"
-              borderColor="border-amber-500/10"
-            />
-          </div>
+          {loading ? (
+            <StatsSkeleton />
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+              <StatCard
+                label="Total Restaurants"
+                value={stats.total}
+                icon={Store}
+                color="text-zinc-400"
+                bgColor="bg-zinc-800/50"
+              />
+              <StatCard
+                label="Active"
+                value={stats.active}
+                icon={ShieldCheck}
+                color="text-blue-400"
+                bgColor="bg-blue-500/5"
+                borderColor="border-blue-500/10"
+              />
+              <StatCard
+                label="Deactivated"
+                value={stats.inactive}
+                icon={ShieldOff}
+                color="text-red-400"
+                bgColor="bg-red-500/5"
+                borderColor="border-red-500/10"
+              />
+              <StatCard
+                label="Expiring (7d)"
+                value={stats.expiringSoon}
+                icon={AlertTriangle}
+                color="text-amber-400"
+                bgColor="bg-amber-500/5"
+                borderColor="border-amber-500/10"
+              />
+              <StatCard
+                label="Expired"
+                value={stats.expired}
+                icon={AlertTriangle}
+                color="text-red-500"
+                bgColor="bg-red-500/5"
+                borderColor="border-red-500/10"
+              />
+              <StatCard
+                label="Total Orders"
+                value={stats.totalOrders.toLocaleString()}
+                icon={TrendingUp}
+                color="text-orange-400"
+                bgColor="bg-orange-500/5"
+                borderColor="border-orange-500/10"
+              />
+              <StatCard
+                label="Total Losses"
+                value={`EGP ${stats.losses.toLocaleString()}`}
+                icon={AlertTriangle}
+                color="text-red-500"
+                bgColor="bg-red-500/5"
+                borderColor="border-red-500/10"
+              />
+              <StatCard
+                label="Cancel Rate"
+                value={`${stats.cancelRate.toFixed(1)}%`}
+                icon={Activity}
+                color="text-amber-500"
+                bgColor="bg-amber-500/5"
+                borderColor="border-amber-500/10"
+              />
+            </div>
+          )}
 
           {/* ── MAIN TABLE ── */}
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 overflow-hidden mt-6">
@@ -366,28 +573,30 @@ export default function AdminPage() {
                 <h2 className="text-sm font-black text-white tracking-tight">
                   Directory
                 </h2>
+                {!loading && (
+                  <span className="text-[10px] font-mono text-zinc-600 bg-zinc-800 px-2 py-0.5 rounded-md">
+                    {stats.withTags} tagged · {stats.withoutTags} untagged
+                  </span>
+                )}
               </div>
               <button
-                onClick={fetchRestaurants}
-                disabled={loading}
+                onClick={() => fetchData(true)}
+                disabled={refreshing}
                 className="flex items-center gap-2 rounded-lg bg-zinc-800 px-3 py-1.5 text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-700 transition-all border border-zinc-700 disabled:opacity-50"
               >
-                {loading ? <span className="animate-spin">↻</span> : "↻"}
-                Refresh
+                <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
+                {refreshing ? "Refreshing..." : "Refresh"}
               </button>
             </div>
 
             {loading ? (
-              <div className="flex items-center justify-center py-20">
-                <div className="flex flex-col items-center gap-3">
-                  <div className="h-8 w-8 animate-spin rounded-full border-2 border-zinc-700 border-t-orange-500" />
-                  <span className="text-xs font-bold text-zinc-600">Loading directory...</span>
-                </div>
-              </div>
+              <TableSkeleton />
             ) : (
               <RestaurantsTable
                 restaurants={restaurants}
+                allTags={allTags}
                 onUpdateField={updateField}
+                onTagsUpdated={handleTagsUpdated}
                 onRecordPayment={(r) => setPaymentModalRestaurant(r)}
                 onManageMembers={(r) => setMembersModalRestaurant(r)}
               />
@@ -415,7 +624,7 @@ export default function AdminPage() {
           onClose={() => setPaymentModalRestaurant(null)}
           onSuccess={() => {
             setPaymentModalRestaurant(null);
-            fetchRestaurants();
+            fetchData(true);
           }}
         />
       )}
@@ -436,3 +645,11 @@ export default function AdminPage() {
   );
 }
 
+// Wrap with ToastProvider
+export default function AdminPage() {
+  return (
+    <ToastProvider>
+      <AdminPageInner />
+    </ToastProvider>
+  );
+}

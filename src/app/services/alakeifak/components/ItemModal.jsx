@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useCartStore } from "../lib/cartStore";
-import Image from "next/image";
 import { X, Plus, Minus, UtensilsCrossed, Check } from "lucide-react";
 import { lockScroll, unlockScroll } from "../lib/scrollLockManager";
 import { track } from "@vercel/analytics";
@@ -138,13 +137,10 @@ export default function ItemModal({ item, extras, themeColor, isOpen, preSelecte
           {/* Edge-to-Edge Hero Image */}
           {item.image_url ? (
             <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] bg-[#131B2B]">
-              <Image
+              <img
                 src={item.image_url}
                 alt={item.name}
-                fill
-                className="object-cover"
-                sizes="(max-width: 640px) 100vw, 512px"
-                priority
+                className="absolute inset-0 h-full w-full object-cover"
               />
             </div>
           ) : (
@@ -250,11 +246,11 @@ export default function ItemModal({ item, extras, themeColor, isOpen, preSelecte
                           {/* Image Support for Extras */}
                           {extra.image_url && (
                             <div className="relative h-[44px] w-[44px] shrink-0 overflow-hidden rounded-[14px] bg-[#1E293B] border border-white/5">
-                              <Image 
+                              <img 
                                 src={extra.image_url} 
                                 alt={extra.name} 
-                                fill 
-                                className="object-cover"
+                                loading="lazy"
+                                className="absolute inset-0 h-full w-full object-cover"
                               />
                             </div>
                           )}

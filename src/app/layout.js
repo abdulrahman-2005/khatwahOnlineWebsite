@@ -10,7 +10,7 @@ import { seoConfig } from "@/lib/seo";
 import contact from "../../data/contact.json";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { GoogleTagManager } from '@next/third-parties/google';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -141,7 +141,7 @@ export default function RootLayout({ children }) {
         <LocalBusinessSchema />
       </head>
       <body className="min-h-screen antialiased" suppressHydrationWarning>
-        <GoogleTagManager gtmId="G-2G26Q35GPF" />
+        <GoogleAnalytics gaId="G-2G26Q35GPF" />
 
         <ThemeProvider>
           <LocaleProvider>

@@ -17,7 +17,6 @@ import {
   Image as ImageIcon,
   AlertTriangle
 } from "lucide-react";
-import Image from "next/image";
 
 const STEPS = [
   { id: 1, icon: Store, title: "هوية المطعم", desc: "اختر اسماً يعبر عنك ورابطاً لمنيوك الخاص." },
@@ -373,7 +372,7 @@ export default function SetupWizard({ userId, userEmail, onComplete }) {
                     </div>
                   ) : logoPreview ? (
                     <>
-                      <Image src={logoPreview} alt="Preview" fill className="object-cover" />
+                      <img src={logoPreview} alt="Preview" className="absolute inset-0 h-full w-full object-cover" />
                       <div className="absolute inset-0 bg-gray-900/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex items-center justify-center backdrop-blur-sm">
                         <span className="text-[15px] font-black text-white">تغيير الصورة</span>
                       </div>

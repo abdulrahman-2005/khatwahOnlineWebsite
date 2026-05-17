@@ -8,7 +8,8 @@
 import { supabase } from './supabaseClient';
 
 // Helper to prevent infinite hanging due to stuck Supabase token refresh
-const withTimeout = (promise, ms = 30000) => {
+// Reduced from 30s to 10s for better UX
+const withTimeout = (promise, ms = 10000) => {
   return Promise.race([
     promise,
     new Promise((_, reject) => {
@@ -47,25 +48,82 @@ function isAuthError(error) {
  *   e.g., () => supabase.from('orders').select('*').eq('id', 1)
  * @param {Object} options
  * @param {number} options.retries - Number of retries on auth errors (default: 1)
+ * @param {AbortSignal} options.signal - Optional AbortController signal for cancellation
  * @returns {{ data, error, isAuthError: boolean }}
  */
-export async function safeQuery(queryFn, { retries = 1 } = {}) {
-  try {
-    const result = await withTimeout(queryFn());
-    const { data, error } = result || {};
-
-    if (error && isAuthError(error)) {
-      if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('supabase:session-expired'));
-      return { data: null, error, isAuthError: true };
+export async function safeQuery(queryFn, { retries = 1, signal } = {}) {
+  let lastError = null;
+  
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    // Check if request was aborted
+    if (signal?.aborted) {
+      console.log('[safeQuery] Request aborted before attempt', attempt);
+      return { data: null, error: new Error('Request aborted'), isAuthError: false };
     }
 
-    return { data, error, isAuthError: false };
-  } catch (err) {
-    if (err?.message?.includes('timed out')) {
+    try {
+      const result = await withTimeout(queryFn());
+      const { data, error } = result || {};
+
+      if (error && isAuthError(error)) {
+        lastError = error;
+        console.warn('[safeQuery] Auth error detected:', error.message);
+        
+        // On auth error, try to refresh session before retry
+        if (attempt < retries && typeof window !== 'undefined' && supabase) {
+          try {
+            console.log('[safeQuery] Attempting session refresh...');
+            const { error: refreshError } = await supabase.auth.refreshSession();
+            if (!refreshError) {
+              console.log('[safeQuery] Session refreshed, retrying...');
+              // Session refreshed, retry the query
+              continue;
+            } else {
+              console.warn('[safeQuery] Session refresh failed:', refreshError.message);
+            }
+          } catch (refreshErr) {
+            console.warn('[safeQuery] Session refresh exception:', refreshErr);
+          }
+        }
+        
+        // If we're out of retries or refresh failed, emit event
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('supabase:session-expired'));
+        }
+        return { data: null, error, isAuthError: true };
+      }
+
+      return { data, error, isAuthError: false };
+    } catch (err) {
+      lastError = err;
+      
+      // Check if it's an abort error
+      if (err.name === 'AbortError' || err.message?.includes('aborted')) {
+        console.log('[safeQuery] Request aborted');
+        return { data: null, error: new Error('Request aborted'), isAuthError: false };
+      }
+      
+      if (err?.message?.includes('timed out')) {
+        console.warn('[safeQuery] Request timed out, attempt', attempt + 1, 'of', retries + 1);
+        // On timeout, retry once with fresh session check
+        if (attempt < retries && typeof window !== 'undefined' && supabase) {
+          try {
+            await supabase.auth.refreshSession();
+            continue;
+          } catch (refreshErr) {
+            console.warn('[safeQuery] Session refresh after timeout failed:', refreshErr);
+          }
+        }
+        return { data: null, error: err, isAuthError: false };
+      }
+      
+      // For other errors, don't retry
+      console.error('[safeQuery] Unexpected error:', err);
       return { data: null, error: err, isAuthError: false };
     }
-    return { data: null, error: err, isAuthError: false };
   }
+  
+  return { data: null, error: lastError, isAuthError: false };
 }
 
 /**

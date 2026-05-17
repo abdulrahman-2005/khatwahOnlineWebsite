@@ -42,9 +42,9 @@ const nextConfig = {
       },
     ],
     formats: ['image/avif', 'image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60,
+    deviceSizes: [640, 828, 1200, 1920],
+    imageSizes: [16, 32, 64, 128, 256, 384],
+    minimumCacheTTL: 604800, // 7 days (URL changes invalidate cache anyway)
   },
   
   // Experimental features for better performance

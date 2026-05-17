@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import CategoryNav from "../components/CategoryNav";
 import ItemCard from "../components/ItemCard";
@@ -189,12 +188,9 @@ export default function MenuContent({ restaurant, categories, groupedData, extra
         <div className="relative w-full overflow-hidden bg-gray-900 shadow-xl group">
           {heroBannerUrl ? (
             <div className="relative w-full">
-              <Image 
+              <img 
                 src={heroBannerUrl} 
                 alt="Banner" 
-                width={1200}
-                height={600}
-                priority={true}
                 className="w-full h-auto max-h-[60vh] object-contain bg-gray-900 shadow-2xl" 
               />
               {/* Subtle Gradient Overlays */}
@@ -225,8 +221,8 @@ export default function MenuContent({ restaurant, categories, groupedData, extra
         {/* Floating Logo - OUTSIDE the overflow-hidden parent to prevent clipping */}
         <div className="absolute bottom-0 left-0 right-0 flex justify-center translate-y-1/2 z-30">
           {restaurant.logo_url ? (
-            <div className="h-[120px] w-[120px] lg:h-[150px] lg:w-[150px] overflow-hidden rounded-[40px] border-[8px] border-[#0F172A] bg-[#0F172A] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] transition-transform hover:scale-105 duration-500">
-              <Image src={restaurant.logo_url} alt={restaurant.name} width={150} height={150} priority={true} className="h-full w-full object-cover" />
+            <div className="h-[120px] w-[120px] lg:h-[150px] lg:w-[150px] overflow-hidden rounded-[40px] border-[8px] border-[#0F172A] bg-[#0F172A] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] transition-transform hover:scale-105 duration-500 transform-gpu will-change-transform [backface-visibility:hidden]">
+              <img src={restaurant.logo_url} alt={restaurant.name} className="h-full w-full object-cover" />
             </div>
           ) : (
             <div className="flex h-[120px] w-[120px] lg:h-[150px] lg:w-[150px] items-center justify-center rounded-[40px] border-[8px] border-[#0F172A] bg-[#0F172A] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)]">

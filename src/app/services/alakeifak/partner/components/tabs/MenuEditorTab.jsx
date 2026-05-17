@@ -470,7 +470,7 @@ export default function MenuEditorTab({ restaurantId, restaurant, themeColor }) 
                               {/* Thumbnail */}
                               <div className="relative aspect-video w-full bg-gray-50 overflow-hidden border-b border-gray-100">
                                 {item.image_url ? (
-                                  <img src={item.image_url} alt="" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                                  <img src={item.image_url} alt="" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 transform-gpu will-change-transform [backface-visibility:hidden]" />
                                 ) : (
                                   <div className="flex h-full w-full items-center justify-center bg-gray-50">
                                     <Pizza size={32} className="text-gray-300" strokeWidth={1.5} />
